@@ -67,6 +67,7 @@ echo "[2/4] Compiling modified source classes (club.aspvp)..."
   "$DIR/src/main/java/club/aspvp/ffa/internal/z.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/k.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/n.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/internal/p.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/p6d2.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/v.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/s.java" \
@@ -75,6 +76,10 @@ echo "[2/4] Compiling modified source classes (club.aspvp)..."
   "$DIR/src/main/java/club/aspvp/ffa/internal/n2x6.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/w7k3.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/v8m5.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/event/KothZone.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/event/AirdropManager.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/event/KothManager.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/event/EventManager.java" \
   "$DIR/src/main/java/club/aspvp/ffa/TwoCubeFFA.java" \
   "$DIR/src/main/java/club/aspvp/ffa/FlixCoreFFA.java" \
   "$DIR/src/main/java/club/aspvp/ffa/hook/FfaPlaceholderExpansion.java" \

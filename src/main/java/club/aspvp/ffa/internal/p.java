@@ -68,6 +68,8 @@ public final class p {
       this.h1s7(var2, var2);
       var2 = "crossserver.yml";
       this.h1s7(var2, var2);
+      var2 = "events.yml";
+      this.h1s7(var2, var2);
    }
 
    public final void ag() {

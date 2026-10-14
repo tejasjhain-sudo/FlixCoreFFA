@@ -61,7 +61,22 @@ commands:
     description: View and manage FlixCore FFA tokens
     usage: /token
     aliases: [tokens, ffatoken, ffatokens]
+  airdrop:
+    description: FlixCore FFA dynamic supply crate airdrop commands
+    usage: /airdrop [start|stop|list] [arena]
+    aliases: [ffaairdrop, supplycrate, crate]
+  koth:
+    description: FlixCore FFA King of the Hill arena event commands
+    usage: /koth [start|stop|setzone|list] [arena]
+    aliases: [ffakoth]
+  events:
+    description: View FlixCore FFA live events status
+    usage: /events
+    aliases: [ffaevents, liveevents]
 permissions:
+  ffa.event.admin:
+    description: Manage dynamic supply crates and KOTH events
+    default: op
   ffa.admin:
     description: Grants access to every FlixCore FFA command and bypass.
     default: op

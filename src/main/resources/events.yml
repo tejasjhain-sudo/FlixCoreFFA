@@ -1,0 +1,117 @@
+# =====================================================================
+#             FlixCore FFA - Dynamic Live Events Configuration
+# =====================================================================
+# This file controls automated and manual live events in your FFA arenas:
+#  1. Dynamic Supply Crates / Airdrops (Spontaneous high-stakes skirmishes)
+#  2. King of the Hill (KOTH) Zone (Territory control & King rewards)
+# =====================================================================
+
+airdrop:
+  # Enable or disable the dynamic airdrop event system
+  enabled: true
+  # Scheduled interval in minutes to drop an airdrop in a random arena (0 to disable auto drops)
+  interval-minutes: 20
+  # Duration in seconds before an unlooted crate disappears
+  despawn-seconds: 300
+  # Warning announcement before crate lands (in seconds)
+  warning-countdown-seconds: 15
+  # Visual drop beam & beacon particles while crate is falling / landing
+  effects:
+    falling-particles: FIREWORK
+    landing-sound: ENTITY_ENDER_DRAGON_GROWL
+    claim-sound: UI_TOAST_CHALLENGE_COMPLETE
+    firework-on-land: true
+    firework-on-claim: true
+  # Floating text displayed above the supply crate
+  hologram:
+    lines:
+      - "&6&l★ SUPPLY CRATE ★"
+      - "&eRight-click to claim!"
+      - "&7Expires in: &c%time_left%s"
+  # Broadcast messages
+  broadcast:
+    spawning: "&8[&6&lFlix&eFFA&8] &6📦 &eAn &6Elite Supply Crate &eis incoming to arena &b%arena% &e(&f%x%, %y%, %z%&e) in &c%time%s&e!"
+    landed: "&8[&6&lFlix&eFFA&8] &a📦 The Supply Crate has landed in arena &b%arena% &eat &f%x%, %y%, %z%&e! &eFight for it!"
+    claimed: "&8[&6&lFlix&eFFA&8] &6🎉 &a%player% &ehas claimed the Supply Crate in &b%arena%&e!"
+    despawned: "&8[&6&lFlix&eFFA&8] &c📦 The Supply Crate in arena &b%arena% &ehas expired."
+  # Loot table dropped/given when the crate is opened
+  loot:
+    tokens:
+      enabled: true
+      min: 150
+      max: 500
+    items:
+      - material: ENCHANTED_GOLDEN_APPLE
+        amount: 2
+        chance: 100
+      - material: GOLDEN_APPLE
+        amount: 6
+        chance: 100
+      - material: ENDER_PEARL
+        amount: 4
+        chance: 85
+      - material: TOTEM_OF_UNDYING
+        amount: 1
+        chance: 40
+      - material: POTION
+        potion-type: STRENGTH
+        amplifier: 1
+        duration-seconds: 90
+        amount: 1
+        name: "&c&lPotion of Strength II"
+        chance: 75
+      - material: POTION
+        potion-type: SPEED
+        amplifier: 1
+        duration-seconds: 90
+        amount: 1
+        name: "&b&lPotion of Speed II"
+        chance: 75
+
+koth:
+  # Enable or disable King of the Hill events
+  enabled: true
+  # Scheduled interval in minutes to start KOTH in an arena (0 to disable auto start)
+  interval-minutes: 45
+  # Capture duration in seconds a player must control the hill to win
+  capture-seconds: 60
+  # Maximum duration in minutes before KOTH times out if no one captures it
+  max-duration-minutes: 15
+  # Visual boundary particles showing the capture zone on the ground
+  boundary-particles:
+    enabled: true
+    particle: FLAME
+    density: 0.5
+  # BossBar display
+  bossbar:
+    capping-title: "&6&lKOTH &8» &e%arena% &8| &a%player% &8(&b%time_left%s left&8)"
+    uncontested-title: "&6&lKOTH &8» &e%arena% &8| &7Stand in zone to capture! &8(&e%time_left%s&8)"
+    contested-title: "&6&lKOTH &8» &e%arena% &8| &c&lCONTESTED! &8(&f%players% players&8)"
+    color: YELLOW
+    style: SEGMENTED_10
+  # Action bar messages
+  actionbar:
+    capping: "&6&lKOTH: &a%player% &7is capturing! &e%time_left%s remaining &8[%progress_bar%&8]"
+    contested: "&c&lKOTH IS CONTESTED! &7Fight for control of the hill!"
+    uncontested: "&e&lKOTH: &7Stand on the hill to start capturing!"
+  # Rewards given to the winning player
+  rewards:
+    tokens: 750
+    title:
+      title: "&6&lVICTORY!"
+      subtitle: "&eYou captured the %arena% KOTH!"
+      fadeIn: 10
+      stay: 70
+      fadeOut: 20
+    fireworks: 3
+    # Optional console commands executed on win (%player%, %arena%)
+    commands: []
+  # Broadcast messages
+  broadcast:
+    started: "&8[&6&lFlix&eFFA&8] &6👑 King of the Hill (KOTH) &ehas begun in arena &b%arena%&e! Control the hill for &c%capture_time%s &eto win!"
+    captured: "&8[&6&lFlix&eFFA&8] &6👑 &a%player% &ehas conquered the &b%arena% &eKOTH and claimed the crown!"
+    timeout: "&8[&6&lFlix&eFFA&8] &c👑 KOTH in arena &b%arena% &eended with no winner."
+  # Custom defined zones for arenas. If not specified for an arena,
+  # a default 5x5 zone centered on the arena spawn location will be used automatically.
+  # Set via: /ffa koth setzone <arena>
+  zones: {}
