@@ -232,7 +232,7 @@ public class TwoCubeFFA extends JavaPlugin {
                            return this.eventManager.handleEventsCommand(sender, args);
                         }
                      }
-                     if (args.length > 0 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels"))) {
+                     if (args.length > 0 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels") || args[0].equalsIgnoreCase("cage"))) {
                         if (this.duelManager != null) {
                            return this.duelManager.handleDuelCommand(sender, args);
                         }
@@ -246,7 +246,7 @@ public class TwoCubeFFA extends JavaPlugin {
                      if (args.length > 1 && args[0].equalsIgnoreCase("koth") && this.eventManager != null) {
                         return this.eventManager.tabCompleteKoth(sender, args);
                      }
-                     if (args.length > 1 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels")) && this.duelManager != null) {
+                     if (args.length > 1 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels") || args[0].equalsIgnoreCase("cage")) && this.duelManager != null) {
                         String[] duelArgs = new String[args.length - 1];
                         System.arraycopy(args, 1, duelArgs, 0, duelArgs.length);
                         return this.duelManager.tabCompleteDuel(sender, duelArgs);
@@ -255,7 +255,7 @@ public class TwoCubeFFA extends JavaPlugin {
                      boolean isConsole = (sender instanceof org.bukkit.command.ConsoleCommandSender) || !(sender instanceof org.bukkit.entity.Player);
                      if (args.length == 1 && (isConsole || sender.hasPermission("ffa.admin"))) {
                         java.util.List<String> result = list == null ? new java.util.ArrayList<>() : new java.util.ArrayList<>(list);
-                        for (String sub : new String[]{"update", "airdrop", "koth", "events", "duel"}) {
+                        for (String sub : new String[]{"update", "airdrop", "koth", "events", "duel", "cage"}) {
                            if (sub.startsWith(args[0].toLowerCase())) {
                               result.add(sub);
                            }

@@ -92,6 +92,7 @@ public final class v8m5 implements Listener {
          }
          String sub = parts[1];
          switch (sub) {
+            case "cage":
             case "duel":
             case "duels":
             case "accept":
