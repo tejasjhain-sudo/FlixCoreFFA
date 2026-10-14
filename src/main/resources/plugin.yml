@@ -73,6 +73,10 @@ commands:
     description: View FlixCore FFA live events status
     usage: /events
     aliases: [ffaevents, liveevents]
+  duel:
+    description: Challenge an arena player to an in-arena gladiator cage duel
+    usage: /duel <player> [kit]
+    aliases: [duels, ffaduel, ffaduels, cage]
 permissions:
   ffa.event.admin:
     description: Manage dynamic supply crates and KOTH events

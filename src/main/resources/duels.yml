@@ -1,0 +1,62 @@
+# =====================================================================
+#          FlixCore FFA - In-Arena Gladiator Cage Duels System
+# =====================================================================
+# Two players in an arena can /ffa duel <player> [kit].
+# When accepted, they are trapped inside a transparent Barrier Cage
+# where spectators outside can watch them fight without interfering!
+# =====================================================================
+
+enabled: true
+
+# Cage dimensions (in blocks) - 21x21 spacious arena
+cage:
+  radius-xz: 10
+  height-y: 8
+  wall-material: BARRIER
+  roof-material: BARRIER
+  floor-material: GLASS
+  boundary-particles:
+    enabled: true
+    particle: END_ROD
+
+# Invitation timeout in seconds
+invite-timeout-seconds: 30
+
+# Maximum duel time before sudden death / tie
+max-duration-seconds: 300
+
+# Rewards for winner
+rewards:
+  tokens: 250
+  fireworks: 3
+
+# Default kit if not specified in /duel <player>
+default-kit: "nethpot"
+
+# Supported kits: nethpot, tank, sword, crystal, mace, lifesteal, cart, manhunt
+available-kits:
+  - nethpot
+  - tank
+  - sword
+  - crystal
+  - mace
+  - lifesteal
+
+# Messages
+messages:
+  invite-sent: "&8[&6⚔&8] &eDuel invite sent to &b%target% &e(&6Kit: &f%kit%&e). Expires in 30s."
+  invite-received:
+    - "&8==================================================="
+    - "&6&l             GLADIATOR CAGE DUEL"
+    - "&e%player% &7has challenged you to an In-Arena Cage Duel!"
+    - "&7Kit: &b%kit% &8| &7Arena: &e%arena%"
+    - "&aType &e/ffa duel accept %player% &ato accept!"
+    - "&cType &e/ffa duel decline %player% &cto decline."
+    - "&8==================================================="
+  duel-started: "&8[&6⚔&8] &6⚔ &eA Cage Duel has begun between &b%player1% &eand &b%player2% &8(&6Kit: &f%kit%&8)!"
+  duel-won: "&8[&6⚔&8] &6👑 &a&l%winner% &ehas DEFEATED &c&l%loser% &ein the Cage Duel!"
+  duel-forfeit: "&8[&6⚔&8] &c%loser% disconnected. &a%winner% &ewon by forfeit!"
+
+# Dedicated cage centers per arena. If not set, auto-calculated in arena.
+# Set via: /ffa duel setcage <arena>
+arenas: {}

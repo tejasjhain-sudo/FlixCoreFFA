@@ -92,6 +92,7 @@ public class TwoCubeFFA extends JavaPlugin {
    private club.aspvp.license.LicenseClient licenseClient;
    private club.aspvp.ffa.updater.PluginUpdater pluginUpdater;
    private club.aspvp.ffa.event.EventManager eventManager;
+   private club.aspvp.ffa.duel.DuelManager duelManager;
 
    public void onEnable() {
       this.saveDefaultConfig();
@@ -195,6 +196,8 @@ public class TwoCubeFFA extends JavaPlugin {
             );
             this.eventManager = new club.aspvp.ffa.event.EventManager(this, this.ab2c);
             this.eventManager.init();
+            this.duelManager = new club.aspvp.ffa.duel.DuelManager(this, this.ab2c);
+            this.duelManager.init();
 
             PluginCommand var5;
             for (String varCmd : new String[]{"ffa", "flixffa", "flixcoreffa"}) {
@@ -229,6 +232,11 @@ public class TwoCubeFFA extends JavaPlugin {
                            return this.eventManager.handleEventsCommand(sender, args);
                         }
                      }
+                     if (args.length > 0 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels"))) {
+                        if (this.duelManager != null) {
+                           return this.duelManager.handleDuelCommand(sender, args);
+                        }
+                     }
                      return originalExec.onCommand(sender, command, label, args);
                   });
                   var5.setTabCompleter((sender, command, alias, args) -> {
@@ -242,7 +250,7 @@ public class TwoCubeFFA extends JavaPlugin {
                      boolean isConsole = (sender instanceof org.bukkit.command.ConsoleCommandSender) || !(sender instanceof org.bukkit.entity.Player);
                      if (args.length == 1 && (isConsole || sender.hasPermission("ffa.admin"))) {
                         java.util.List<String> result = list == null ? new java.util.ArrayList<>() : new java.util.ArrayList<>(list);
-                        for (String sub : new String[]{"update", "airdrop", "koth", "events"}) {
+                        for (String sub : new String[]{"update", "airdrop", "koth", "events", "duel"}) {
                            if (sub.startsWith(args[0].toLowerCase())) {
                               result.add(sub);
                            }
@@ -317,6 +325,10 @@ public class TwoCubeFFA extends JavaPlugin {
                var5.setExecutor((sender, command, label, args) -> this.eventManager != null && this.eventManager.handleEventsCommand(sender, args));
             }
 
+            if ((var5 = this.getCommand("duel")) != null) {
+               var5.setExecutor((sender, command, label, args) -> this.duelManager != null && this.duelManager.handleDuelCommand(sender, args));
+            }
+
             Bukkit.getPluginManager()
                .registerEvents(
                   new w7k3(this.ab2c, this.m4z1, this.f3y8, this.v8m5, this.z4c9, this.r5n0, this.u2q5, this.i5k2, this.a7r4, this.b8t3, this.n2x6, this.p6d2),
@@ -362,6 +374,9 @@ public class TwoCubeFFA extends JavaPlugin {
       Bukkit.getServicesManager().unregisterAll(this);
       if (this.eventManager != null) {
          this.eventManager.cleanup();
+      }
+      if (this.duelManager != null) {
+         this.duelManager.cleanup();
       }
       if (this.i5k2 != null) {
          e var1 = this.i5k2;
@@ -455,6 +470,10 @@ public class TwoCubeFFA extends JavaPlugin {
          this.eventManager.cleanup();
          this.eventManager.init();
       }
+      if (this.duelManager != null) {
+         this.duelManager.cleanup();
+         this.duelManager.init();
+      }
       this.ab2c.ag();
       this.f3y8.d9r1();
       this.p6d2.ab2c(this.f3y8.arenas());
@@ -471,6 +490,10 @@ public class TwoCubeFFA extends JavaPlugin {
 
    public club.aspvp.ffa.event.EventManager getEventManager() {
       return this.eventManager;
+   }
+
+   public club.aspvp.ffa.duel.DuelManager getDuelManager() {
+      return this.duelManager;
    }
 
    private void printStartupBanner() {

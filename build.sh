@@ -80,6 +80,9 @@ echo "[2/4] Compiling modified source classes (club.aspvp)..."
   "$DIR/src/main/java/club/aspvp/ffa/event/AirdropManager.java" \
   "$DIR/src/main/java/club/aspvp/ffa/event/KothManager.java" \
   "$DIR/src/main/java/club/aspvp/ffa/event/EventManager.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/duel/DuelInvite.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/duel/ActiveCageDuel.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/duel/DuelManager.java" \
   "$DIR/src/main/java/club/aspvp/ffa/TwoCubeFFA.java" \
   "$DIR/src/main/java/club/aspvp/ffa/FlixCoreFFA.java" \
   "$DIR/src/main/java/club/aspvp/ffa/hook/FfaPlaceholderExpansion.java" \
