@@ -95,13 +95,15 @@ public class TwoCubeFFA extends JavaPlugin {
 
    public void onEnable() {
       this.saveDefaultConfig();
+      this.printStartupBanner();
+      this.pluginUpdater = new club.aspvp.ffa.updater.PluginUpdater(this);
+
       String licenseKey = this.getConfig().getString("license-key", "");
       this.licenseClient = new club.aspvp.license.LicenseClient(this, PRODUCT_ID, licenseKey);
       this.licenseClient.verifyOnStartup().thenAccept(isValid -> {
          if (isValid) {
             this.licenseClient.startHeartbeat(432000L);
             this.registerPluginFeatures();
-            this.pluginUpdater = new club.aspvp.ffa.updater.PluginUpdater(this);
             this.pluginUpdater.checkForUpdates(null);
          }
       });
@@ -201,15 +203,15 @@ public class TwoCubeFFA extends JavaPlugin {
                   final org.bukkit.command.TabCompleter originalTab = var15;
                   var5.setExecutor((sender, command, label, args) -> {
                      if (args.length > 0 && args[0].equalsIgnoreCase("update")) {
-                        if (!sender.hasPermission("ffa.admin")) {
+                        boolean isConsole = (sender instanceof org.bukkit.command.ConsoleCommandSender) || !(sender instanceof org.bukkit.entity.Player);
+                        if (!isConsole && !sender.hasPermission("ffa.admin")) {
                            sender.sendMessage("§cYou do not have permission to use this command.");
                            return true;
                         }
-                        if (this.pluginUpdater != null) {
-                           this.pluginUpdater.downloadAndInstall(sender);
-                        } else {
-                           sender.sendMessage("§cUpdater service is not initialized.");
+                        if (this.pluginUpdater == null) {
+                           this.pluginUpdater = new club.aspvp.ffa.updater.PluginUpdater(this);
                         }
+                        this.pluginUpdater.downloadAndInstall(sender);
                         return true;
                      }
                      if (args.length > 0 && args[0].equalsIgnoreCase("airdrop")) {
@@ -237,7 +239,8 @@ public class TwoCubeFFA extends JavaPlugin {
                         return this.eventManager.tabCompleteKoth(sender, args);
                      }
                      java.util.List<String> list = originalTab.onTabComplete(sender, command, alias, args);
-                     if (args.length == 1 && sender.hasPermission("ffa.admin")) {
+                     boolean isConsole = (sender instanceof org.bukkit.command.ConsoleCommandSender) || !(sender instanceof org.bukkit.entity.Player);
+                     if (args.length == 1 && (isConsole || sender.hasPermission("ffa.admin"))) {
                         java.util.List<String> result = list == null ? new java.util.ArrayList<>() : new java.util.ArrayList<>(list);
                         for (String sub : new String[]{"update", "airdrop", "koth", "events"}) {
                            if (sub.startsWith(args[0].toLowerCase())) {
@@ -468,5 +471,27 @@ public class TwoCubeFFA extends JavaPlugin {
 
    public club.aspvp.ffa.event.EventManager getEventManager() {
       return this.eventManager;
+   }
+
+   private void printStartupBanner() {
+      String[] banner = new String[]{
+         "§6  ███████╗██╗     ██╗██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗",
+         "§6  ██╔════╝██║     ██║╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝",
+         "§e  █████╗  ██║     ██║ ╚███╔╝ ██║     ██║   ██║██████╔╝█████╗  ",
+         "§e  ██╔══╝  ██║     ██║ ██╔██╗ ██║     ██║   ██║██╔══██╗██╔══╝  ",
+         "§6  ██║     ███████╗██║██╔╝ ██╗╚██████╗╚██████╔╝██║  ██║███████╗",
+         "§6  ╚═╝     ╚══════╝╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝",
+         "§8============================================================",
+         "§6  FlixCore FFA §7- §eNext-Gen High Performance Free-For-All Core",
+         "§7  Version:     §a1.0.6 §8| §7Platform: §bPaper 1.21.4 (Java 21)",
+         "§7  Developer:   §eFlixStudios §8(§bhttps://discord.gg/flixstudios§8)",
+         "§7  Backend:     §aSupabase Cloud Verification Active",
+         "§7  Live Events: §aActive §8(§eDynamic Supply Crates & KOTH Hills§8)",
+         "§7  Updater:     §aActive §8(§btejasjhain-sudo/FlixCoreFFA§8)",
+         "§8============================================================"
+      };
+      for (String line : banner) {
+         Bukkit.getConsoleSender().sendMessage(line);
+      }
    }
 }

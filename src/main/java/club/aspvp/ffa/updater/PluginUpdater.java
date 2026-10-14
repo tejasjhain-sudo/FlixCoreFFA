@@ -8,10 +8,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -23,7 +27,6 @@ public class PluginUpdater {
     private final JavaPlugin plugin;
     private final String currentVersion;
     private String latestVersion = null;
-    private String downloadUrl = null;
 
     public PluginUpdater(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -36,46 +39,41 @@ public class PluginUpdater {
     public void checkForUpdates(CommandSender notifier) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
-                URI uri = URI.create("https://api.github.com/repos/" + REPO + "/releases/latest");
-                HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
-                conn.setRequestProperty("Accept", "application/vnd.github+json");
-                conn.setRequestProperty("User-Agent", "FlixCoreFFA-Updater/1.0");
-                conn.setConnectTimeout(8000);
-                conn.setReadTimeout(8000);
+                HttpClient client = HttpClient.newBuilder()
+                        .followRedirects(HttpClient.Redirect.ALWAYS)
+                        .connectTimeout(Duration.ofSeconds(10))
+                        .build();
 
-                if (conn.getResponseCode() != 200) {
-                    if (notifier != null) {
-                        notifier.sendMessage("§cFailed to check for updates: HTTP " + conn.getResponseCode());
-                    }
-                    return;
-                }
+                HttpRequest req = HttpRequest.newBuilder()
+                        .uri(URI.create("https://api.github.com/repos/" + REPO + "/releases/latest"))
+                        .header("Accept", "application/vnd.github+json")
+                        .header("User-Agent", "FlixCoreFFA-Updater/1.0")
+                        .timeout(Duration.ofSeconds(10))
+                        .GET()
+                        .build();
 
-                String json = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                this.latestVersion = extractJsonString(json, "tag_name").replace("v", "").trim();
+                HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+                if (resp.statusCode() == 200) {
+                    String json = resp.body();
+                    this.latestVersion = extractJsonString(json, "tag_name").replace("v", "").trim();
 
-                // Find download URL for core.bin or .jar
-                if (json.contains("\"browser_download_url\"")) {
-                    for (String part : json.split("\"browser_download_url\": \"")) {
-                        if (part.contains("core.bin") || part.contains(".jar")) {
-                            this.downloadUrl = part.substring(0, part.indexOf("\""));
-                            break;
+                    if (isNewer(latestVersion, currentVersion)) {
+                        String msg = "§8[§6★§8] §eA new update is available: §aFlixCore FFA v" + latestVersion + " §7(Current: v" + currentVersion + ")";
+                        Bukkit.getConsoleSender().sendMessage(msg);
+                        Bukkit.getConsoleSender().sendMessage("§7Run §e/ffa update §7to download and install automatically.");
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (p.isOp() || p.hasPermission("ffa.admin")) {
+                                p.sendMessage(msg + " §7Run §e/ffa update §7to install.");
+                            }
                         }
-                    }
-                }
-
-                if (isNewer(latestVersion, currentVersion)) {
-                    String msg = "§8[§bFlixCore FFA§8] §aA new update is available: §ev" + latestVersion + " §7(Current: v" + currentVersion + ")";
-                    Bukkit.getConsoleSender().sendMessage(msg);
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        if (p.isOp() || p.hasPermission("ffa.admin")) {
-                            p.sendMessage(msg + " §7Run §e/ffa update §7to install.");
+                        if (notifier != null && !(notifier instanceof Player && ((Player) notifier).isOp())) {
+                            notifier.sendMessage(msg + " §7Run §e/ffa update §7to install.");
                         }
-                    }
-                    if (notifier != null && !(notifier instanceof Player && ((Player) notifier).isOp())) {
-                        notifier.sendMessage(msg + " §7Run §e/ffa update §7to install.");
+                    } else if (notifier != null) {
+                        notifier.sendMessage("§8[§6★§8] §aYou are running the latest version (v" + currentVersion + ").");
                     }
                 } else if (notifier != null) {
-                    notifier.sendMessage("§8[§bFlixCore FFA§8] §aYou are running the latest version (v" + currentVersion + ").");
+                    notifier.sendMessage("§cCould not query GitHub releases API (HTTP " + resp.statusCode() + ").");
                 }
             } catch (Exception e) {
                 if (notifier != null) {
@@ -89,42 +87,7 @@ public class PluginUpdater {
      * Downloads, decrypts, validates, and installs the update into plugins/update/.
      */
     public void downloadAndInstall(CommandSender sender) {
-        if (downloadUrl == null) {
-            sender.sendMessage("§eChecking for available updates first...");
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try {
-                    URI uri = URI.create("https://api.github.com/repos/" + REPO + "/releases/latest");
-                    HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
-                    conn.setRequestProperty("Accept", "application/vnd.github+json");
-                    conn.setRequestProperty("User-Agent", "FlixCoreFFA-Updater/1.0");
-                    if (conn.getResponseCode() == 200) {
-                        String json = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                        this.latestVersion = extractJsonString(json, "tag_name").replace("v", "").trim();
-                        if (json.contains("\"browser_download_url\"")) {
-                            for (String part : json.split("\"browser_download_url\": \"")) {
-                                if (part.contains("core.bin") || part.contains(".jar")) {
-                                    this.downloadUrl = part.substring(0, part.indexOf("\""));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception ignored) {}
-
-                if (downloadUrl == null) {
-                    sender.sendMessage("§cNo update release asset found on GitHub.");
-                    return;
-                }
-                executeDownload(sender);
-            });
-            return;
-        }
-
-        executeDownload(sender);
-    }
-
-    private void executeDownload(CommandSender sender) {
-        sender.sendMessage("§eDownloading update from GitHub...");
+        sender.sendMessage("§8[§6★§8] §eConnecting to GitHub Releases repository...");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             File tempTarget = null;
             File decryptedTarget = null;
@@ -135,27 +98,47 @@ public class PluginUpdater {
                 String finalJarName = plugin.getName() + ".jar";
                 tempTarget = new File(updateFolder, finalJarName + ".download.tmp");
 
-                // 1. Download payload
-                HttpURLConnection conn = (HttpURLConnection) URI.create(downloadUrl).toURL().openConnection();
-                conn.setRequestProperty("User-Agent", "FlixCoreFFA-Updater/1.0");
-                conn.setConnectTimeout(15000);
-                conn.setReadTimeout(30000);
+                // Target URL: direct latest release asset download
+                String targetUrl = "https://github.com/" + REPO + "/releases/latest/download/core.bin";
+                sender.sendMessage("§8[§6★§8] §eDownloading latest encrypted payload (§bcore.bin§e)...");
 
-                try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(tempTarget)) {
+                HttpClient client = HttpClient.newBuilder()
+                        .followRedirects(HttpClient.Redirect.ALWAYS)
+                        .connectTimeout(Duration.ofSeconds(15))
+                        .build();
+
+                HttpRequest req = HttpRequest.newBuilder()
+                        .uri(URI.create(targetUrl))
+                        .header("User-Agent", "FlixCoreFFA-Updater/1.0")
+                        .timeout(Duration.ofSeconds(60))
+                        .GET()
+                        .build();
+
+                HttpResponse<InputStream> resp = client.send(req, HttpResponse.BodyHandlers.ofInputStream());
+                if (resp.statusCode() != 200) {
+                    throw new IOException("GitHub returned HTTP " + resp.statusCode() + " while downloading core.bin.");
+                }
+
+                try (InputStream in = resp.body(); OutputStream out = new FileOutputStream(tempTarget)) {
                     in.transferTo(out);
                 }
 
-                File jarToVerify = tempTarget;
+                if (!tempTarget.exists() || tempTarget.length() == 0) {
+                    throw new IOException("Downloaded file is empty or missing.");
+                }
 
-                // 2. Decrypt if payload is encrypted with MAGIC header
+                sender.sendMessage("§8[§6★§8] §7Downloaded " + (tempTarget.length() / 1024) + " KB. Decrypting AES-128 protected payload...");
+
+                File jarToVerify = tempTarget;
                 if (isEncrypted(tempTarget)) {
-                    sender.sendMessage("§7Decrypting protected payload...");
                     decryptedTarget = new File(updateFolder, finalJarName + ".decrypted.tmp");
                     decryptFile(tempTarget, decryptedTarget);
                     jarToVerify = decryptedTarget;
+                } else {
+                    sender.sendMessage("§7Payload is standard binary jar.");
                 }
 
-                // 3. Verify valid plugin.yml inside jar
+                // Verify valid plugin.yml inside jar
                 try (JarFile jf = new JarFile(jarToVerify)) {
                     JarEntry entry = jf.getJarEntry("plugin.yml");
                     if (entry == null) {
@@ -163,14 +146,20 @@ public class PluginUpdater {
                     }
                 }
 
-                // 4. Move to plugins/update/FlixCoreFFA.jar
+                // Move to plugins/update/FlixCoreFFA.jar
                 File finalDestination = new File(updateFolder, finalJarName);
                 Files.move(jarToVerify.toPath(), finalDestination.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                sender.sendMessage("§8[§bFlixCore FFA§8] §aUpdate " + (latestVersion != null ? "v" + latestVersion + " " : "") + "downloaded successfully!");
-                sender.sendMessage("§7The new version will automatically apply on the next server restart.");
+                sender.sendMessage("§8=================================================");
+                sender.sendMessage("§6§l           FlixCore FFA - Update Complete");
+                sender.sendMessage("§8=================================================");
+                sender.sendMessage("§a✔ Update successfully downloaded and verified!");
+                sender.sendMessage("§e📁 Saved to: §fplugins/update/" + finalJarName);
+                sender.sendMessage("§a🔄 Restart your server to automatically apply the new version.");
+                sender.sendMessage("§8=================================================");
             } catch (Exception e) {
                 sender.sendMessage("§cFailed to install update: " + e.getMessage());
+                plugin.getLogger().severe("Update failed: " + e.getMessage());
             } finally {
                 if (tempTarget != null && tempTarget.exists()) tempTarget.delete();
                 if (decryptedTarget != null && decryptedTarget.exists()) decryptedTarget.delete();
@@ -242,21 +231,5 @@ public class PluginUpdater {
         start += search.length();
         int end = json.indexOf("\"", start);
         return json.substring(start, end);
-    }
-
-    public static void main(String[] args) throws Exception {
-        if (args.length >= 3 && args[0].equals("--encrypt")) {
-            File src = new File(args[1]);
-            File dest = new File(args[2]);
-            encryptFile(src, dest);
-            System.out.println("Encrypted payload created at: " + dest.getAbsolutePath() + " (" + dest.length() + " bytes)");
-        } else if (args.length >= 3 && args[0].equals("--decrypt")) {
-            File src = new File(args[1]);
-            File dest = new File(args[2]);
-            decryptFile(src, dest);
-            System.out.println("Decrypted jar created at: " + dest.getAbsolutePath() + " (" + dest.length() + " bytes)");
-        } else {
-            System.out.println("Usage: PluginUpdater --encrypt <src.jar> <dest.bin> | --decrypt <src.bin> <dest.jar>");
-        }
     }
 }
