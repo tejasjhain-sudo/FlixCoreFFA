@@ -146,6 +146,7 @@ public class AirdropManager {
         TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
         Optional<ArenaRegionSnapshot> regOpt = api.arenaRegion(arenaId);
         World world = arena.spawn() != null ? arena.spawn().getWorld() : null;
+        Location spawnLoc = arena.spawn();
 
         if (regOpt.isPresent()) {
             ArenaRegionSnapshot reg = regOpt.get();
@@ -153,28 +154,90 @@ public class AirdropManager {
                 world = Bukkit.getWorld(reg.world());
             }
             if (world != null) {
-                double minX = Math.min(reg.minX(), reg.maxX()) + 3;
-                double maxX = Math.max(reg.minX(), reg.maxX()) - 3;
-                double minZ = Math.min(reg.minZ(), reg.maxZ()) + 3;
-                double maxZ = Math.max(reg.minZ(), reg.maxZ()) - 3;
+                double minX = Math.min(reg.minX(), reg.maxX()) + 6;
+                double maxX = Math.max(reg.minX(), reg.maxX()) - 6;
+                double minZ = Math.min(reg.minZ(), reg.maxZ()) + 6;
+                double maxZ = Math.max(reg.minZ(), reg.maxZ()) - 6;
+                int minY = (int) Math.min(reg.minY(), reg.maxY());
+                int maxY = (int) Math.max(reg.minY(), reg.maxY());
+
                 if (maxX > minX && maxZ > minZ) {
-                    double randX = ThreadLocalRandom.current().nextDouble(minX, maxX);
-                    double randZ = ThreadLocalRandom.current().nextDouble(minZ, maxZ);
-                    int y = world.getHighestBlockYAt((int) randX, (int) randZ);
-                    return new Location(world, (int) randX, y + 1, (int) randZ);
+                    for (int attempt = 0; attempt < 30; attempt++) {
+                        int randX = (int) ThreadLocalRandom.current().nextDouble(minX, maxX);
+                        int randZ = (int) ThreadLocalRandom.current().nextDouble(minZ, maxZ);
+
+                        // Keep airdrop at least 15 blocks away from spawn point
+                        if (spawnLoc != null && spawnLoc.distanceSquared(new Location(world, randX, spawnLoc.getY(), randZ)) < 225) {
+                            continue;
+                        }
+
+                        Location ground = findSafeGround(world, randX, randZ, maxY, minY);
+                        if (ground != null) {
+                            return ground;
+                        }
+                    }
                 }
             }
         }
 
-        if (arena.spawn() != null) {
-            Location sp = arena.spawn().clone();
-            double randX = sp.getBlockX() + ThreadLocalRandom.current().nextInt(-6, 7);
-            double randZ = sp.getBlockZ() + ThreadLocalRandom.current().nextInt(-6, 7);
-            int y = sp.getWorld().getHighestBlockYAt((int) randX, (int) randZ);
-            return new Location(sp.getWorld(), (int) randX, y + 1, (int) randZ);
+        // Fallback: search around spawn 18-35 blocks away (outside spawn protection)
+        if (spawnLoc != null) {
+            World spWorld = spawnLoc.getWorld();
+            int spX = spawnLoc.getBlockX();
+            int spY = spawnLoc.getBlockY();
+            int spZ = spawnLoc.getBlockZ();
+
+            for (int attempt = 0; attempt < 25; attempt++) {
+                double angle = ThreadLocalRandom.current().nextDouble(0, 2 * Math.PI);
+                double dist = ThreadLocalRandom.current().nextDouble(18, 35);
+                int randX = (int) (spX + dist * Math.cos(angle));
+                int randZ = (int) (spZ + dist * Math.sin(angle));
+
+                Location ground = findSafeGround(spWorld, randX, randZ, spY + 15, Math.max(spWorld.getMinHeight(), spY - 25));
+                if (ground != null) {
+                    return ground;
+                }
+            }
         }
 
         return null;
+    }
+
+    private Location findSafeGround(World world, int x, int z, int startY, int minY) {
+        startY = Math.min(startY, world.getMaxHeight() - 2);
+        minY = Math.max(minY, world.getMinHeight());
+
+        for (int y = startY; y >= minY; y--) {
+            Block ground = world.getBlockAt(x, y, z);
+            Material mat = ground.getType();
+
+            // SKIP BARRIERS, AIR, VOID, LIGHT, LEAVES
+            if (mat == Material.BARRIER || mat == Material.STRUCTURE_VOID || mat == Material.LIGHT || mat.isAir()) {
+                continue;
+            }
+
+            // Must be solid walkable surface
+            if (!mat.isSolid()) {
+                continue;
+            }
+
+            // Check chest placement space and player headspace (both must NOT be solid or barrier)
+            Block chestBlock = world.getBlockAt(x, y + 1, z);
+            Block headBlock = world.getBlockAt(x, y + 2, z);
+
+            if (isPassableAir(chestBlock) && isPassableAir(headBlock)) {
+                return new Location(world, x, y + 1, z);
+            }
+        }
+        return null;
+    }
+
+    private boolean isPassableAir(Block b) {
+        Material m = b.getType();
+        if (m == Material.BARRIER || m == Material.STRUCTURE_VOID || m.isSolid()) {
+            return false;
+        }
+        return m.isAir() || m == Material.SHORT_GRASS || m == Material.TALL_GRASS || m == Material.FERN || m == Material.SNOW;
     }
 
     private void landAirdrop(String arenaId, Location loc) {

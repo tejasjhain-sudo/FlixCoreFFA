@@ -1,9 +1,11 @@
 package club.aspvp.ffa.event;
 
 import club.aspvp.ffa.TwoCubeFFA;
+import club.aspvp.ffa.api.ArenaRegionSnapshot;
 import club.aspvp.ffa.api.ArenaSnapshot;
 import club.aspvp.ffa.api.TwoCubeFFAAPI;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -338,16 +340,97 @@ public class KothManager {
             if (z != null) return z;
         }
 
-        // Auto-create 5x5 zone around arena spawn
+        TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+        Optional<ArenaRegionSnapshot> regOpt = api.arenaRegion(arenaId);
+        World world = arena.spawn() != null ? arena.spawn().getWorld() : null;
+
+        if (regOpt.isPresent()) {
+            ArenaRegionSnapshot reg = regOpt.get();
+            if (world == null && reg.world() != null) {
+                world = Bukkit.getWorld(reg.world());
+            }
+            if (world != null) {
+                double centerX = (reg.minX() + reg.maxX()) / 2.0;
+                double centerZ = (reg.minZ() + reg.maxZ()) / 2.0;
+                int minY = (int) Math.min(reg.minY(), reg.maxY());
+                int maxY = (int) Math.max(reg.minY(), reg.maxY());
+
+                // If region center is too close to spawn (< 20 blocks), shift it into the battlefield
+                if (arena.spawn() != null) {
+                    Location sp = arena.spawn();
+                    double dx = centerX - sp.getX();
+                    double dz = centerZ - sp.getZ();
+                    double dist = Math.sqrt(dx * dx + dz * dz);
+                    if (dist < 20.0) {
+                        if (dist < 1.0) {
+                            centerX = sp.getX() + 25.0;
+                            centerZ = sp.getZ() + 25.0;
+                        } else {
+                            centerX = sp.getX() + (dx / dist) * 28.0;
+                            centerZ = sp.getZ() + (dz / dist) * 28.0;
+                        }
+                    }
+                }
+
+                // Find real solid floor at (centerX, centerZ) skipping all barriers
+                int groundY = findRealGroundY(world, (int) centerX, (int) centerZ, maxY, minY);
+                if (groundY != -1) {
+                    KothZone zone = new KothZone(
+                            world.getName(),
+                            centerX - 2.5, groundY, centerZ - 2.5,
+                            centerX + 2.5, groundY + 4.0, centerZ + 2.5
+                    );
+                    ConfigurationSection newSec = config.createSection("koth.zones." + arenaId.toLowerCase(Locale.ROOT));
+                    zone.saveToConfig(newSec);
+                    eventManager.saveConfig();
+                    return zone;
+                }
+            }
+        }
+
+        // Fallback: 25 blocks away from spawn in combat direction
         if (arena.spawn() != null) {
             Location sp = arena.spawn();
-            KothZone defaultZone = KothZone.fromCenter(sp, 2.5, 4.0);
+            World spWorld = sp.getWorld();
+            double targetX = sp.getX() + 25.0;
+            double targetZ = sp.getZ() + 25.0;
+            int groundY = findRealGroundY(spWorld, (int) targetX, (int) targetZ, sp.getBlockY() + 15, Math.max(spWorld.getMinHeight(), sp.getBlockY() - 25));
+            if (groundY == -1) groundY = sp.getBlockY();
+
+            KothZone defaultZone = new KothZone(
+                    spWorld.getName(),
+                    targetX - 2.5, groundY, targetZ - 2.5,
+                    targetX + 2.5, groundY + 4.0, targetZ + 2.5
+            );
             ConfigurationSection newSec = config.createSection("koth.zones." + arenaId.toLowerCase(Locale.ROOT));
             defaultZone.saveToConfig(newSec);
             eventManager.saveConfig();
             return defaultZone;
         }
+
         return null;
+    }
+
+    private int findRealGroundY(World world, int x, int z, int startY, int minY) {
+        startY = Math.min(startY, world.getMaxHeight() - 2);
+        minY = Math.max(minY, world.getMinHeight());
+        for (int y = startY; y >= minY; y--) {
+            Block b = world.getBlockAt(x, y, z);
+            Material m = b.getType();
+            if (m == Material.BARRIER || m == Material.STRUCTURE_VOID || m == Material.LIGHT || m.isAir()) {
+                continue;
+            }
+            if (!m.isSolid()) {
+                continue;
+            }
+            Block above1 = world.getBlockAt(x, y + 1, z);
+            Block above2 = world.getBlockAt(x, y + 2, z);
+            if (above1.getType() != Material.BARRIER && !above1.getType().isSolid()
+                    && above2.getType() != Material.BARRIER && !above2.getType().isSolid()) {
+                return y + 1;
+            }
+        }
+        return -1;
     }
 
     private void drawZoneBoundary(KothZone zone, Particle particle) {

@@ -99,6 +99,30 @@ public class EventManager implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onKothPvPDamage(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim)) return;
+
+        Player damager = null;
+        if (event.getDamager() instanceof Player p) {
+            damager = p;
+        } else if (event.getDamager() instanceof org.bukkit.entity.Projectile proj && proj.getShooter() instanceof Player p) {
+            damager = p;
+        }
+
+        if (damager == null) return;
+
+        for (KothManager.ActiveKoth koth : kothManager.getActiveGames().values()) {
+            if (koth.zone.contains(victim.getLocation()) || koth.zone.contains(damager.getLocation())) {
+                // Force allow PvP inside KOTH zone even if cancelled by spawn protection or WorldGuard
+                if (event.isCancelled()) {
+                    event.setCancelled(false);
+                }
+                break;
+            }
+        }
+    }
+
     public boolean handleAirdropCommand(CommandSender sender, String[] args) {
         if (!sender.hasPermission("ffa.admin") && !sender.hasPermission("ffa.event.admin")) {
             sender.sendMessage("§cYou do not have permission to manage FFA live events.");
@@ -177,7 +201,7 @@ public class EventManager implements Listener {
                     return true;
                 }
                 if (args.length <= offset + 1) {
-                    sender.sendMessage("§cUsage: /ffa koth setzone <arena>");
+                    sender.sendMessage("§cUsage: /ffa koth setzone <arena> [radius (default 3)]");
                     return true;
                 }
                 String arena = args[offset + 1];
@@ -186,11 +210,30 @@ public class EventManager implements Listener {
                     sender.sendMessage("§cArena '" + arena + "' does not exist.");
                     return true;
                 }
+                double radius = 2.5;
+                if (args.length > offset + 2) {
+                    try {
+                        radius = Math.max(1.5, Math.min(15.0, Double.parseDouble(args[offset + 2])));
+                    } catch (NumberFormatException ignored) {}
+                }
                 Location pLoc = player.getLocation();
-                Location min = pLoc.clone().add(-2.5, -1.0, -2.5);
-                Location max = pLoc.clone().add(2.5, 3.0, 2.5);
+                Location min = pLoc.clone().add(-radius, -0.5, -radius);
+                Location max = pLoc.clone().add(radius, 4.0, radius);
                 kothManager.setZone(arena, min, max);
-                sender.sendMessage("§aSuccessfully defined 5x5 KOTH capture zone for arena §b" + arena + " §aat your location!");
+
+                // Preview particles at player feet
+                for (double x = min.getX(); x <= max.getX(); x += 0.5) {
+                    player.spawnParticle(org.bukkit.Particle.FLAME, x, pLoc.getY() + 0.15, min.getZ(), 1, 0, 0, 0, 0.0);
+                    player.spawnParticle(org.bukkit.Particle.FLAME, x, pLoc.getY() + 0.15, max.getZ(), 1, 0, 0, 0, 0.0);
+                }
+                for (double z = min.getZ(); z <= max.getZ(); z += 0.5) {
+                    player.spawnParticle(org.bukkit.Particle.FLAME, min.getX(), pLoc.getY() + 0.15, z, 1, 0, 0, 0, 0.0);
+                    player.spawnParticle(org.bukkit.Particle.FLAME, max.getX(), pLoc.getY() + 0.15, z, 1, 0, 0, 0, 0.0);
+                }
+
+                int size = (int) (radius * 2);
+                sender.sendMessage("§8[§6👑§8] §aSuccessfully set " + size + "x" + size + " KOTH zone for arena §b" + arena + " §aat your location!");
+                sender.sendMessage("§7PvP is forcibly enabled inside this hill regardless of spawn/WorldGuard protections.");
                 return true;
             }
             case "list": {
