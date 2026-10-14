@@ -8,10 +8,10 @@
 
 enabled: true
 
-# Cage dimensions (in blocks) - 21x21 spacious arena
+# Cage dimensions (in blocks) - Compact In-Arena 1v1 Gladiator Ring (7x7)
 cage:
-  radius-xz: 8
-  height-y: 6
+  radius-xz: 3
+  height-y: 4
   wall-material: GLASS
   roof-material: GLASS
   floor-material: GLASS
@@ -30,8 +30,8 @@ rewards:
   tokens: 250
   fireworks: 3
 
-# Default kit if not specified in /duel <player>
-default-kit: "nethpot"
+# Default kit if not specified and not detected from arena
+default-kit: "sword"
 
 # Supported kits: nethpot, tank, sword, crystal, mace, lifesteal, cart, manhunt
 available-kits:

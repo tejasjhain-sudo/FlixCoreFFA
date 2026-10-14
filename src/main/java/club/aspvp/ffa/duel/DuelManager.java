@@ -63,8 +63,8 @@ public class DuelManager implements Listener {
             this.height = height;
             this.minX = center.getBlockX() - radius;
             this.maxX = center.getBlockX() + radius;
-            this.minY = center.getBlockY();
-            this.maxY = center.getBlockY() + height + 1;
+            this.minY = center.getBlockY() - 1; // Floor is at cy - 1
+            this.maxY = center.getBlockY() + height; // Roof is at cy + height
             this.minZ = center.getBlockZ() - radius;
             this.maxZ = center.getBlockZ() + radius;
         }
@@ -134,8 +134,8 @@ public class DuelManager implements Listener {
                 World w = Bukkit.getWorld(getConfig().getString(path + ".world", ""));
                 if (w != null) {
                     Location loc = new Location(w, getConfig().getDouble(path + ".x"), getConfig().getDouble(path + ".y"), getConfig().getDouble(path + ".z"));
-                    int r = getConfig().getInt(path + ".radius", getConfig().getInt("cage.radius-xz", 8));
-                    int h = getConfig().getInt(path + ".height", getConfig().getInt("cage.height-y", 6));
+                    int r = getConfig().getInt(path + ".radius", getConfig().getInt("cage.radius-xz", 3));
+                    int h = getConfig().getInt(path + ".height", getConfig().getInt("cage.height-y", 4));
                     cageBounds.put(arenaKey.toLowerCase(Locale.ROOT), new CageBound(arenaKey, loc, r, h));
                 }
             }
@@ -208,6 +208,34 @@ public class DuelManager implements Listener {
     }
 
     // =========================================================================
+    // Kit Resolution Logic (Auto-detects active arena kit, e.g. sword ffa -> sword)
+    // =========================================================================
+
+    public String resolveDefaultKit(Player player, String arenaId) {
+        TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+        // 1. Check player's currently selected kit in FFA
+        if (player != null) {
+            String selected = api.selectedKit(player);
+            if (selected != null && !selected.isEmpty()) {
+                return selected.toLowerCase(Locale.ROOT);
+            }
+        }
+        // 2. Check arena's linked kits
+        if (arenaId != null) {
+            ArenaSnapshot arena = api.arena(arenaId).orElse(null);
+            if (arena != null && !arena.kits().isEmpty()) {
+                return arena.kits().get(0).toLowerCase(Locale.ROOT);
+            }
+        }
+        // 3. Check if the arena name matches a kit (e.g. "sword", "nethpot", "tank")
+        if (arenaId != null && isKnownKit(arenaId)) {
+            return arenaId.toLowerCase(Locale.ROOT);
+        }
+        // 4. Fallback from duels.yml config
+        return getConfig().getString("default-kit", "sword");
+    }
+
+    // =========================================================================
     // Command Handling: /duel, /duels, /ffa cage, /cage
     // =========================================================================
 
@@ -233,13 +261,14 @@ public class DuelManager implements Listener {
             return handleCageAdminCommand(player, args, offset);
         }
 
-        // When a player runs /duels or /duel with no args:
-        // Automatically check which arena they are in and broadcast the duel challenge with an accept button!
+        // When a player runs /duels or /duel with NO args:
+        // Automatically check which arena they are in, detect their kit (e.g. sword), and broadcast challenge with 1-click button!
         if (relativeLen == 0) {
             TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
             Optional<String> arena = api.arenaOf(player);
             if (arena.isPresent()) {
-                sendOpenArenaInvite(player, getConfig().getString("default-kit", "nethpot"));
+                String kit = resolveDefaultKit(player, arena.get());
+                sendOpenArenaInvite(player, kit);
                 return true;
             } else {
                 sendHelp(player);
@@ -281,24 +310,27 @@ public class DuelManager implements Listener {
                 return true;
             }
             default: {
-                // Check if the argument is a kit name for an open arena duel: /duels <kit>
+                TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+                Optional<String> optArena = api.arenaOf(player);
+
+                // Check if the argument is a kit name: /duels <kit> (e.g. /duels sword, /duels tank)
                 if (isKnownKit(sub) && Bukkit.getPlayerExact(args[offset]) == null) {
-                    TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
-                    Optional<String> arena = api.arenaOf(player);
-                    if (arena.isPresent()) {
+                    if (optArena.isPresent()) {
                         sendOpenArenaInvite(player, sub);
                         return true;
                     }
                 }
 
-                // Otherwise treat as direct player challenge: /duel <player> [kit]
+                // Direct player challenge: /duel <player> [kit]
                 String targetName = args[offset];
                 Player target = Bukkit.getPlayerExact(targetName);
                 if (target == null) {
-                    player.sendMessage("§cPlayer '" + targetName + "' is not online (or unknown duel kit).");
+                    player.sendMessage("§cPlayer '" + targetName + "' is not online (or unknown kit).");
                     return true;
                 }
-                String kit = (relativeLen > 1) ? args[offset + 1].toLowerCase(Locale.ROOT) : getConfig().getString("default-kit", "nethpot");
+
+                String arenaName = optArena.orElse(null);
+                String kit = (relativeLen > 1) ? args[offset + 1].toLowerCase(Locale.ROOT) : resolveDefaultKit(player, arenaName);
                 sendInvite(player, target, kit);
                 return true;
             }
@@ -331,11 +363,27 @@ public class DuelManager implements Listener {
             case "set":
             case "create": {
                 String arenaId = null;
+                int customRadius = getConfig().getInt("cage.radius-xz", 3);
+
                 if (args.length > subOffset + 1) {
-                    arenaId = args[subOffset + 1];
-                } else if (api.arenaOf(player).isPresent()) {
+                    String param = args[subOffset + 1];
+                    try {
+                        customRadius = Integer.parseInt(param);
+                    } catch (NumberFormatException e) {
+                        arenaId = param;
+                    }
+                }
+                if (args.length > subOffset + 2 && arenaId != null) {
+                    try {
+                        customRadius = Integer.parseInt(args[subOffset + 2]);
+                    } catch (NumberFormatException ignored) {}
+                }
+
+                if (arenaId == null && api.arenaOf(player).isPresent()) {
                     arenaId = api.arenaOf(player).get();
-                } else {
+                }
+
+                if (arenaId == null) {
                     for (ArenaSnapshot a : api.arenas()) {
                         if (a.enabled()) {
                             arenaId = a.id();
@@ -345,11 +393,12 @@ public class DuelManager implements Listener {
                 }
 
                 if (arenaId == null) {
-                    player.sendMessage("§cUsage: /ffa cage add <arena> (or stand inside an active arena)");
+                    player.sendMessage("§cUsage: /ffa cage add <arena> [radius] (or stand inside the arena)");
                     return true;
                 }
 
-                setupGlassCage(player, arenaId);
+                int height = getConfig().getInt("cage.height-y", 4);
+                setupGlassCage(player, arenaId, customRadius, height);
                 return true;
             }
             case "remove":
@@ -374,14 +423,14 @@ public class DuelManager implements Listener {
                     player.sendMessage("§cNo cage has been set for arena '" + arenaId + "'.");
                     return true;
                 }
-                player.teleport(bound.center.clone().add(0, 1, 0));
+                player.teleport(bound.center);
                 player.sendMessage("§aTeleported to the Cage Duel arena for §b" + arenaId + "§a!");
                 return true;
             }
             default: {
                 player.sendMessage("§8===================================================");
                 player.sendMessage("§6§l           ⚔ CAGE ARENA MANAGEMENT ⚔");
-                player.sendMessage("§e/ffa cage add [arena] §7- Create & protect glass cage at your location");
+                player.sendMessage("§e/ffa cage add [arena] [radius] §7- Create compact glass cage at your location");
                 player.sendMessage("§e/ffa cage tp <arena> §7- Teleport to the arena cage");
                 player.sendMessage("§e/ffa cage remove <arena> §7- Remove arena cage");
                 player.sendMessage("§8===================================================");
@@ -390,12 +439,10 @@ public class DuelManager implements Listener {
         }
     }
 
-    public void setupGlassCage(Player admin, String arenaId) {
+    public void setupGlassCage(Player admin, String arenaId, int radiusXZ, int heightY) {
         Location center = admin.getLocation().getBlock().getLocation().add(0.5, 0.0, 0.5);
-        int radiusXZ = getConfig().getInt("cage.radius-xz", 8);
-        int heightY = getConfig().getInt("cage.height-y", 6);
 
-        // 1. Build the physical Glass Cage right at the admin's location on the arena ground
+        // 1. Build the physical Glass Cage right at the admin's exact location on the arena ground
         createGlassCage(center, radiusXZ, heightY);
 
         // 2. Save location to duels.yml
@@ -405,11 +452,12 @@ public class DuelManager implements Listener {
         CageBound bound = new CageBound(arenaId, center, radiusXZ, heightY);
         cageBounds.put(arenaId.toLowerCase(Locale.ROOT), bound);
 
+        int totalWidth = radiusXZ * 2 + 1;
         admin.sendMessage("§8===================================================");
         admin.sendMessage("§6§l           ⚔ CAGE DUEL ARENA CREATED ⚔");
-        admin.sendMessage("§aSuccessfully generated indestructible Glass Cage for §b" + arenaId + "§a!");
-        admin.sendMessage("§7• Location: §eX: " + center.getBlockX() + ", Y: " + center.getBlockY() + ", Z: " + center.getBlockZ());
-        admin.sendMessage("§7• Dimensions: §e" + (radiusXZ * 2 + 1) + "x" + (radiusXZ * 2 + 1) + " §7(Height: §e" + heightY + "§7)");
+        admin.sendMessage("§aSuccessfully generated compact Glass Cage for §b" + arenaId + "§a!");
+        admin.sendMessage("§7• Center: §eX: " + center.getBlockX() + ", Y: " + center.getBlockY() + ", Z: " + center.getBlockZ());
+        admin.sendMessage("§7• Dimensions: §e" + totalWidth + "x" + totalWidth + " §7(Height: §e" + heightY + "§7)");
         admin.sendMessage("§7• Protection: §aActive (Indestructible in all arenas including build mode)");
         admin.sendMessage("§8===================================================");
         admin.playSound(admin.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
@@ -421,7 +469,6 @@ public class DuelManager implements Listener {
         if (bound != null) {
             World w = Bukkit.getWorld(bound.world);
             if (w != null) {
-                // Clear glass
                 for (int y = bound.minY; y <= bound.maxY; y++) {
                     for (int x = bound.minX; x <= bound.maxX; x++) {
                         for (int z = bound.minZ; z <= bound.maxZ; z++) {
@@ -448,15 +495,16 @@ public class DuelManager implements Listener {
 
         Material glassMat = Material.GLASS;
 
-        // Floor
+        // 1. Floor at cy - 1 (directly underneath player feet)
+        int floorY = cy - 1;
         for (int x = cx - radius; x <= cx + radius; x++) {
             for (int z = cz - radius; z <= cz + radius; z++) {
-                world.getBlockAt(x, cy, z).setType(glassMat, false);
+                world.getBlockAt(x, floorY, z).setType(glassMat, false);
             }
         }
 
-        // Walls and Interior
-        for (int y = cy + 1; y <= cy + height; y++) {
+        // 2. Walls and Interior (from cy to cy + height - 1)
+        for (int y = cy; y < cy + height; y++) {
             for (int x = cx - radius; x <= cx + radius; x++) {
                 for (int z = cz - radius; z <= cz + radius; z++) {
                     boolean isWall = (x == cx - radius || x == cx + radius || z == cz - radius || z == cz + radius);
@@ -469,8 +517,8 @@ public class DuelManager implements Listener {
             }
         }
 
-        // Roof
-        int roofY = cy + height + 1;
+        // 3. Roof at cy + height
+        int roofY = cy + height;
         for (int x = cx - radius; x <= cx + radius; x++) {
             for (int z = cz - radius; z <= cz + radius; z++) {
                 world.getBlockAt(x, roofY, z).setType(glassMat, false);
@@ -493,16 +541,16 @@ public class DuelManager implements Listener {
     public void sendHelp(Player player) {
         player.sendMessage("§8===================================================");
         player.sendMessage("§6§l               FLIXCORE FFA DUELS");
-        player.sendMessage("§e/duels §7- Send an open cage duel challenge to your arena");
-        player.sendMessage("§e/duels <kit> §7- Send an open cage duel challenge with a kit");
+        player.sendMessage("§e/duels §7- Challenge your current arena (auto-detects kit)");
+        player.sendMessage("§e/duels <kit> §7- Challenge your current arena with a kit");
         player.sendMessage("§e/duel <player> [kit] §7- Challenge a specific player");
         player.sendMessage("§e/duel accept [player] §7- Accept a pending duel challenge");
         player.sendMessage("§e/duel decline <player> §7- Decline a duel challenge");
         player.sendMessage("§e/duel forfeit §7- Surrender the active duel");
         if (player.hasPermission("ffa.admin") || player.hasPermission("ffa.event.admin")) {
-            player.sendMessage("§e/ffa cage add [arena] §7- Set glass duel cage at your location");
+            player.sendMessage("§e/ffa cage add [arena] [radius] §7- Set glass duel cage at your feet");
         }
-        player.sendMessage("§7Supported Kits: §bnethpot§7, §btank§7, or any arena kit");
+        player.sendMessage("§7Supported Kits: §bsword§7, §bnethpot§7, §btank§7, or any arena kit");
         player.sendMessage("§8===================================================");
     }
 
@@ -522,13 +570,10 @@ public class DuelManager implements Listener {
         String arenaId = senderArena.get();
 
         CageBound bound = cageBounds.get(arenaId.toLowerCase(Locale.ROOT));
-        if (bound == null) {
-            // Check if cage configured in duels.yml or fallback
-            Location cageLoc = getOrCreateCageCenter(arenaId);
-            if (cageLoc == null) {
-                sender.sendMessage("§cThe Cage Duel arena for '" + arenaId + "' has not been set yet! An admin must run /ffa cage add " + arenaId + ".");
-                return;
-            }
+        if (bound == null || bound.center == null || bound.center.getWorld() == null) {
+            sender.sendMessage("§8[§6⚔§8] §cThe Cage Duel arena for '§e" + arenaId + "§c' has not been set yet!");
+            sender.sendMessage("§7An admin must stand in the arena and run: §a/ffa cage add " + arenaId);
+            return;
         }
 
         if (activeDuels.containsKey(sender.getUniqueId())) {
@@ -556,10 +601,10 @@ public class DuelManager implements Listener {
         );
         openArenaInvites.put(arenaId.toLowerCase(Locale.ROOT), invite);
 
-        // Interactive Clickable Button for Opponents
+        // Interactive Clickable Button for Opponents (No typing needed!)
         TextComponent acceptBtn = new TextComponent("  §a§l▶ [✔ CLICK HERE TO ACCEPT] ◀");
         acceptBtn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/duel accept " + sender.getName()));
-        acceptBtn.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to instantly accept " + sender.getName() + "'s duel challenge!").create()));
+        acceptBtn.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to instantly accept " + sender.getName() + "'s " + kitName + " duel!").create()));
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (api.arenaOf(p).isPresent() && api.arenaOf(p).get().equalsIgnoreCase(arenaId)) {
@@ -610,6 +655,13 @@ public class DuelManager implements Listener {
 
         if (arenaName == null) {
             sender.sendMessage("§cNo active FFA arena is available for duels. Create or enable an arena first.");
+            return;
+        }
+
+        CageBound bound = cageBounds.get(arenaName.toLowerCase(Locale.ROOT));
+        if (bound == null || bound.center == null || bound.center.getWorld() == null) {
+            sender.sendMessage("§8[§6⚔§8] §cThe Cage Duel arena for '§e" + arenaName + "§c' has not been set yet!");
+            sender.sendMessage("§7An admin must stand in the arena and run: §a/ffa cage add " + arenaName);
             return;
         }
 
@@ -721,13 +773,6 @@ public class DuelManager implements Listener {
             return;
         }
 
-        if (!api.isInArena(sender)) {
-            api.join(sender, invite.arenaId());
-        }
-        if (!api.isInArena(target)) {
-            api.join(target, invite.arenaId());
-        }
-
         startDuel(sender, target, invite.kitName(), invite.arenaId());
     }
 
@@ -747,28 +792,20 @@ public class DuelManager implements Listener {
 
     public void startDuel(Player p1, Player p2, String kitName, String arenaId) {
         CageBound bound = cageBounds.get(arenaId.toLowerCase(Locale.ROOT));
-        Location center;
-        int radiusXZ;
-        int heightY;
-
-        if (bound != null && bound.center != null && bound.center.getWorld() != null) {
-            center = bound.center;
-            radiusXZ = bound.radius;
-            heightY = bound.height;
-        } else {
-            // Find genuine safe ground inside arena (NEVER elevated to the sky!)
-            center = getOrCreateCageCenter(arenaId);
-            if (center == null || center.getWorld() == null) {
-                p1.sendMessage("§cThe Cage Duel arena has not been set yet! An admin must run /ffa cage add " + arenaId + ".");
-                p2.sendMessage("§cThe Cage Duel arena has not been set yet! An admin must run /ffa cage add " + arenaId + ".");
-                return;
-            }
-            radiusXZ = getConfig().getInt("cage.radius-xz", 8);
-            heightY = getConfig().getInt("cage.height-y", 6);
-            createGlassCage(center, radiusXZ, heightY);
-            bound = new CageBound(arenaId, center, radiusXZ, heightY);
-            cageBounds.put(arenaId.toLowerCase(Locale.ROOT), bound);
+        if (bound == null || bound.center == null || bound.center.getWorld() == null) {
+            String msg = "§8[§6⚔§8] §cThe Cage Duel arena for '§e" + arenaId + "§c' has not been set yet! An admin must run §a/ffa cage add " + arenaId + " §cat the cage location.";
+            p1.sendMessage(msg);
+            p2.sendMessage(msg);
+            return;
         }
+
+        Location center = bound.center;
+        World world = center.getWorld();
+        int cx = center.getBlockX();
+        int cy = center.getBlockY();
+        int cz = center.getBlockZ();
+        int radiusXZ = bound.radius;
+        int heightY = bound.height;
 
         ActiveCageDuel duel = new ActiveCageDuel(
                 p1.getUniqueId(), p1.getName(),
@@ -779,16 +816,15 @@ public class DuelManager implements Listener {
         activeDuels.put(p1.getUniqueId(), duel);
         activeDuels.put(p2.getUniqueId(), duel);
 
-        // Teleport fighters to opposite sides of the glass cage on the arena ground
-        Location loc1 = center.clone().add(-radiusXZ + 2.5, 1.0, 0.5);
-        Location loc2 = center.clone().add(radiusXZ - 2.5, 1.0, 0.5);
-        loc1.setYaw(-90f);
-        loc2.setYaw(90f);
+        // Teleport both fighters directly onto the glass floor inside the cage (Never under or outside!)
+        int spawnOffset = Math.max(1, radiusXZ - 1);
+        Location loc1 = new Location(world, cx - spawnOffset + 0.5, cy, cz + 0.5, -90f, 0f);
+        Location loc2 = new Location(world, cx + spawnOffset + 0.5, cy, cz + 0.5, 90f, 0f);
 
         p1.teleport(loc1);
         p2.teleport(loc2);
 
-        // Prepare fighters
+        // Prepare fighters with requested kit (sword, nethpot, tank, etc.)
         prepareFighter(p1, kitName);
         prepareFighter(p2, kitName);
 
@@ -909,7 +945,10 @@ public class DuelManager implements Listener {
         } else {
             boolean applied = TwoCubeFFAAPI.get().applyKit(player, kitName);
             if (!applied) {
-                if (!TwoCubeFFAAPI.get().applyKit(player, "nethpot")) {
+                // If specific kit failed, fallback to player's arena kit, then nethpot, then tank
+                TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+                String fallback = api.arenaOf(player).flatMap(a -> api.arena(a)).filter(ar -> !ar.kits().isEmpty()).map(ar -> ar.kits().get(0)).orElse("nethpot");
+                if (!api.applyKit(player, fallback)) {
                     equipTankKit(player);
                 }
             }
@@ -1035,7 +1074,7 @@ public class DuelManager implements Listener {
                         winner.setHealth(winner.getMaxHealth());
                         winner.setFoodLevel(20);
                         if (TwoCubeFFAAPI.get().isInArena(winner)) {
-                            String primaryKit = (arena != null && !arena.kits().isEmpty()) ? arena.kits().get(0) : "nethpot";
+                            String primaryKit = (arena != null && !arena.kits().isEmpty()) ? arena.kits().get(0) : "sword";
                             TwoCubeFFAAPI.get().applyKit(winner, primaryKit);
                         }
                         winner.sendMessage("§aReturned to the arena!");
@@ -1127,59 +1166,11 @@ public class DuelManager implements Listener {
         }
     }
 
-    private Location getOrCreateCageCenter(String arenaId) {
-        FileConfiguration config = getConfig();
-        String path = "arenas." + arenaId.toLowerCase(Locale.ROOT) + ".cage";
-        if (config.contains(path + ".world")) {
-            World w = Bukkit.getWorld(config.getString(path + ".world"));
-            if (w != null) {
-                return new Location(w, config.getDouble(path + ".x"), config.getDouble(path + ".y"), config.getDouble(path + ".z"));
-            }
-        }
-
-        // Locate real ground inside the combat arena (NEVER in the sky!)
-        TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
-        ArenaSnapshot arena = api.arena(arenaId).orElse(null);
-        if (arena != null && arena.spawn() != null) {
-            Location sp = arena.spawn();
-            World w = sp.getWorld();
-            int targetX = sp.getBlockX() + 15;
-            int targetZ = sp.getBlockZ() + 15;
-            Location safeGround = findSafeGround(w, targetX, targetZ, sp.getBlockY() + 5, w.getMinHeight());
-            if (safeGround != null) {
-                return safeGround;
-            }
-            return sp.clone().add(15, 0, 15);
-        }
-        return null;
-    }
-
-    private Location findSafeGround(World world, int x, int z, int startY, int minY) {
-        startY = Math.min(startY, world.getMaxHeight() - 2);
-        minY = Math.max(minY, world.getMinHeight());
-
-        for (int y = startY; y >= minY; y--) {
-            Block ground = world.getBlockAt(x, y, z);
-            Material mat = ground.getType();
-            if (mat == Material.BARRIER || mat == Material.STRUCTURE_VOID || mat == Material.LIGHT || mat.isAir()) {
-                continue;
-            }
-            if (!mat.isSolid()) continue;
-
-            Block b1 = world.getBlockAt(x, y + 1, z);
-            Block b2 = world.getBlockAt(x, y + 2, z);
-            if (!b1.getType().isSolid() && b1.getType() != Material.BARRIER && !b2.getType().isSolid() && b2.getType() != Material.BARRIER) {
-                return new Location(world, x + 0.5, y + 1, z + 0.5);
-            }
-        }
-        return null;
-    }
-
     private void drawCagePerimeter(ActiveCageDuel duel, Particle particle) {
         World world = duel.cageCenter.getWorld();
         if (world == null) return;
 
-        double y = duel.cageCenter.getY() + 1.1;
+        double y = duel.cageCenter.getY() + 0.1;
         double minX = duel.cageCenter.getX() - duel.radiusXZ;
         double maxX = duel.cageCenter.getX() + duel.radiusXZ;
         double minZ = duel.cageCenter.getZ() - duel.radiusXZ;
@@ -1212,7 +1203,7 @@ public class DuelManager implements Listener {
     private boolean isKnownKit(String kit) {
         if (kit == null) return false;
         String k = kit.toLowerCase(Locale.ROOT);
-        if (k.equals("nethpot") || k.equals("tank")) return true;
+        if (k.equals("sword") || k.equals("nethpot") || k.equals("tank")) return true;
         TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
         for (KitSnapshot snap : api.kits()) {
             if (snap.id().equalsIgnoreCase(k)) return true;
@@ -1240,7 +1231,7 @@ public class DuelManager implements Listener {
                 }
             }
             // Kits
-            for (String kit : Arrays.asList("nethpot", "tank")) {
+            for (String kit : Arrays.asList("sword", "nethpot", "tank")) {
                 if (kit.startsWith(current)) completions.add(kit);
             }
             // Online players
@@ -1273,7 +1264,7 @@ public class DuelManager implements Listener {
                     }
                 }
             } else {
-                for (String kit : Arrays.asList("nethpot", "tank")) {
+                for (String kit : Arrays.asList("sword", "nethpot", "tank")) {
                     if (kit.startsWith(current)) completions.add(kit);
                 }
                 TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
