@@ -102,6 +102,10 @@ public final class q {
       }
    }
 
+   public void clearProtection(UUID var1) {
+      this.gC.remove(var1);
+   }
+
    public void ag(Player var1) {
       p var3 = this.gw;
       if (this.gw.gt.getConfig().getBoolean("killstreak-rewards.enabled", true)) {

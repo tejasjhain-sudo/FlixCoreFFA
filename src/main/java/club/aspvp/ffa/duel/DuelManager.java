@@ -28,6 +28,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -142,6 +143,16 @@ public class DuelManager implements Listener {
         }
     }
 
+    public boolean isInDuel(Player player) {
+        if (player == null) return false;
+        return activeDuels.containsKey(player.getUniqueId());
+    }
+
+    public boolean isInDuel(UUID uuid) {
+        if (uuid == null) return false;
+        return activeDuels.containsKey(uuid);
+    }
+
     public boolean isInsideAnyCage(Location loc) {
         if (loc == null) return false;
         for (CageBound bound : cageBounds.values()) {
@@ -213,25 +224,24 @@ public class DuelManager implements Listener {
 
     public String resolveDefaultKit(Player player, String arenaId) {
         TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
-        // 1. Check player's currently selected kit in FFA
-        if (player != null) {
-            String selected = api.selectedKit(player);
-            if (selected != null && !selected.isEmpty()) {
-                return selected.toLowerCase(Locale.ROOT);
-            }
-        }
-        // 2. Check arena's linked kits
+        // 1. Check arena's linked kits first (e.g. sword arena -> sword kit)
         if (arenaId != null) {
             ArenaSnapshot arena = api.arena(arenaId).orElse(null);
             if (arena != null && !arena.kits().isEmpty()) {
                 return arena.kits().get(0).toLowerCase(Locale.ROOT);
             }
+            if (isKnownKit(arenaId)) {
+                return arenaId.toLowerCase(Locale.ROOT);
+            }
         }
-        // 3. Check if the arena name matches a kit (e.g. "sword", "nethpot", "tank")
-        if (arenaId != null && isKnownKit(arenaId)) {
-            return arenaId.toLowerCase(Locale.ROOT);
+        // 2. Check player's currently selected kit in FFA
+        if (player != null) {
+            String selected = api.selectedKit(player);
+            if (selected != null && !selected.isEmpty() && isKnownKit(selected)) {
+                return selected.toLowerCase(Locale.ROOT);
+            }
         }
-        // 4. Fallback from duels.yml config
+        // 3. Fallback from duels.yml config
         return getConfig().getString("default-kit", "sword");
     }
 
@@ -816,6 +826,12 @@ public class DuelManager implements Listener {
         activeDuels.put(p1.getUniqueId(), duel);
         activeDuels.put(p2.getUniqueId(), duel);
 
+        // Ensure both fighters are registered in arena session
+        if (plugin.getSessionManager() != null) {
+            plugin.getSessionManager().eG.put(p1.getUniqueId(), arenaId);
+            plugin.getSessionManager().eG.put(p2.getUniqueId(), arenaId);
+        }
+
         // Teleport both fighters directly onto the glass floor inside the cage (Never under or outside!)
         int spawnOffset = Math.max(1, radiusXZ - 1);
         Location loc1 = new Location(world, cx - spawnOffset + 0.5, cy, cz + 0.5, -90f, 0f);
@@ -892,6 +908,16 @@ public class DuelManager implements Listener {
                     count--;
                 } else {
                     duel.frozen = false;
+                    p1.setInvulnerable(false);
+                    p2.setInvulnerable(false);
+                    p1.setNoDamageTicks(0);
+                    p2.setNoDamageTicks(0);
+                    p1.setMaximumNoDamageTicks(20);
+                    p2.setMaximumNoDamageTicks(20);
+                    if (plugin.getSpawnProtectionManager() != null) {
+                        plugin.getSpawnProtectionManager().clearProtection(p1.getUniqueId());
+                        plugin.getSpawnProtectionManager().clearProtection(p2.getUniqueId());
+                    }
                     sendDuelTitle(p1, "§a§lFIGHT!", "§eGlory to the victor!", 0, 30, 10);
                     sendDuelTitle(p2, "§a§lFIGHT!", "§eGlory to the victor!", 0, 30, 10);
                     p1.playSound(p1.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1.2f);
@@ -929,12 +955,19 @@ public class DuelManager implements Listener {
 
     private void prepareFighter(Player player, String kitName) {
         player.setGameMode(GameMode.SURVIVAL);
+        player.setInvulnerable(false);
+        player.setNoDamageTicks(0);
+        player.setMaximumNoDamageTicks(20);
         player.setHealth(player.getMaxHealth());
         player.setFoodLevel(20);
         player.setSaturation(20f);
         player.setFireTicks(0);
         for (PotionEffect pe : player.getActivePotionEffects()) {
             player.removePotionEffect(pe.getType());
+        }
+
+        if (plugin.getSpawnProtectionManager() != null) {
+            plugin.getSpawnProtectionManager().clearProtection(player.getUniqueId());
         }
 
         player.getInventory().clear();
@@ -1084,7 +1117,7 @@ public class DuelManager implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         Player victim = (event.getEntity() instanceof Player p) ? p : null;
         Player damager = null;
@@ -1097,15 +1130,21 @@ public class DuelManager implements Listener {
         if (victim != null) {
             ActiveCageDuel vDuel = activeDuels.get(victim.getUniqueId());
             if (vDuel != null) {
+                // If countdown is active, freeze all damage
                 if (vDuel.frozen) {
                     event.setCancelled(true);
                     return;
                 }
                 // Only opponent can damage victim!
-                if (damager == null || !damager.getUniqueId().equals(vDuel.getOpponentUUID(victim.getUniqueId()))) {
+                UUID oppId = vDuel.getOpponentUUID(victim.getUniqueId());
+                if (damager == null || !damager.getUniqueId().equals(oppId)) {
                     event.setCancelled(true);
                     return;
                 }
+                // Legit duel fight! Force un-cancel any previous cancellation (WorldGuard, region protection, etc.)
+                event.setCancelled(false);
+                victim.setNoDamageTicks(0);
+                return;
             }
         }
 
@@ -1117,8 +1156,26 @@ public class DuelManager implements Listener {
                     return;
                 }
                 // Damager in duel can ONLY damage their opponent!
-                if (victim == null || !victim.getUniqueId().equals(dDuel.getOpponentUUID(damager.getUniqueId()))) {
+                UUID oppId = dDuel.getOpponentUUID(damager.getUniqueId());
+                if (victim == null || !victim.getUniqueId().equals(oppId)) {
                     event.setCancelled(true);
+                    return;
+                }
+                event.setCancelled(false);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onGenericDamage(EntityDamageEvent event) {
+        if (event instanceof EntityDamageByEntityEvent) return; // Handled in onEntityDamage
+        if (event.getEntity() instanceof Player victim) {
+            ActiveCageDuel duel = activeDuels.get(victim.getUniqueId());
+            if (duel != null) {
+                if (duel.frozen) {
+                    event.setCancelled(true);
+                } else {
+                    event.setCancelled(false);
                 }
             }
         }

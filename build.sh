@@ -73,6 +73,8 @@ echo "[2/4] Compiling modified source classes (club.aspvp)..."
   "$DIR/src/main/java/club/aspvp/ffa/internal/s.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/o3w8.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/q.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/internal/w.java" \
+  "$DIR/src/main/java/club/aspvp/ffa/internal/r.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/n2x6.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/w7k3.java" \
   "$DIR/src/main/java/club/aspvp/ffa/internal/v8m5.java" \

@@ -502,6 +502,14 @@ public class TwoCubeFFA extends JavaPlugin {
       return this.duelManager;
    }
 
+   public club.aspvp.ffa.internal.b getSessionManager() {
+      return this.v8m5;
+   }
+
+   public club.aspvp.ffa.internal.q getSpawnProtectionManager() {
+      return this.r5n0;
+   }
+
    private void printStartupBanner() {
       String[] banner = new String[]{
          "§6  ███████╗██╗     ██╗██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗",

@@ -103,7 +103,7 @@ public final class r {
    }
 
    public final void x7q9(CommandSender var1, String var2, Map<String, String> var3) {
-      List var4;
+      List<String> var4;
       if ((var4 = gD.get(var2)) != null) {
          for (String var10 : var4) {
             this.gF.m4z1(var1, this.x7q9(var10, var3), Map.of());
@@ -128,23 +128,27 @@ public final class r {
 
    public static String ab2c(p var0, String var1, String var2) {
       FileConfiguration var3;
+      String val;
       if ((var3 = ab2c(var0)) != null && var3.isSet(var1)) {
-         return var3.getString(var1, var2);
+         val = var3.getString(var1, var2);
       } else if ((var3 = var0.h("messages.yml")) != null && var3.isSet(var1)) {
-         return var3.getString(var1, var2);
+         val = var3.getString(var1, var2);
       } else {
          FileConfiguration var4;
-         return (var4 = var0.h("messages_en.yml")) == null ? var2 : var4.getString(var1, var2);
+         val = (var4 = var0.h("messages_en.yml")) == null ? var2 : var4.getString(var1, var2);
       }
+      if (val != null && var1.equals("prefix")) {
+         val = val.replace("TwoCubeFFA", "FlixCore FFA").replace("twocubeffa", "flixcoreffa").replace("TwoCube", "FlixCore");
+      }
+      return val;
    }
 
    private String x7q9(String var1, Map<String, String> var2) {
-      HashMap var5;
-      (var5 = new HashMap(var2)).putIfAbsent("prefix", ab2c(this.gE, "prefix", ""));
-      var1 = var1;
+      Map<String, String> var5 = new HashMap<>(var2);
+      var5.putIfAbsent("prefix", ab2c(this.gE, "prefix", ""));
 
-      for (Entry var3 : var5.entrySet()) {
-         var1 = var1.replace("%" + (String)var3.getKey() + "%", (CharSequence)var3.getValue());
+      for (Entry<String, String> var3 : var5.entrySet()) {
+         var1 = var1.replace("%" + var3.getKey() + "%", var3.getValue());
       }
 
       return var1;

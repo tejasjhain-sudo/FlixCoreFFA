@@ -69,6 +69,11 @@ public class FlixFFATransformer {
                     remappedCount++;
                 } else if (!name.endsWith(".class")) {
                     // Resource file (will be overridden by resourcesDir if present)
+                    if (name.endsWith(".yml") || name.endsWith(".txt") || name.endsWith(".json")) {
+                        String content = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+                        content = sanitizeBranding(content);
+                        bytes = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                    }
                     jarEntries.put(name, bytes);
                 } else {
                     jarEntries.put(name, bytes);
@@ -106,6 +111,11 @@ public class FlixFFATransformer {
                     String relPath = resRoot.relativize(p).toString().replace('\\', '/');
                     try {
                         byte[] bytes = Files.readAllBytes(p);
+                        if (relPath.endsWith(".yml") || relPath.endsWith(".txt") || relPath.endsWith(".json")) {
+                            String content = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+                            content = sanitizeBranding(content);
+                            bytes = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                        }
                         jarEntries.put(relPath, bytes);
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
@@ -145,6 +155,17 @@ public class FlixFFATransformer {
         System.out.println("=================================================");
     }
 
+    public static String sanitizeBranding(String text) {
+        if (text == null) return null;
+        return text.replace("TwoCubeFFA", "FlixCore FFA")
+                   .replace("twocubeffa", "flixcoreffa")
+                   .replace("twocube.in", "flixstudios.in")
+                   .replace("TwoCube", "FlixCore")
+                   .replace("twocube", "flixcore")
+                   .replace("in.twocube.ffa", "club.aspvp.ffa")
+                   .replace("in/twocube/ffa", "club/aspvp/ffa");
+    }
+
     /**
      * Remaps classes using ASM ClassRemapper and clears debug tables (Layer 1).
      */
@@ -171,6 +192,29 @@ public class FlixFFATransformer {
                     public void visitParameter(String name, int access) {
                         // Strip MethodParameters (Layer 1)
                     }
+
+                    @Override
+                    public void visitLdcInsn(Object value) {
+                        if (value instanceof String s) {
+                            super.visitLdcInsn(sanitizeBranding(s));
+                            return;
+                        }
+                        super.visitLdcInsn(value);
+                    }
+
+                    @Override
+                    public void visitInvokeDynamicInsn(String name, String descriptor, Handle bootstrapMethodHandle, Object... bootstrapMethodArguments) {
+                        Object[] newArgs = new Object[bootstrapMethodArguments.length];
+                        for (int i = 0; i < bootstrapMethodArguments.length; i++) {
+                            Object arg = bootstrapMethodArguments[i];
+                            if (arg instanceof String s) {
+                                newArgs[i] = sanitizeBranding(s);
+                            } else {
+                                newArgs[i] = arg;
+                            }
+                        }
+                        super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, newArgs);
+                    }
                 };
             }
         };
@@ -195,6 +239,11 @@ public class FlixFFATransformer {
             }
             if (mn.parameters != null) {
                 mn.parameters.clear();
+            }
+            for (org.objectweb.asm.tree.AbstractInsnNode insn : mn.instructions) {
+                if (insn instanceof org.objectweb.asm.tree.LdcInsnNode ldc && ldc.cst instanceof String s) {
+                    ldc.cst = sanitizeBranding(s);
+                }
             }
         }
 

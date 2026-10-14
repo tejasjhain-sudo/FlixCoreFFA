@@ -8,10 +8,19 @@ public final class w {
    private static final Pattern hl = Pattern.compile("&#([A-Fa-f0-9]{6})");
    private static final Pattern hm = Pattern.compile("(?<![&<:])#([A-Fa-f0-9]{6})");
 
+   public static String sanitizeBranding(String text) {
+      if (text == null) return null;
+      return text.replace("TwoCubeFFA", "FlixCore FFA")
+                 .replace("twocubeffa", "flixcoreffa")
+                 .replace("TwoCube", "FlixCore")
+                 .replace("twocube", "flixcore");
+   }
+
    public static String n(String var0) {
       if (var0 == null) {
          return "";
       } else {
+         var0 = sanitizeBranding(var0);
          var0 = p(var0);
          Matcher var3 = hl.matcher(var0);
          StringBuffer var1 = new StringBuffer();
@@ -29,6 +38,7 @@ public final class w {
       if (var0 == null) {
          return "";
       } else {
+         var0 = sanitizeBranding(var0);
          var0 = p(var0);
          var0 = ab2c(
             ab2c(

@@ -266,13 +266,20 @@ public final class w7k3 implements Listener {
                            : null
                      )
                )
-               != null
-            && (this.bt.w(var2) || this.bt.w(var8))) {
-            if (!this.ab2c(var2, var8)) {
-               var1.setCancelled(true);
-            } else {
-               if (this.bv.af(var2) || this.bv.af(var8)) {
+               != null) {
+            club.aspvp.ffa.TwoCubeFFA plugin = club.aspvp.ffa.TwoCubeFFA.getPlugin(club.aspvp.ffa.TwoCubeFFA.class);
+            if (plugin != null && plugin.getDuelManager() != null) {
+               if (plugin.getDuelManager().isInDuel(var2) || plugin.getDuelManager().isInDuel(var8)) {
+                  return; // In active cage duel: DuelManager handles all authorizations!
+               }
+            }
+            if (this.bt.w(var2) || this.bt.w(var8)) {
+               if (!this.ab2c(var2, var8)) {
                   var1.setCancelled(true);
+               } else {
+                  if (this.bv.af(var2) || this.bv.af(var8)) {
+                     var1.setCancelled(true);
+                  }
                }
             }
          }
@@ -281,6 +288,11 @@ public final class w7k3 implements Listener {
 
    @EventHandler
    public final void onMove(PlayerMoveEvent var1) {
+      Player var5 = var1.getPlayer();
+      club.aspvp.ffa.TwoCubeFFA plugin = club.aspvp.ffa.TwoCubeFFA.getPlugin(club.aspvp.ffa.TwoCubeFFA.class);
+      if (plugin != null && plugin.getDuelManager() != null && plugin.getDuelManager().isInDuel(var5)) {
+         return; // Cage duel movement is handled exclusively by DuelManager!
+      }
       p var2 = this.bq;
       if (this.bq.gt.getConfig().getBoolean("settings.prevent-arena-region-exit", true)) {
          if (var1.getTo() != null) {
@@ -291,7 +303,6 @@ public final class w7k3 implements Listener {
                || var4.getBlockX() != var3.getBlockX()
                || var4.getBlockY() != var3.getBlockY()
                || var4.getBlockZ() != var3.getBlockZ()) {
-               Player var5 = var1.getPlayer();
                this.bt.v(var5).flatMap(this.bs::arena).map(j::S).ifPresent(var3x -> {
                   if (!var3x.m4z1(var1.getTo())) {
                      var1.setCancelled(true);
@@ -411,6 +422,10 @@ public final class w7k3 implements Listener {
       ignoreCancelled = true
    )
    public final void onTeleport(PlayerTeleportEvent var1) {
+      club.aspvp.ffa.TwoCubeFFA plugin = club.aspvp.ffa.TwoCubeFFA.getPlugin(club.aspvp.ffa.TwoCubeFFA.class);
+      if (plugin != null && plugin.getDuelManager() != null && plugin.getDuelManager().isInDuel(var1.getPlayer())) {
+         return; // Cage duel teleports are handled exclusively by DuelManager!
+      }
       p var2 = this.bq;
       if (this.bq.gt.getConfig().getBoolean("settings.prevent-arena-region-exit", true) && var1.getTo() != null && this.bt.w(var1.getPlayer())) {
          this.bt.v(var1.getPlayer()).flatMap(this.bs::arena).ifPresent(var2x -> {
