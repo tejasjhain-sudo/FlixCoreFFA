@@ -65,6 +65,11 @@ public class DuelManager implements Listener {
         int offset = (args.length > 0 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels"))) ? 1 : 0;
         String sub = (args.length > offset) ? args[offset].toLowerCase(Locale.ROOT) : "help";
 
+        if (args.length <= offset || sub.equals("help")) {
+            sendHelp(player);
+            return true;
+        }
+
         switch (sub) {
             case "accept": {
                 if (args.length <= offset + 1) {
@@ -127,6 +132,20 @@ public class DuelManager implements Listener {
         }
     }
 
+    public void sendHelp(Player player) {
+        player.sendMessage("§8===================================================");
+        player.sendMessage("§6§l               FLIXCORE FFA DUELS");
+        player.sendMessage("§e/duel <player> [kit] §7- Challenge a player to a cage duel");
+        player.sendMessage("§e/duel accept <player> §7- Accept a pending duel challenge");
+        player.sendMessage("§e/duel decline <player> §7- Decline a duel challenge");
+        player.sendMessage("§e/duel forfeit §7- Surrender the active duel");
+        if (player.hasPermission("ffa.admin") || player.hasPermission("ffa.event.admin")) {
+            player.sendMessage("§e/duel setcage <arena> §7- Set permanent cage center at your location");
+        }
+        player.sendMessage("§7Supported Kits: §bnethpot§7, §btank§7, or any arena kit");
+        player.sendMessage("§8===================================================");
+    }
+
     public void sendInvite(Player sender, Player target, String kitName) {
         if (sender.getUniqueId().equals(target.getUniqueId())) {
             sender.sendMessage("§cYou cannot challenge yourself to a duel!");
@@ -137,14 +156,25 @@ public class DuelManager implements Listener {
         Optional<String> senderArena = api.arenaOf(sender);
         Optional<String> targetArena = api.arenaOf(target);
 
-        if (senderArena.isEmpty()) {
-            sender.sendMessage("§cYou must be inside an FFA arena to challenge players to a duel.");
+        String arenaName = null;
+        if (senderArena.isPresent()) {
+            arenaName = senderArena.get();
+        } else if (targetArena.isPresent()) {
+            arenaName = targetArena.get();
+        } else {
+            for (ArenaSnapshot a : api.arenas()) {
+                if (a.enabled()) {
+                    arenaName = a.id();
+                    break;
+                }
+            }
+        }
+
+        if (arenaName == null) {
+            sender.sendMessage("§cNo active FFA arena is available for duels. Create or enable an arena first.");
             return;
         }
-        if (targetArena.isEmpty() || !targetArena.get().equalsIgnoreCase(senderArena.get())) {
-            sender.sendMessage("§c" + target.getName() + " is not playing in your arena!");
-            return;
-        }
+
         if (activeDuels.containsKey(sender.getUniqueId())) {
             sender.sendMessage("§cYou are already inside an active cage duel!");
             return;
@@ -157,7 +187,7 @@ public class DuelManager implements Listener {
         DuelInvite invite = new DuelInvite(
                 sender.getUniqueId(), sender.getName(),
                 target.getUniqueId(), target.getName(),
-                senderArena.get(), kitName,
+                arenaName, kitName,
                 System.currentTimeMillis()
         );
 
@@ -172,16 +202,16 @@ public class DuelManager implements Listener {
             target.sendMessage("§8===================================================");
             target.sendMessage("§6§l             GLADIATOR CAGE DUEL");
             target.sendMessage("§e" + sender.getName() + " §7has challenged you to an In-Arena Cage Duel!");
-            target.sendMessage("§7Kit: §b" + kitName + " §8| §7Arena: §e" + senderArena.get());
-            target.sendMessage("§aType §e/ffa duel accept " + sender.getName() + " §ato accept!");
-            target.sendMessage("§cType §e/ffa duel decline " + sender.getName() + " §cto decline.");
+            target.sendMessage("§7Kit: §b" + kitName + " §8| §7Arena: §e" + arenaName);
+            target.sendMessage("§aType §e/duel accept " + sender.getName() + " §ato accept!");
+            target.sendMessage("§cType §e/duel decline " + sender.getName() + " §cto decline.");
             target.sendMessage("§8===================================================");
         } else {
             for (String line : rawRecv) {
                 target.sendMessage(color(line
                         .replace("%player%", sender.getName())
                         .replace("%kit%", kitName)
-                        .replace("%arena%", senderArena.get())));
+                        .replace("%arena%", arenaName)));
             }
         }
     }
@@ -206,13 +236,77 @@ public class DuelManager implements Listener {
             return;
         }
 
-        TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
-        if (!api.isInArena(sender) || !api.isInArena(target)) {
-            target.sendMessage("§cBoth players must be in the arena to begin the duel.");
+        if (activeDuels.containsKey(sender.getUniqueId()) || activeDuels.containsKey(target.getUniqueId())) {
+            target.sendMessage("§cOne of the players is already participating in an active duel.");
             return;
         }
 
+        TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+        if (!api.isInArena(sender)) {
+            api.join(sender, invite.arenaId());
+        }
+        if (!api.isInArena(target)) {
+            api.join(target, invite.arenaId());
+        }
+
         startDuel(sender, target, invite.kitName(), invite.arenaId());
+    }
+
+    public List<String> tabCompleteDuel(CommandSender sender, String[] args) {
+        int offset = (args.length > 0 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels"))) ? 1 : 0;
+        int relativeLen = args.length - offset;
+        List<String> completions = new ArrayList<>();
+
+        if (relativeLen == 1) {
+            String current = args[args.length - 1].toLowerCase(Locale.ROOT);
+            for (String sub : Arrays.asList("accept", "decline", "forfeit", "leave", "help")) {
+                if (sub.startsWith(current)) completions.add(sub);
+            }
+            if (sender.hasPermission("ffa.admin") && "setcage".startsWith(current)) {
+                completions.add("setcage");
+            }
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (sender instanceof Player && p.getUniqueId().equals(((Player) sender).getUniqueId())) continue;
+                if (p.getName().toLowerCase(Locale.ROOT).startsWith(current)) {
+                    completions.add(p.getName());
+                }
+            }
+        } else if (relativeLen == 2) {
+            String first = args[offset].toLowerCase(Locale.ROOT);
+            String current = args[args.length - 1].toLowerCase(Locale.ROOT);
+
+            if (first.equals("accept") || first.equals("decline")) {
+                if (sender instanceof Player p) {
+                    Map<UUID, DuelInvite> invites = pendingInvites.get(p.getUniqueId());
+                    if (invites != null) {
+                        for (DuelInvite inv : invites.values()) {
+                            if (inv.senderName().toLowerCase(Locale.ROOT).startsWith(current)) {
+                                completions.add(inv.senderName());
+                            }
+                        }
+                    }
+                }
+            } else if (first.equals("setcage")) {
+                TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+                for (ArenaSnapshot a : api.arenas()) {
+                    if (a.id().toLowerCase(Locale.ROOT).startsWith(current)) {
+                        completions.add(a.id());
+                    }
+                }
+            } else {
+                List<String> kits = Arrays.asList("nethpot", "tank");
+                for (String k : kits) {
+                    if (k.startsWith(current)) completions.add(k);
+                }
+                TwoCubeFFAAPI api = TwoCubeFFAAPI.get();
+                for (var kitSnap : api.kits()) {
+                    if (kitSnap.id().toLowerCase(Locale.ROOT).startsWith(current) && !kits.contains(kitSnap.id().toLowerCase(Locale.ROOT))) {
+                        completions.add(kitSnap.id());
+                    }
+                }
+            }
+        }
+        return completions;
     }
 
     public void declineInvite(Player target, String senderName) {

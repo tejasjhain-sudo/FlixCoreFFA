@@ -246,6 +246,11 @@ public class TwoCubeFFA extends JavaPlugin {
                      if (args.length > 1 && args[0].equalsIgnoreCase("koth") && this.eventManager != null) {
                         return this.eventManager.tabCompleteKoth(sender, args);
                      }
+                     if (args.length > 1 && (args[0].equalsIgnoreCase("duel") || args[0].equalsIgnoreCase("duels")) && this.duelManager != null) {
+                        String[] duelArgs = new String[args.length - 1];
+                        System.arraycopy(args, 1, duelArgs, 0, duelArgs.length);
+                        return this.duelManager.tabCompleteDuel(sender, duelArgs);
+                     }
                      java.util.List<String> list = originalTab.onTabComplete(sender, command, alias, args);
                      boolean isConsole = (sender instanceof org.bukkit.command.ConsoleCommandSender) || !(sender instanceof org.bukkit.entity.Player);
                      if (args.length == 1 && (isConsole || sender.hasPermission("ffa.admin"))) {
@@ -327,6 +332,7 @@ public class TwoCubeFFA extends JavaPlugin {
 
             if ((var5 = this.getCommand("duel")) != null) {
                var5.setExecutor((sender, command, label, args) -> this.duelManager != null && this.duelManager.handleDuelCommand(sender, args));
+               var5.setTabCompleter((sender, command, alias, args) -> this.duelManager != null ? this.duelManager.tabCompleteDuel(sender, args) : java.util.Collections.emptyList());
             }
 
             Bukkit.getPluginManager()
