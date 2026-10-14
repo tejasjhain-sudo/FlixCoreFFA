@@ -1,0 +1,99 @@
+gui-settings:
+  pre-title: flixcoreffa Tags Loading...
+  title: '&0&lTags &8| &7%flixcoreffa_tag_page%/%flixcoreffa_tag_total%'
+  size: 45
+  sort-mode-text: "&fDefault"
+
+tag-item:
+  material: NAME_TAG
+  locked-material: BARRIER
+  selected-material: NAME_TAG
+  amount: 1
+  name: '%tag%'
+  glow: false
+  locked-glow: false
+  selected-glow: true
+
+  status:
+    selected: "&aSelected"
+    unlocked: "&aUnlocked"
+    locked: "&cLocked"
+
+  lore:
+    - ""
+    - " &8◦ Tag: %tag%"
+    - " &8◦ Name: &f%tag_name%"
+    - " &8◦ Status: %flixcoreffa_tag_status%"
+    - ""
+    - " &#4287f5› Left click to select"
+
+  selected-lore:
+    - ""
+    - " &8◦ Tag: %tag%"
+    - " &8◦ Name: &f%tag_name%"
+    - " &f✦ Status: %flixcoreffa_tag_status%"
+    - ""
+    - " &#4287f5› Already selected"
+
+  locked-lore:
+    - ""
+    - " &8◦ Tag: %tag%"
+    - " &8◦ Name: &f%tag_name%"
+    - " &8◦ Status: %flixcoreffa_tag_status%"
+    - " &8◦ Permission: &c%flixcoreffa_tag_permission%"
+    - ""
+    - " &#FC0000› Locked tag"
+
+next-page:
+  material: ARROW
+  slot: 41
+  name: '&#4287f5&lNext Page'
+  lore:
+    - ""
+    - " &8◦ Sort: %sort_mode%"
+    - " &8◦ Page: &f%flixcoreffa_tag_page% &8/ &f%flixcoreffa_tag_total%"
+    - ""
+    - " &#4287f5› Click to go next page"
+
+previous-page:
+  material: ARROW
+  slot: 39
+  name: '&#4287f5&lPrevious Page'
+  lore:
+    - ""
+    - " &8◦ Sort: %sort_mode%"
+    - " &8◦ Page: &f%flixcoreffa_tag_page% &8/ &f%flixcoreffa_tag_total%"
+    - ""
+    - " &#4287f5› Click to go previous page"
+
+clear-tag:
+  slot: 3
+  material: BARRIER
+  name: '&#FC0000&lClear Tag'
+  lore:
+    - ""
+    - " &8◦ Remove your active tag"
+    - " &8◦ Current Tag: %flixcoreffa_tag%"
+    - " &8◦ Current Name: &f%flixcoreffa_tag_name%"
+    - ""
+    - " &#4287f5› Click to clear"
+
+search:
+  slot: 4
+  material: OAK_SIGN
+  name: '&#FCE300&lSearch'
+  lore:
+    - ""
+    - " &8◦ Search is currently disabled"
+    - " &8◦ Reserved for future use"
+    - ""
+    - " &#4287f5› Coming soon"
+
+extra-items:
+  border-item:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: ' '
+    slots:
+      - 0-8
+      - 36-44

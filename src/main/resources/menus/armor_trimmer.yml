@@ -1,0 +1,79 @@
+# =============================================================================
+# FlixCore FFA - Armor Trimmer GUI
+# Opens from the Kit Editor armor trim button.
+# =============================================================================
+
+enabled: true
+
+permissions:
+  enabled: false
+  node: ffa.kiteditor
+
+selection_gui:
+  title: "&0&nTrim Editor - %armor%"
+  size: 27
+
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    display_name: " "
+
+  pattern_selector:
+    slot: 10
+    display_name: "&#DDA0DD&l%pattern% Pattern"
+    selected_prefix: "&a> &f"
+    unselected_prefix: "&7- "
+    lore_header: "&7Choose a trim pattern:"
+    lore_footer: "&eLeft click to cycle"
+
+  preview_item:
+    slot: 13
+    display_name: "&#7DFF50&l%armor% Preview"
+    show_selected_info: true
+    lore:
+      - ""
+      - "&7Pattern: &f%pattern%"
+      - "&7Material: &f%material%"
+      - ""
+      - "&aClick to apply trim to this armor piece."
+
+  material_selector:
+    slot: 16
+    display_name: "&#7CB8FF&l%material% Material"
+    selected_prefix: "&a> &f"
+    unselected_prefix: "&7- "
+    lore_header: "&7Choose a trim material:"
+    lore_footer: "&eLeft/right click to cycle"
+
+  back_button:
+    slot: 22
+    material: ARROW
+    display_name: "&cBack"
+    lore:
+      - "&7Return to kit editor."
+
+pattern:
+  options:
+    SENTRY: { display_name: "Sentry", icon_material: SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE }
+    DUNE: { display_name: "Dune", icon_material: DUNE_ARMOR_TRIM_SMITHING_TEMPLATE }
+    COAST: { display_name: "Coast", icon_material: COAST_ARMOR_TRIM_SMITHING_TEMPLATE }
+    WILD: { display_name: "Wild", icon_material: WILD_ARMOR_TRIM_SMITHING_TEMPLATE }
+    WARD: { display_name: "Ward", icon_material: WARD_ARMOR_TRIM_SMITHING_TEMPLATE }
+    EYE: { display_name: "Eye", icon_material: EYE_ARMOR_TRIM_SMITHING_TEMPLATE }
+    VEX: { display_name: "Vex", icon_material: VEX_ARMOR_TRIM_SMITHING_TEMPLATE }
+    TIDE: { display_name: "Tide", icon_material: TIDE_ARMOR_TRIM_SMITHING_TEMPLATE }
+    SNOUT: { display_name: "Snout", icon_material: SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE }
+    RIB: { display_name: "Rib", icon_material: RIB_ARMOR_TRIM_SMITHING_TEMPLATE }
+    SPIRE: { display_name: "Spire", icon_material: SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE }
+
+material:
+  options:
+    QUARTZ: { display_name: "Quartz", icon_material: QUARTZ }
+    IRON: { display_name: "Iron", icon_material: IRON_INGOT }
+    NETHERITE: { display_name: "Netherite", icon_material: NETHERITE_INGOT }
+    REDSTONE: { display_name: "Redstone", icon_material: REDSTONE }
+    COPPER: { display_name: "Copper", icon_material: COPPER_INGOT }
+    GOLD: { display_name: "Gold", icon_material: GOLD_INGOT }
+    EMERALD: { display_name: "Emerald", icon_material: EMERALD }
+    DIAMOND: { display_name: "Diamond", icon_material: DIAMOND }
+    LAPIS: { display_name: "Lapis", icon_material: LAPIS_LAZULI }
+    AMETHYST: { display_name: "Amethyst", icon_material: AMETHYST_SHARD }

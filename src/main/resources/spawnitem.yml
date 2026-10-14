@@ -1,0 +1,58 @@
+# FlixCore FFA spawn item configuration.
+# Installed path: plugins/FlixCoreFFA/spawnitem.yml
+#
+# Format:
+# - name: Unique item id.
+# - slot: Inventory slot from 0-35.
+# - command: Player command executed on right-click. Slash is optional.
+# - permission: Optional receive/use permission. Empty or missing means everyone.
+#
+# Item options:
+# 1) Simple item: material, display_name, lore
+# 2) Exact Bukkit serialized item:
+#    item:
+#      ==: org.bukkit.inventory.ItemStack
+#      v: 3953
+#      type: DIAMOND
+
+enabled: true
+give-on-join: true
+give-on-ffa-leave: true
+clear-configured-slots: true
+
+spawn-items:
+  - name: ffa
+    slot: 1
+    material: Iron_Sword 
+    display_name: "&#64FB08&lFREE FOR ALL"
+    lore:
+      - "&7Open the FFA arena list."
+      - "&eRight-click to open."
+    command: "/ffa"
+
+  - name: kit-editor
+    slot: 3
+    material: AMETHYST_SHARD
+    display_name: "&#A855F7&lKIT EDITOR"
+    lore:
+      - "&7Edit and manage kit layouts."
+      - "&eRight-click to open."
+    command: "/kiteditor"
+
+  - name: settings
+    slot: 5
+    material: CLOCK
+    display_name: "&#FFD166&lSETTINGS"
+    lore:
+      - "&7Open plugin settings."
+      - "&eRight-click to open."
+    command: "/settings"
+    
+  - name: tokenshop
+    slot: 7
+    material: SUNFLOWER
+    display_name: "&#FFD166&lTOKEN SHOP"
+    lore:
+      - "&7Open the token shop."
+      - "&eRight-click to open."
+    command: "/tokenshop"

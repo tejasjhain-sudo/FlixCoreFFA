@@ -1,0 +1,38 @@
+# =============================================================================
+# FlixCore FFA - Announcements
+# Periodic public messages for the server.
+# Supports legacy colors, RGB hex colors, MiniMessage, PlaceholderAPI, and FFA placeholders.
+# Use <center>text</center> if you want centered chat styling handled by compatible chat plugins.
+# =============================================================================
+
+announcements:
+  entries:
+    discord:
+      enabled: true
+      interval: 300
+      type: CHAT
+      play-sound: true
+      sound: ENTITY_PLAYER_LEVELUP
+      volume: 1.0
+      pitch: 1.0
+      lines:
+        - ""
+        - "<center>&#7580DD&lDISCORD</center>"
+        - ""
+        - "<center>&fHey %player_name%, join our &#7580DD&nDiscord Server&f.</center>"
+        - "<center>&7Use &f/discord &7to connect with the community.</center>"
+        - ""
+
+    store:
+      enabled: false
+      interval: 420
+      type: CHAT
+      play-sound: true
+      sound: ENTITY_EXPERIENCE_ORB_PICKUP
+      volume: 0.8
+      pitch: 1.2
+      lines:
+        - ""
+        - "<center>&#FFD166&lSTORE</center>"
+        - "<center>&fSupport the network at &#FFD166store.flixmine.net</center>"
+        - ""

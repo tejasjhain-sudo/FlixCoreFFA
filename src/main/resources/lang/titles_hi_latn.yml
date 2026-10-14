@@ -1,0 +1,37 @@
+# FlixCore FFA title language override: Hindi Latin
+titles:
+  join:
+    enabled: true
+    title: "&#7CFFCB&lFIGHT"
+    subtitle: "&fArena: &#2EB6FF%ffa_arena%"
+    fade-in: 10
+    stay: 40
+    fade-out: 10
+  kill:
+    enabled: true
+    title: "&#52FF00&l+1 KILL"
+    subtitle: "&fKillstreak: &#2EB6FF%ffa_killstreak%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+  respawn:
+    enabled: true
+    title: "&#2EB6FF&lRESPAWN"
+    subtitle: "&fKit wapas mil gaya: &#7CFFCB%ffa_kit%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+  kiteditor-leave:
+    enabled: true
+    title: "&#2EB6FF&lKIT EDITOR"
+    subtitle: "&fEditor band. Aapka kit save hai."
+    fade-in: 5
+    stay: 25
+    fade-out: 5
+  spawnpvp-enter:
+    enabled: true
+    title: "&#2EB6FF&lSPAWNPVP"
+    subtitle: "&fIs zone me PvP enabled hai."
+    fade-in: 5
+    stay: 35
+    fade-out: 10

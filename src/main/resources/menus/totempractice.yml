@@ -1,0 +1,37 @@
+# =============================================================================
+# FlixCore FFA - Totem Practice Menu
+# Edit this file to customize the /totempractice GUI.
+# Installed path: plugins/FlixCoreFFA/menus/totempractice.yml
+# =============================================================================
+
+gui:
+  # Inventory title.
+  title: "&0&nᴛᴏᴛᴇᴍᴘʀᴀᴄᴛɪᴄᴇ"
+  # Inventory size. Must be a multiple of 9 between 9 and 54.
+  size: 27
+  # Material used as the clickable moving target.
+  totem-item: TOTEM_OF_UNDYING
+  # Display name for the clickable target.
+  totem-name: "&#FFD166&lTap the Totem"
+  # Lore shown on the clickable target.
+  totem-lore:
+    - "&7Tap as quickly as possible."
+    - "&7Every correct click increases your score."
+
+game:
+  # Points given for every correct click.
+  points-per-click: 1
+  progressive-difficulty:
+    enabled: true
+    start-delay: 4
+    min-delay: 0
+    score-interval: 3
+    delay-reduction: 2
+  # Extra random movement behavior reserved for future expansion.
+  movement-randomness: 1
+  # Play a click sound after a correct hit.
+  play-sound: true
+  # Show the current score in the actionbar.
+  show-score-actionbar: true
+  # Close the GUI if the player clicks the wrong slot.
+  close-on-miss: true

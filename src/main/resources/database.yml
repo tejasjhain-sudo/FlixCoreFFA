@@ -1,0 +1,65 @@
+# =============================================================================
+# FlixCore FFA - Database Configuration
+# Main supported storage engines: SQLITE and MYSQL.
+# MongoDB and Redis sections are provided for future expansion / network alignment.
+# =============================================================================
+
+# Database type: SQLITE or MYSQL.
+database: SQLITE
+
+# Cached data refresh interval for player stats and lightweight lookup data.
+cache-refresh-seconds: 15
+
+# Reserved for future team stat systems.
+team-cache-refresh-seconds: 30
+
+mongodb:
+  # Optional full MongoDB connection URI. Reserved for future storage support.
+  uri: ""
+  address: 127.0.0.1
+  port: 27017
+  database: FlixCoreFFA
+  authentication:
+    enabled: false
+    username: admin
+    password: pass
+    database: admin
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  database: FlixCoreFFA
+  user: root
+  password: ""
+  params: useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+  pool:
+    maximum-pool-size: 10
+    connection-timeout-ms: 10000
+
+sqlite:
+  # Path can be relative to the server root, e.g. plugins/FlixCoreFFA/data/flixcoreffa.db,
+  # or just a file name, e.g. flixcoreffa.db, which will be stored inside the plugin folder.
+  file: plugins/FlixCoreFFA/data/flixcoreffa.db
+
+redis:
+  # Reserved for future cache/pubsub support.
+  uri: ""
+  host: 127.0.0.1
+  port: 6379
+  database: 0
+  username: ""
+  password: ""
+  ssl: false
+  timeout-ms: 5000
+  key-prefix: "flixcoreffa:"
+  pool:
+    max-total: 16
+    max-idle: 8
+    min-idle: 1
+    test-on-borrow: true
+    test-while-idle: true
+
+snapshots:
+  # Save kits.yml and arenas.yml settings snapshots into the SQL database.
+  # Arena snapshots include lobby, spawn, region, settings, and linked kits from arenas.yml.
+  save-kits-and-arenas: true

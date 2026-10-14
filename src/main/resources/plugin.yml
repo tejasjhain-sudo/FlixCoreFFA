@@ -1,0 +1,148 @@
+name: FlixCoreFFA
+version: 1.0.6
+main: club.aspvp.ffa.FlixCoreFFA
+api-version: '1.21.4'
+folia-supported: true
+load: POSTWORLD
+softdepend:
+  - PlaceholderAPI
+  - Multiverse-Core
+  - MultiWorld
+  - My_Worlds
+  - AdvancedSlimePaper
+  - SlimeWorldManager
+  - WorldGuard
+libraries:
+  - com.zaxxer:HikariCP:5.1.0
+  - org.xerial:sqlite-jdbc:3.46.1.0
+  - com.mysql:mysql-connector-j:9.0.0
+  - org.slf4j:slf4j-api:2.0.13
+commands:
+  ffa:
+    description: FlixCore FFA main command
+    usage: /ffa help
+    aliases: [flixffa, flixcoreffa, arena, freeforall, ffaarena, flixcoreffa]
+  flixffa:
+    description: FlixCore FFA main command
+    usage: /flixffa help
+    aliases: [flixcoreffa]
+  kiteditor:
+    description: Open the FlixCore FFA kit editor for a kit
+    usage: /kiteditor [kit]
+    aliases: [kte, ffakiteditor]
+  totempractice:
+    description: Open the FlixCore FFA totem practice menu
+    usage: /totempractice
+    aliases: [totem, ffatotem]
+  leave:
+    description: Leave the active FFA arena
+    usage: /leave
+    aliases: [leaveffa, ffaleave]
+  spawn:
+    description: Teleport to the FlixCore FFA lobby
+    usage: /spawn
+    aliases: [ffaspawn]
+  settings:
+    description: Open the FlixCore FFA player settings menu
+    usage: /settings
+    aliases: [setting, preferences, prefs, ffasettings]
+  hat:
+    description: Wear the item in your hand as a hat
+    usage: /hat
+  tags:
+    description: Open the FlixCore FFA tags menu
+    usage: /tags
+    aliases: [tag, ffatags]
+  chatcolour:
+    description: Open the FlixCore FFA chat colour menu
+    usage: /chatcolour
+    aliases: [chatcolor, chatcolors, chatcolours, ffachatcolor, ffachatcolour]
+  token:
+    description: View and manage FlixCore FFA tokens
+    usage: /token
+    aliases: [tokens, ffatoken, ffatokens]
+permissions:
+  ffa.admin:
+    description: Grants access to every FlixCore FFA command and bypass.
+    default: op
+  ffa.command.bypass:
+    description: Allows commands while playing inside an FFA arena.
+    default: op
+  ffa.join:
+    default: true
+  ffa.leave:
+    default: true
+  ffa.spawn:
+    default: true
+  ffa.stats:
+    default: true
+  ffa.top:
+    default: true
+  ffa.kit:
+    default: true
+  ffa.reload:
+    default: op
+  ffa.arena.create:
+    default: op
+  ffa.arena.delete:
+    default: op
+  ffa.arena.edit:
+    default: op
+  ffa.stats.reset:
+    default: op
+  ffa.build:
+    default: op
+  ffa.spectate:
+    default: op
+  ffa.scoreboard.reload:
+    default: op
+  ffa.totempractice:
+    default: true
+  ffa.kiteditor:
+    default: op
+  ffa.kiteditor.personal:
+    default: true
+  ffa.menu:
+    default: true
+  ffa.settings:
+    default: op
+  ffa.settings.menu:
+    description: Allows opening the normal player settings menu.
+    default: true
+  ffa.hat:
+    description: Allows using /hat.
+    default: true
+  ffa.tags:
+    default: true
+  ffa.chatcolour:
+    default: true
+  ffa.chatcustomization.reload:
+    default: op
+  ffa.token:
+    default: true
+  ffa.token.admin:
+    default: op
+  flixcoreffa.tokens.4x:
+    description: Gives 4x kill tokens.
+    default: false
+  flixcoreffa.tokens.6x:
+    description: Gives 6x kill tokens.
+    default: false
+  flixcoreffa.tokens.10x:
+    description: Gives 10x kill tokens.
+    default: false
+  flixcoreffa.tokens.4x:
+    description: Gives 4x kill tokens (legacy).
+    default: false
+  flixcoreffa.tokens.6x:
+    description: Gives 6x kill tokens (legacy).
+    default: false
+  flixcoreffa.tokens.10x:
+    description: Gives 10x kill tokens (legacy).
+    default: false
+  ffa.spawnpvp:
+    description: Allows setting up and managing the SpawnPvP circle.
+    default: op
+  ffa.afk:
+    description: Allows creating and managing AFK reward zones.
+    default: op

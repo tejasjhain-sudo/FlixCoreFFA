@@ -1,0 +1,120 @@
+chat-colours:
+  purple:
+    display-name: '&5Purple'
+    code: '&5'
+    material: PURPLE_DYE
+    permission: flixcoreffa.chatcolour.purple
+
+  dark-green:
+    display-name: '&2Dark Green'
+    code: '&2'
+    material: GREEN_DYE
+    permission: flixcoreffa.chatcolour.darkgreen
+
+  dark-red:
+    display-name: '&4Dark Red'
+    code: '&4'
+    material: RED_DYE
+    permission: flixcoreffa.chatcolour.darkred
+
+  dark-blue:
+    display-name: '&1Dark Blue'
+    code: '&1'
+    material: BLUE_DYE
+    permission: flixcoreffa.chatcolour.darkblue
+
+  black:
+    display-name: '&0Black'
+    code: '&0'
+    material: BLACK_DYE
+    permission: flixcoreffa.chatcolour.black
+
+  dark-gray:
+    display-name: '&8Dark Gray'
+    code: '&8'
+    material: LIGHT_GRAY_DYE
+    permission: flixcoreffa.chatcolour.darkgray
+
+  light-purple:
+    display-name: '&dLight Purple'
+    code: '&d'
+    material: MAGENTA_DYE
+    permission: flixcoreffa.chatcolour.lightpurple
+
+  cyan:
+    display-name: '&#00FFFFCyan'
+    code: '&#00FFFF'
+    material: CYAN_DYE
+    permission: flixcoreffa.chatcolour.cyan
+
+  lime:
+    display-name: '&#32CD32Lime'
+    code: '&#32CD32'
+    material: LIME_DYE
+    permission: flixcoreffa.chatcolour.lime
+
+  sky-blue:
+    display-name: '&#87CEEBSky Blue'
+    code: '&#87CEEB'
+    material: LIGHT_BLUE_DYE
+    permission: flixcoreffa.chatcolour.skyblue
+
+  coral:
+    display-name: '&#FF7F50Coral'
+    code: '&#FF7F50'
+    material: ORANGE_DYE
+    permission: flixcoreffa.chatcolour.coral
+
+  rose:
+    display-name: '&#FF4F81Rose'
+    code: '&#FF4F81'
+    material: PINK_DYE
+    permission: flixcoreffa.chatcolour.rose
+
+  emerald:
+    display-name: '&#50C878Emerald'
+    code: '&#50C878'
+    material: GREEN_DYE
+    permission: flixcoreffa.chatcolour.emerald
+
+  ruby:
+    display-name: '&#E0115FRuby'
+    code: '&#E0115F'
+    material: RED_DYE
+    permission: flixcoreffa.chatcolour.ruby
+
+  ocean:
+    display-name: '&#1CA3ECOcean'
+    code: '&#1CA3EC'
+    material: CYAN_DYE
+    permission: flixcoreffa.chatcolour.ocean
+
+  sunset:
+    display-name: '&#FF5E13Sunset'
+    code: '&#FF5E13'
+    material: ORANGE_DYE
+    permission: flixcoreffa.chatcolour.sunset
+
+  neon-green:
+    display-name: '&#39FF14Neon Green'
+    code: '&#39FF14'
+    material: LIME_DYE
+    permission: flixcoreffa.chatcolour.neongreen
+
+  hot-pink:
+    display-name: '&#FF69B4Hot Pink'
+    code: '&#FF69B4'
+    material: PINK_DYE
+    permission: flixcoreffa.chatcolour.hotpink
+
+  ice:
+    display-name: '&#AEEFFFIce'
+    code: '&#AEEFFF'
+    material: LIGHT_BLUE_DYE
+    permission: flixcoreffa.chatcolour.ice
+
+  royal:
+    display-name: '&#4169E1Royal Blue'
+    code: '&#4169E1'
+    material: BLUE_DYE
+    permission: flixcoreffa.chatcolour.royal

@@ -1,0 +1,59 @@
+# =============================================================================
+# FlixCore FFA - Cross Server Mode
+# Installed path: plugins/FlixCoreFFA/crossserver.yml
+#
+# This is the network foundation for multiple FFA servers sharing data through
+# the same database. Keep disabled unless every connected FFA server uses the
+# same MySQL database.yml storage.
+#
+# Important:
+# - For a network, use MYSQL in database.yml on every FFA server.
+# - Set server-id to the same server name used in Velocity/BungeeCord config.
+#   Velocity example:
+#     [servers]
+#     ffa-1 = "127.0.0.1:25566"
+#     ffa-2 = "127.0.0.1:25567"
+#   BungeeCord example:
+#     servers:
+#       ffa-1:
+#         address: 127.0.0.1:25566
+# - On the first FFA server use server-id: "ffa-1"
+# - On the second FFA server use server-id: "ffa-2"
+# - The plugin writes heartbeat data to the shared database so other servers
+#   can see whether a server is alive.
+# =============================================================================
+
+# Master switch. When false, the server behaves as a normal standalone FFA.
+enabled: false
+
+# Unique id for this physical server.
+# Recommended: match your Velocity/BungeeCord server key exactly.
+server-id: "ffa-1"
+
+# Request channel name stored in database rows for cross-server messages.
+channel: "flixcoreffa:requests"
+
+# Ignore requests older than this value.
+request-ttl-seconds: 30
+
+# How often this server should poll the database for pending cross-server work.
+poll-interval-ticks: 40
+
+features:
+  # Keep selected kit sync-ready across servers.
+  selected-kit-sync: true
+  # Stats already save to the shared database; keep this true for network stats.
+  stats-sync: true
+
+placeholders:
+  # Placeholder: %flixcoreffa_ping_<server-id>%
+  # Example: %flixcoreffa_ping_ffa-1%
+  # This is database heartbeat age, not a TCP Minecraft ping.
+  ping-format: "%ping%ms"
+  offline: "offline"
+  disabled: "disabled"
+
+messages:
+  server-offline: "%prefix%&cTarget FFA server is not online."
+  request-sent: "%prefix%&aCross-server request sent."
+  request-expired: "%prefix%&eCross-server request expired."

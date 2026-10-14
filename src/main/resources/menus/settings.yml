@@ -1,0 +1,152 @@
+# FlixCore FFA normal player settings menu.
+# Opened with /settings.
+#
+# Editable toggle keys:
+# - scoreboard       Hide/show the sidebar scoreboard.
+# - actionbar        Hide/show repeating actionbar messages.
+# - kill-messages   Hide/show kill, death, and AutoGG chat broadcasts.
+# - announcements   Hide/show automatic announcements.
+# - sounds          Disable/enable FFA feedback sounds.
+# - titles          Disable/enable FFA title/subtitle popups.
+#
+# Item placeholders:
+# %state%, %status%, %state_color%, %status_color%
+menu_title: '&0&lPLAYER SETTINGS'
+size: 45
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    display_name: '&7'
+    slots: [0-44]
+
+  scoreboard:
+    setting: scoreboard
+    enabled_material: LIME_DYE
+    disabled_material: GRAY_DYE
+    slot: 10
+    display_name: '&#2EB6FF&lScoreboard'
+    lore:
+      - '&8Personal Setting'
+      - ''
+      - '&7Show or hide your sidebar scoreboard.'
+      - '&7Current: %state_color%%state%'
+      - ''
+      - '&e> Click to toggle'
+    enabled-text: 'Enabled'
+    disabled-text: 'Disabled'
+    enabled-color: '&a'
+    disabled-color: '&c'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 1.2'
+
+  actionbar:
+    setting: actionbar
+    enabled_material: LIME_DYE
+    disabled_material: GRAY_DYE
+    slot: 12
+    display_name: '&#2EB6FF&lActionbar'
+    lore:
+      - '&8Personal Setting'
+      - ''
+      - '&7Show or hide actionbar status text.'
+      - '&7Current: %state_color%%state%'
+      - ''
+      - '&e> Click to toggle'
+    enabled-text: 'Enabled'
+    disabled-text: 'Disabled'
+    enabled-color: '&a'
+    disabled-color: '&c'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 1.2'
+
+  kill_messages:
+    setting: kill-messages
+    enabled_material: LIME_DYE
+    disabled_material: GRAY_DYE
+    slot: 14
+    display_name: '&#2EB6FF&lKill Messages'
+    lore:
+      - '&8Personal Setting'
+      - ''
+      - '&7Receive kill, death, and AutoGG chat lines.'
+      - '&7Current: %state_color%%state%'
+      - ''
+      - '&e> Click to toggle'
+    enabled-text: 'Enabled'
+    disabled-text: 'Disabled'
+    enabled-color: '&a'
+    disabled-color: '&c'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 1.2'
+
+  announcements:
+    setting: announcements
+    enabled_material: LIME_DYE
+    disabled_material: GRAY_DYE
+    slot: 16
+    display_name: '&#2EB6FF&lAnnouncements'
+    lore:
+      - '&8Personal Setting'
+      - ''
+      - '&7Receive automatic server announcements.'
+      - '&7Current: %state_color%%state%'
+      - ''
+      - '&e> Click to toggle'
+    enabled-text: 'Enabled'
+    disabled-text: 'Disabled'
+    enabled-color: '&a'
+    disabled-color: '&c'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 1.2'
+
+  sounds:
+    setting: sounds
+    enabled_material: LIME_DYE
+    disabled_material: GRAY_DYE
+    slot: 21
+    display_name: '&#2EB6FF&lSounds'
+    lore:
+      - '&8Personal Setting'
+      - ''
+      - '&7Receive FFA feedback sounds.'
+      - '&7Current: %state_color%%state%'
+      - ''
+      - '&e> Click to toggle'
+    enabled-text: 'Enabled'
+    disabled-text: 'Disabled'
+    enabled-color: '&a'
+    disabled-color: '&c'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 1.2'
+
+  titles:
+    setting: titles
+    enabled_material: LIME_DYE
+    disabled_material: GRAY_DYE
+    slot: 23
+    display_name: '&#2EB6FF&lTitles'
+    lore:
+      - '&8Personal Setting'
+      - ''
+      - '&7Receive FFA title and subtitle popups.'
+      - '&7Current: %state_color%%state%'
+      - ''
+      - '&e> Click to toggle'
+    enabled-text: 'Enabled'
+    disabled-text: 'Disabled'
+    enabled-color: '&a'
+    disabled-color: '&c'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 1.2'
+
+  close:
+    material: BARRIER
+    slot: 40
+    display_name: '&cClose'
+    lore:
+      - '&7Close this menu.'
+    close-after-click: true
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK 1 0.8'
+      - '[close]'

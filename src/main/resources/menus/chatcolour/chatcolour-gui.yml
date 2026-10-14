@@ -1,0 +1,80 @@
+gui-settings:
+  title: '&0&lChat Colour &8| &7%flixcoreffa_chatcolor_page%/%flixcoreffa_chatcolor_total%'
+  size: 45
+  sort-mode-text: "&fDefault"
+
+colour-item:
+  material: WHITE_DYE
+  locked-material: BARRIER
+  selected-material: GLOW_INK_SAC
+  name: '%flixcoreffa_chatcolor_chat_colour%%flixcoreffa_chatcolor_colour_name%'
+  glow: false
+  locked-glow: false
+  selected-glow: true
+  status:
+    selected: "&aSelected"
+    unlocked: "&aUnlocked"
+    locked: "&cLocked"
+  lore:
+    - ""
+    - " &8◦ Colour: %flixcoreffa_chatcolor_chat_colour%%flixcoreffa_chatcolor_colour_name%"
+    - " &8◦ Status: %flixcoreffa_chatcolor_status%"
+    - ""
+    - " &#4287f5› Left click to select"
+
+  selected-lore:
+    - ""
+    - " &8◦ Colour: %flixcoreffa_chatcolor_chat_colour%%flixcoreffa_chatcolor_colour_name%"
+    - " &f✦ Status: %flixcoreffa_chatcolor_status%"
+    - ""
+    - " &#4287f5› Already selected"
+
+  locked-lore:
+    - ""
+    - " &8◦ Colour: %flixcoreffa_chatcolor_chat_colour%%flixcoreffa_chatcolor_colour_name%"
+    - " &8◦ Status: %flixcoreffa_chatcolor_status%"
+    - " &8◦ Permission: &c%flixcoreffa_chatcolor_permission%"
+    - ""
+    - " &#FC0000› Locked colour"
+
+next-page:
+  material: ARROW
+  slot: 41
+  name: '&#4287f5&lNext Page'
+  lore:
+    - ""
+    - " &8◦ Sort: %sort_mode%"
+    - " &8◦ Page: &f%flixcoreffa_chatcolor_page% &8/ &f%flixcoreffa_chatcolor_total%"
+    - ""
+    - " &#4287f5› Click to go next page"
+
+previous-page:
+  material: ARROW
+  slot: 39
+  name: '&#4287f5&lPrevious Page'
+  lore:
+    - ""
+    - " &8◦ Sort: %sort_mode%"
+    - " &8◦ Page: &f%flixcoreffa_chatcolor_page% &8/ &f%flixcoreffa_chatcolor_total%"
+    - ""
+    - " &#4287f5› Click to go previous page"
+
+clear-colour:
+  slot: 4
+  material: MILK_BUCKET
+  name: '&#FC0000&lRemove Chat Colour'
+  lore:
+    - ""
+    - " &8◦ Remove your active chat colour"
+    - " &8◦ Current: &f%flixcoreffa_chatcolor_chat_colour%"
+    - ""
+    - " &#4287f5› Click to remove"
+
+extra-items:
+  border-item:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: ' '
+    slots:
+      - 0-8
+      - 36-44

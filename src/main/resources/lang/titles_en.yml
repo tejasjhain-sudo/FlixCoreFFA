@@ -1,0 +1,62 @@
+# =============================================================================
+# FlixCore FFA - Titles
+# Installed path: plugins/FlixCoreFFA/lang/titles_en.yml
+#
+# Edit every title/subtitle message here.
+# Command guides such as /ffa help are not stored in title/message files.
+# Supported formatting:
+# - Legacy colors: &a, &l, &r
+# - RGB hex: &#2EB6FF
+# - MiniMessage where supported by the text parser
+# - PlaceholderAPI and FlixCore FFA placeholders, for example %ffa_arena%
+#
+# Timing values are in ticks. 20 ticks = 1 second.
+# Set enabled: false on any section to disable that title.
+# =============================================================================
+
+titles:
+  # Shown when a player joins an FFA arena.
+  join:
+    enabled: true
+    title: "&#7CFFCB&lFIGHT"
+    subtitle: "&fArena: &#2EB6FF%ffa_arena%"
+    fade-in: 10
+    stay: 40
+    fade-out: 10
+
+  # Shown to the killer after a valid FFA kill.
+  kill:
+    enabled: true
+    title: "&#52FF00&l+1 KILL"
+    subtitle: "&fKillstreak: &#2EB6FF%ffa_killstreak%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+
+  # Shown after an FFA respawn when the kit is restored.
+  respawn:
+    enabled: true
+    title: "&#2EB6FF&lRESPAWNED"
+    subtitle: "&fKit restored: &#7CFFCB%ffa_kit%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+
+  # Shown when a player exits the personal/global kit editor.
+  kiteditor-leave:
+    enabled: true
+    title: "&#2EB6FF&lKIT EDITOR"
+    subtitle: "&fEditor closed. Your kit is saved."
+    fade-in: 5
+    stay: 25
+    fade-out: 5
+
+  # Shown once when a player enters the SpawnPvP zone.
+  spawnpvp-enter:
+    enabled: true
+    title: "&#2EB6FF&lSPAWNPVP"
+    subtitle: "&fPvP is enabled in this zone."
+    fade-in: 5
+    stay: 35
+    fade-out: 10
+

@@ -1,0 +1,37 @@
+# FlixCore FFA title language override: Arabic
+titles:
+  join:
+    enabled: true
+    title: "&#7CFFCB&lقاتل"
+    subtitle: "&fالساحة: &#2EB6FF%ffa_arena%"
+    fade-in: 10
+    stay: 40
+    fade-out: 10
+  kill:
+    enabled: true
+    title: "&#52FF00&l+1 قتل"
+    subtitle: "&fالسلسلة: &#2EB6FF%ffa_killstreak%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+  respawn:
+    enabled: true
+    title: "&#2EB6FF&lعودة"
+    subtitle: "&fتمت إعادة الكت: &#7CFFCB%ffa_kit%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+  kiteditor-leave:
+    enabled: true
+    title: "&#2EB6FF&lمحرر الكت"
+    subtitle: "&fتم إغلاق المحرر. الكت محفوظ."
+    fade-in: 5
+    stay: 25
+    fade-out: 5
+  spawnpvp-enter:
+    enabled: true
+    title: "&#2EB6FF&lSPAWNPVP"
+    subtitle: "&fPvP مفعل في هذه المنطقة."
+    fade-in: 5
+    stay: 35
+    fade-out: 10

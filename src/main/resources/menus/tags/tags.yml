@@ -1,0 +1,155 @@
+tags:
+  pride:
+    name: Pride
+    tag: '&7[&#FF0000&lL&#FF7200&lG&#FFCF00&lB&#00FF3B&lT&#00A2FF&lQ&#7D2EFF&l+&7]'
+    permission: flixcoreffa.tag.pride
+
+  gamer:
+    name: Gamer
+    tag: '&7[&a&lGAMER&7]'
+    permission: flixcoreffa.tag.gamer
+
+  sweat:
+    name: Sweat
+    tag: '&7[&c&lSWEAT&7]'
+    permission: flixcoreffa.tag.sweat
+
+  clown:
+    name: Clown
+    tag: '&7[&#FF0000&lCLOWN&7]'
+    permission: flixcoreffa.tag.clown
+
+  cracked:
+    name: Cracked
+    tag: '&7[&#FFD700&lCRACKED&7]'
+    permission: flixcoreffa.tag.cracked
+
+  zoom:
+    name: Zoom
+    tag: '&7[&#20BDFF&lZOOM&7]'
+    permission: flixcoreffa.tag.zoom
+
+  uwu:
+    name: UwU
+    tag: '&7[&#FF69B4&lUWU&7]'
+    permission: flixcoreffa.tag.uwu
+
+  troll:
+    name: Troll
+    tag: '&7[&#00FF00&lTROLL&7]'
+    permission: flixcoreffa.tag.troll
+
+  skull:
+    name: Skull
+    tag: '&7[&#808080&lSKULL&7]'
+    permission: flixcoreffa.tag.skull
+    
+  contributor:
+    name: contributor
+    tag: '&7[&#07e999&lCONTRIBUTOR&7]'
+    permission: flixcoreffa.tag.contributor
+
+  afk:
+    name: afk
+    tag: '&7[&7#CCCCCC&lA#EEEEEE&lF#CCCCCC&lK&7]'
+    permission: flixcoreffa.tag.afk
+
+  beast:
+    name: beast
+    tag: '&7[#FF9900&lB#FFBB00&lE#FFDD00&lA#FFFF00&lS#FFDD00&lT&7]'
+    permission: flixcoreffa.tag.beast
+
+  builder:
+    name: builder
+    tag: '&7[#33BBFF&lB#66CCFF&lU#99DDFF&lI#CCEEFF&lL#99DDFF&lD#66CCFF&lE#33BBFF&lR&7]'
+    permission: flixcoreffa.tag.builder
+
+  champion:
+    name: champion
+    tag: '&7[#FFE033&lC#FFEA66&lH#FFF499&lA#FFFFCC&lM#FFF499&lP#FFEA66&lI#FFE033&lO#FFD700&lN&7]'
+    permission: flixcoreffa.tag.champion
+  
+  donator:
+    name: donator
+    tag: '&7[#FF7FBB&lD#FF95C2&lO#FFABC9&lN#FFC1D0&lA#FFD7D7&lT#FFC1D0&lO#FFABC9&lR&7]'
+    permission: flixcoreffa.tag.donator
+
+  dragon:
+    name: dragon
+    tag: '&7[#FF6A00&lD#FF8F00&lR#FFB400&lA#FFD900&lG#FFB400&lO#FF8F00&lN&7]'
+    permission: flixcoreffa.tag.dragon
+
+  earth:
+    name: earth
+    tag: '&7[#8B4513&lE#A0522D&lA#B87333&lR#D2B48C&lT#B87333&lH&7]'
+    permission: flixcoreffa.tag.earth
+
+  farmer:
+    name: farmer
+    tag: '&7[#00AA00&lF#00BB00&lA#00CC00&lR#00DD00&lM#00EE00&lE#00FF00&lR&7]'
+    permission: flixcoreffa.tag.farmer
+
+  fire:
+    name: fire
+    tag: '&7[#FF5500&lF#FF7700&lI#FF9900&lR#FFBB00&lE&7]'
+    permission: flixcoreffa.tag.fire
+
+  god:
+    name: god 
+    tag: '&7[#FF5555&lG#FFAAAA&lO#FFFFFF&lD&7]'
+    permission: flixcoreffa.tag.god
+
+  hunter:
+    name: hunter
+    tag: '&7[#CD5C5C&lH#DC7C7C&lU#EB9C9C&lN#FABCBC&lT#EB9C9C&lE#DC7C7C&lR&7]'
+    permission: flixcoreffa.tag.hunter
+
+  ice:
+    name: ice
+    tag: '&7[#33EEFF&lI#66DDFF&lC#99CCFF&lE&7]'
+    permission: flixcoreffa.tag.ice
+
+  joker:
+    name: joker
+    tag: '&7[#9400D3&lJ#A020F0&lO#B550FF&lK#CA80FF&lE#DFB0FF&lR&7]'
+    permission: flixcoreffa.tag.joker
+
+  queen:
+    name: queen
+    tag: '&7[#FF7FBB&lQ#FF95C2&lU#FFABC9&lE#FFC1D0&lE#FFABC9&lN&7]'
+    permission: flixcoreffa.tag.queen
+
+  king:
+    name: king
+    tag: '&7[#FFE033&lK#FFEA66&lI#FFF499&lN#FFFFCC&lG&7]'
+    permission: flixcoreffa.tag.king
+
+  phoenix:
+    name: phoenix
+    tag: '&7[#FF4500&lP#FF6A00&lH#FF8F00&lO#FFB400&lE#FFD900&lN#FFB400&lI#FF8F00&lX7]'
+    permission: flixcoreffa.tag.phoenix
+
+  pvp:
+    name: pvp
+    tag: '&7[#FF3333&lP#FF6666&lV#FF9999&lP&7]'
+    permission: flixcoreffa.tag.pvp
+
+  lightning:
+    name: lightning
+    tag: '&7[#FFFF00&lL#FFEE00&lI#FFDD00&lG#FFCC00&lH#FFBB00&lT#FFAA00&lN#FF9900&lI#FF8800&lN#FF7700&lG&7]'
+    permission: flixcoreffa.tag.lightning
+
+  wind:
+    name: wind
+    tag: '&7[#99FFDD&lW#BBFFCC&lI#DDFFBB&lN#FFFFFF&lD&7]'
+    permission: flixcoreffa.tag.wind
+
+  richs:
+    name: rich
+    tag: '&7[#FFDF00&lR#FFEC00&lI#FFF200&lC#FFEC00&lH&7]'
+    permission: flixcoreffa.tag.rich
+
+  gamers:
+    name: gamer
+    tag: '&7[#00FF00&lG#55FF55&lA#AAFFAA&lM#FFFFFF&lE#AAFFAA&lR&7]'
+    permission: flixcoreffa.tag.gamer

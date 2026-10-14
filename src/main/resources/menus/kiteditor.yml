@@ -1,0 +1,78 @@
+# =============================================================================
+# FlixCore FFA - Kit Editor GUI
+# Open from /kiteditor <kitname> or /ffa kit editor.
+# =============================================================================
+
+title: "&0&nᴋɪᴛᴇᴅɪᴛᴏʀ &7- &f%kit%"
+size: 36
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  display_name: " "
+
+buttons:
+  save:
+    material: LIME_SHULKER_BOX
+    display_name: "&#7DFF50&lSave Kit"
+    slot: 30
+    lore:
+      - "&7Save your current inventory"
+      - "&7to your selected kit."
+  reset:
+    material: LIGHT_BLUE_SHULKER_BOX
+    display_name: "&#ADD8E6&lReset Kit"
+    slot: 31
+    lore:
+      - "&7Reload the saved kit"
+      - "&7back into your inventory."
+    cooldown: 2
+  leave:
+    material: RED_SHULKER_BOX
+    display_name: "&#FF5555&lExit Editor"
+    slot: 32
+    lore:
+      - "&7Close the kit editor."
+
+armor_slots:
+  helmet:
+    slot: 11
+    empty_material: ARMOR_STAND
+    display_name: "&#FFD166&lHelmet Slot"
+    empty_lore:
+      - "&7Helmet slot is empty."
+    filled_lore:
+      - "&aHelmet detected."
+  chestplate:
+    slot: 12
+    empty_material: ARMOR_STAND
+    display_name: "&#FFD166&lChestplate Slot"
+    empty_lore:
+      - "&7Chestplate slot is empty."
+    filled_lore:
+      - "&aChestplate detected."
+  leggings:
+    slot: 13
+    empty_material: ARMOR_STAND
+    display_name: "&#FFD166&lLeggings Slot"
+    empty_lore:
+      - "&7Leggings slot is empty."
+    filled_lore:
+      - "&aLeggings detected."
+  boots:
+    slot: 14
+    empty_material: ARMOR_STAND
+    display_name: "&#FFD166&lBoots Slot"
+    empty_lore:
+      - "&7Boots slot is empty."
+    filled_lore:
+      - "&aBoots detected."
+
+offhand_slot:
+  slot: 15  
+  empty_material: LIGHT_GRAY_DYE
+  display_name: "&#6EE7F9&lOffhand Slot"
+  empty_lore:
+    - "&7Offhand slot is empty."
+  filled_lore:
+    - "&aOffhand item detected."

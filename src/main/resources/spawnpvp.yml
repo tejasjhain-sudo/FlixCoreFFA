@@ -1,0 +1,80 @@
+# =============================================================================
+# FlixCore FFA - SpawnPvP
+# Lets you allow PvP inside an irregular spawn shape marked with one block type.
+#
+# Setup:
+# 1. Run /ffa spawnpvp 1 and right-click the first corner of your setup area.
+# 2. Run /ffa spawnpvp 2 and right-click the opposite corner.
+# 3. Build a visible closed outline inside those corners using one block/slab type.
+# 4. Hold that same block/slab in your hand.
+# 5. Run /ffa spawnpvp block select.
+# 6. Matching marker blocks outside the selected corners are ignored.
+# =============================================================================
+
+# Master switch for SpawnPvP.
+enabled: true
+
+# If true, FlixCore FFA automatically allows PvP inside the saved SpawnPvP shape
+# even if WorldGuard or another protection listener cancelled the hit first.
+# WorldGuard is already listed as a softdepend so FlixCore FFA can apply this late.
+protection-bypass: true
+
+# Legacy key kept for old server configs. New setups should use protection-bypass.
+worldguard-bypass: true
+
+pvp:
+  # If true, SpawnPvP hits deal 0 damage but still apply vanilla knockback.
+  # Use this when the spawn area should be a fun knockback zone, not a kill zone.
+  knockback-only: true
+  # If true, configured spawn items will not run commands/open menus in SpawnPvP.
+  # Example: a sword spawn item behaves like a normal sword instead of opening a GUI.
+  disable-spawn-item-actions: true
+
+# How far above/below the marker layer PvP remains allowed.
+vertical-range: 8
+
+# Legacy display buffer after reading the marker shape.
+radius-buffer: 1.5
+
+# Safety limits for auto-detecting marker blocks and the filled shape.
+minimum-marker-blocks: 6
+minimum-filled-cells: 8
+max-marker-blocks: 512
+max-shape-cells: 20000
+
+# Setup wand given by /ffa spawnpvp wand.
+wand:
+  material: STONE_AXE
+  display-name: "&#2EB6FF&lSpawnPvP Wand"
+  lore:
+    - "&7Left-click: &fSet corner 1"
+    - "&7Right-click: &fSet corner 2"
+    - "&7Then hold your outline block and run:"
+    - "&f/ffa spawnpvp block select"
+
+zone:
+  enabled: false
+  world: ""
+  marker-material: ""
+  pos1:
+    world: ""
+    x: 0
+    y: 0
+    z: 0
+  pos2:
+    world: ""
+    x: 0
+    y: 0
+    z: 0
+  center-x: 0.0
+  center-y: 0
+  center-z: 0.0
+  # Radius is saved for info/debug only. PvP checks use the filled shape cells.
+  radius: 0.0
+  bounds:
+    min-x: 0
+    max-x: 0
+    min-y: 0
+    max-y: 0
+    min-z: 0
+    max-z: 0

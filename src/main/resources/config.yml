@@ -1,0 +1,275 @@
+# FlixCore FFA main configuration.
+# All feature groups below can be enabled or disabled independently for scalable network use.
+
+# Put your FlixStudios license key here:
+license-key: "FLIX-XXXX-XXXX-XXXX"
+
+settings:
+  # Server-wide language for chat messages and titles.
+  # Supported: en, ja, es, fr, hi-latn, ar.
+  language: en
+  # Restore the player's previous inventory when they leave FFA.
+  # Keep false to remove all arena kit items, armor, offhand items, and effects on leave.
+  restore-inventory-on-leave: false
+  # Clear inventory before giving arena kits.
+  clear-inventory-on-join: true
+  # Kit selected for new players and fallback kit when a selected kit is missing.
+  default-kit: sword
+  # XP awarded per kill.
+  xp-per-kill: 3
+  # Base XP required per level. Required XP is level * base.
+  level-xp-base: 100
+  # Teleport players back to spawn when they leave an arena region.
+  prevent-arena-region-exit: true
+  # Delay before kit is restored after respawn.
+  respawn-delay-ticks: 2
+  # Save kit YAML snapshots to the database.
+  store-kits-in-database: false
+  # Save the complete arenas.yml snapshot to the database, including locations.
+  store-arenas-in-database: false
+tokens:
+  # Enable the built-in FlixCore FFA token currency.
+  enabled: true
+  # Tokens awarded to the killer for every valid FFA kill.
+  kill-reward: 2
+  # Permission-based kill token multipliers. Highest matching multiplier is used.
+  # You can add more entries using the same format.
+  multipliers:
+    - permission: "flixcoreffa.tokens.4x"
+      multiplier: 4
+    - permission: "flixcoreffa.tokens.6x"
+      multiplier: 6
+    - permission: "flixcoreffa.tokens.10x"
+      multiplier: 10
+    - permission: "flixcoreffa.tokens.4x"
+      multiplier: 4
+    - permission: "flixcoreffa.tokens.6x"
+      multiplier: 6
+    - permission: "flixcoreffa.tokens.10x"
+      multiplier: 10
+  # Send token reward feedback to the killer after a kill.
+  kill-message: true
+
+# Automatically respawn dead players while they are inside any FFA arena.
+auto-respawn:
+  enabled: true
+  # Delay before the Minecraft respawn screen is skipped.
+  delay-ticks: 2
+
+# Saves a compressed block snapshot when an arena region is created or changed,
+# then restores the arena with fast batched regeneration when the last player leaves.
+arena-regen:
+  enabled: true
+  # On server start/reload, missing or broken arena snapshot files are recreated automatically.
+  auto-create-snapshots-on-startup: true
+  regenerate-on-shutdown: true
+  # Set -1 to disable the configurable size check.
+  max-arena-size: -1
+  snapshot-blocks-per-tick: 10000
+  fast-blocks-per-tick: 12000
+  auto:
+    # Automatically regenerate arenas after this timer.
+    enabled: true
+    # First auto-regeneration delay after server startup.
+    initial-delay-seconds: 300
+    # Repeat auto-regeneration interval.
+    interval-seconds: 300
+    # Keep true so active fights are not reset while players are inside.
+    only-empty-arenas: true
+  countdown:
+    enabled: true
+    # Total countdown timer before normal/manual arena regeneration starts.
+    seconds: 30
+    # Broadcast only these remaining seconds.
+    alerts:
+      - 30
+      - 10
+      - 9
+      - 8
+      - 7
+      - 6
+      - 5
+      - 4
+      - 3
+      - 2
+      - 1
+    message: "%prefix%&eArena &f%arena% &eregenerating in &f%seconds%s&e."
+    all-message: "%prefix%&eAll arenas regenerating in &f%seconds%s&e."
+    complete-message: "%prefix%&aArena &f%arena% &ahas regenerated."
+
+features:
+  # Master switch for FFA arena joining and gameplay.
+  ffa: true
+  # Enable the dedicated /kiteditor flow.
+  kiteditor: true
+  # Enable /totempractice and /ffa totempractice.
+  totempractice: true
+  # Enable lobby spawn items from spawnitem.yml.
+  spawn-items: true
+  # Enable automatic announcement broadcasts from announcements.yml.
+  announcements: true
+  # Enable AFK zone setup and rewards from plugins/FlixCoreFFA/afk/*-afk.yml.
+  afk: true
+  # Enable the scoreboard system from scoreboard.yml.
+  scoreboard: true
+  # Enable actionbar display from display.yml.
+  display: true
+  # Enable tags, chat colours, chat-format placeholders, /tags, and /chatcolour.
+  chat-customization: true
+
+player-display:
+  # Adds a configurable text before player names in FFA placeholders.
+  # Placeholders added: %ffa_name_prefix% and %ffa_player_display%.
+  prefix-before-name:
+    enabled: true
+    value: "&#2EB6FF$"
+    space-after: true
+
+spectate:
+  # Enable spectator mode support.
+  enabled: true
+  # Allow spectator flight.
+  allow-flight: true
+  # Hide spectators from normal players.
+  hide-spectators: true
+
+build-mode:
+  # Default build mode state for players.
+  default-enabled: false
+
+# Restrict commands while a player is actively inside an FFA arena.
+command-restrictions:
+  enabled: true
+  bypass-permission: "ffa.command.bypass"
+  # Keep the leave command available so normal players can always exit safely.
+  allowed-commands:
+    - "ffa leave"
+    - "ffa spawn"
+    - "flixffa leave"
+    - "flixffa spawn"
+    - "flixcoreffa leave"
+    - "flixcoreffa spawn"
+    - "flixcoreffa leave"
+    - "flixcoreffa spawn"
+    - "arena leave"
+    - "arena spawn"
+    - "freeforall leave"
+    - "freeforall spawn"
+    - "hat"
+    - "leave"
+    - "spawn"
+
+respawn-countdown:
+  # Enable countdown feedback after death.
+  enabled: true
+  # Countdown seconds. Keep low for FFA pacing.
+  seconds: 3
+
+first-join-protection:
+  # Protect players briefly when joining an arena.
+  enabled: true
+  # Protection duration in seconds.
+  duration-seconds: 5
+
+arena-rotation:
+  # Enable automatic arena rotation for future queue/lobby flows.
+  enabled: false
+  # Rotation interval in seconds.
+  interval-seconds: 900
+
+killstreak-rewards:
+  # Enable command rewards when a player reaches configured streaks.
+  enabled: true
+  # Commands are run by console. Placeholders: %player%, %streak%, %arena%, %kit%.
+  rewards:
+    5:
+      - "eco give %player% 50"
+    10:
+      - "eco give %player% 150"
+
+# AutoGG runtime configuration.
+# When enabled, one configured line is broadcast after a player gets a kill.
+auto-gg:
+  enabled: true
+  require-permission: false
+  permission: "flixcoreffa.autogg.use"
+  use-mini-message: true
+  messages:
+    - "%luckperms_prefix% %player_name% GG"
+    - "%luckperms_prefix% %player_name% Good game!"
+    - "%luckperms_prefix% %player_name% Well played!"
+    - "%luckperms_prefix% %player_name% Nice fight!"
+    - "%luckperms_prefix% %player_name% wp"
+    - "%luckperms_prefix% %player_name% ggs"
+    - "%luckperms_prefix% %player_name% Respect!"
+
+# Death and kill chat text. Leave a value empty to disable its broadcast.
+death-messages:
+  format: "&#FF0000☠ &7| &#FF0000%victim% &fᴡᴀs ᴇʟɪᴍɪɴᴀᴛᴇᴅ ʙʏ &a%attacker%&f!"
+  kill-commands:
+    enabled: false
+    only-in-match: false
+    attacker: []
+    victim: []
+    ranks: {}
+  death-reasons:
+    FALL: "fell from a high place!"
+    LAVA: "fell into lava!"
+    DROWNING: "drowned!"
+    FIRE: "burned to death!"
+    FIRE_TICK: "burned to death!"
+    VOID: "fell into the void!"
+    CONTACT: "was pricked to death!"
+    LIGHTNING: "was struck by lightning!"
+    EXPLOSION: "blew up!"
+    MAGIC: "was killed by magic!"
+    PROJECTILE: "was shot!"
+    UNKNOWN: "died mysteriously!"
+
+kill-message: ""
+
+# FFA game join/leave broadcasts.
+# These messages are not sent for normal server connect/disconnect.
+# They are sent only when a player enters or leaves an FFA arena.
+join-leave-messages:
+  enabled: true
+  # Available placeholders: %player%, %arena%, %kit%, PlaceholderAPI placeholders.
+  join-message: "&#52FF00⚔ &f%player% &7joined FFA arena &#52FF00%arena% &8(&f%kit%&8)"
+  leave-message: "&#FF5555⚔ &f%player% &7left FFA arena &#FF5555%arena%&7."
+
+# Shared leave title used when closing editor flows.
+leave_messages:
+  title: "&6&lKIT EDITOR"
+  subtitle: "&fYou exited the editor!"
+  fade_in: 5
+  stay: 25
+  fade_out: 5
+
+# Chat formatter integration block for future expansion.
+chat-format:
+  enabled: true
+  apply-in-all-worlds: true
+  use-mini-message: true
+  # Available internal placeholders:
+  # %flixcoreffa_tag%, %flixcoreffa_tag_name%, %flixcoreffa_chatcolor_chat_colour%,
+  # %flixcoreffa_chatcolor_colour_name%, %player_name%, PlaceholderAPI placeholders, and {MESSAGE}.
+  chat_format: "%flixcoreffa_tag% %luckperms_prefix% %player_name%&7: %flixcoreffa_chatcolor_chat_colour%{MESSAGE}"
+
+# Detailed diagnostic logging for arena, kit, player, respawn, and database flows.
+# Enable temporarily while troubleshooting, then disable to keep console output clean.
+debug:
+  # Set enabled true while testing arena regen. Keep false on production unless troubleshooting.
+  enabled: false
+  areas:
+    # Enable every debug category at once. Useful only while testing.
+    all: false
+    startup: true
+    command: true
+    # Shows arena regen snapshot/restore queue, file paths, broken snapshots, and Folia chunk scheduling.
+    arena: true
+    kit: true
+    player: true
+    database: true
+    crossserver: true
+    scoreboard: true
+    display: true

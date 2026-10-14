@@ -1,0 +1,195 @@
+# Arena data file.
+# This file is managed by /ffa create, /ffa setspawn, /ffa setregion, and arena admin commands.
+
+arenas:
+  nethpot:
+    enabled: true
+    build-allowed: false
+    allowed-break-blocks: []
+    allowed-place-blocks: []
+    kits:
+    - nethpot
+    spawn:
+      world: minecraft_freeforall
+      x: -649.664759206524
+      y: 100.0
+      z: -649.8101830993824
+      yaw: -178.63379
+      pitch: 6.493329
+    region:
+      world: minecraft_freeforall
+      min-x: -762.0
+      min-y: 92.0
+      min-z: -733.0
+      max-x: -548.0
+      max-y: 224.0
+      max-z: -516.0
+  sword:
+    enabled: true
+    build-allowed: false
+    allowed-break-blocks: []
+    allowed-place-blocks: []
+    kits:
+    - sword
+    spawn:
+      world: minecraft_freeforall
+      x: 355.3310785421796
+      y: 100.0
+      z: 350.8454753056924
+      yaw: 94.5571
+      pitch: 14.646201
+    region:
+      world: minecraft_freeforall
+      min-x: 202.0
+      min-y: 86.0
+      min-z: 183.0
+      max-x: 460.0
+      max-y: 225.0
+      max-z: 441.0
+  manhunt:
+    enabled: true
+    build-allowed: false
+    allowed-break-blocks:
+    - ANCIENT_DEBRIS
+    - COBBLESTONE
+    - COBWEB
+    - OAK_PLANKS
+    - OBSERVER
+    - POINTED_DRIPSTONE
+    - REDSTONE_BLOCK
+    - SCAFFOLDING
+    - SLIME_BLOCK
+    - STICKY_PISTON
+    - TNT
+    allowed-place-blocks:
+    - WATER
+    - ANCIENT_DEBRIS
+    - COBBLESTONE
+    - COBWEB
+    - OAK_PLANKS
+    - OBSERVER
+    - POINTED_DRIPSTONE
+    - REDSTONE_BLOCK
+    - SCAFFOLDING
+    - SLIME_BLOCK
+    - STICKY_PISTON
+    - TNT
+    kits:
+    - manhunt
+    spawn:
+      world: minecraft_freeforall
+      x: -349.52680896119
+      y: 100.0
+      z: -349.79466328219416
+      yaw: -174.47906
+      pitch: 9.717619
+    region:
+      world: minecraft_freeforall
+      min-x: -413.0
+      min-y: 98.0
+      min-z: -414.0
+      max-x: -282.0
+      max-y: 139.0
+      max-z: -272.0
+  crystal:
+    enabled: true
+    build-allowed: true
+    allowed-break-blocks: []
+    allowed-place-blocks: []
+    kits:
+    - crystal
+    spawn:
+      world: minecraft_freeforall
+      x: -1000.0417281199465
+      y: 100.0
+      z: -999.3491296690256
+      yaw: 91.701294
+      pitch: 9.671686
+    region:
+      world: minecraft_freeforall
+      min-x: -1072.0
+      min-y: 23.0
+      min-z: -1071.0
+      max-x: -922.0
+      max-y: 127.0
+      max-z: -914.0
+  lifesteal:
+    enabled: true
+    build-allowed: false
+    allowed-break-blocks:
+    - COBWEB
+    - OAK_LOG
+    - REDSTONE_WIRE
+    allowed-place-blocks:
+    - WATER
+    - COBWEB
+    - OAK_LOG
+    - REDSTONE_WIRE
+    kits:
+    - lifesteal
+    spawn:
+      world: minecraft_freeforall
+      x: 1508.030532888797
+      y: 101.0
+      z: 1505.6289669562511
+      yaw: 92.42433
+      pitch: 8.934651
+    region:
+      world: minecraft_freeforall
+      min-x: 1433.0
+      min-y: 100.0
+      min-z: 1433.0
+      max-x: 1568.0
+      max-y: 149.0
+      max-z: 1568.0
+  macelt:
+    enabled: true
+    build-allowed: false
+    allowed-break-blocks: []
+    allowed-place-blocks: []
+    kits:
+    - mace
+    spawn:
+      world: minecraft_freeforall
+      x: 1000.4975121973365
+      y: 100.0
+      z: 1000.3774699738171
+      yaw: 177.05453
+      pitch: 4.515079
+    region:
+      world: minecraft_freeforall
+      min-x: 906.0
+      min-y: 88.0
+      min-z: 876.0
+      max-x: 1112.0
+      max-y: 171.0
+      max-z: 1082.0
+  cart:
+    enabled: true
+    build-allowed: true
+    allowed-break-blocks: []
+    allowed-place-blocks: []
+    kits:
+    - cart
+    spawn:
+      world: minecraft_freeforall
+      x: 0.9989947153117825
+      y: 100.0
+      z: 0.05494904588294677
+      yaw: 1.9353783
+      pitch: 3.5916998
+    region:
+      world: minecraft_freeforall
+      min-x: -30.0
+      min-y: 65.0
+      min-z: -30.0
+      max-x: 30.0
+      max-y: 110.0
+      max-z: 31.0
+lobby:
+  world: world
+  x: 0.4996256523189665
+  y: 101.0
+  z: 25.852377959225468
+  yaw: -0.4606125
+  pitch: 2.026675

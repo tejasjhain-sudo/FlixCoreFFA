@@ -1,0 +1,33 @@
+# Enable or disable the entire scoreboard system.
+enabled: true
+
+# Global scoreboard update interval in ticks. 20 ticks = 1 second.
+update-interval-ticks: 20
+
+arena-default:
+  enabled: true
+  title: "&#fc0303&lYOURSERVER"
+  lines:
+    - ""
+    - " &c⚔ &fᴋɪʟʟs &c%ffa_kills%"
+    - " &6☠ &fᴅᴇᴀᴛʜs &6%ffa_deaths%"
+    - " &a⚑ &fᴋ/ᴅ &a%ffa_kdr%"
+    - " &5⚔ &fʙᴇsᴛ sᴛʀᴇᴀᴋ &d%ffa_best_killstreak%"
+    - ""
+    - " &#00BFFF✹ &fᴛᴏᴋᴇɴs &b%ffa_tokens%"
+    - " &#FF69B4☂ &fᴘɪɴɢ &#FF69B4%flixcoreffa_player_ping%ᴍs &7| &dᴇᴜ"
+    - ""
+
+lobby:
+  enabled: true
+  title: "&#fc0303&lYOURSERVER"
+  lines:
+    - ""
+    - " &a⚔ &fғғᴀ &a%ffa_players%"
+    - " &c⚔ &fᴋɪʟʟs &c%ffa_kills%"
+    - " &6☠ &fᴅᴇᴀᴛʜs &6%ffa_deaths%"
+    - " &a⚑ &fᴋ/ᴅ &a%ffa_kdr%"
+    - ""
+    - " &#00BFFF✹ &fᴛᴏᴋᴇɴs &b%flixcoreffa_token%"
+    - " &#FF69B4☂ &fᴘɪɴɢ &#FF69B4%flixcoreffa_player_ping%ᴍs &7| &dᴇᴜ"
+    - ""

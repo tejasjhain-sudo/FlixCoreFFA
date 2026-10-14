@@ -1,0 +1,182 @@
+# FlixCore FFA editable player messages: Hindi Latin
+# Normal player-facing messages yahan edit kar sakte ho.
+# /ffa help jaise command guides plugin ke andar built-in hain aur yahan editable nahi hain.
+# Missing keys pehle lang/messages_en.yml se load hongi, phir old install me legacy messages.yml se.
+
+arena-not-ready: "%prefix%&cArena &f%arena% &cabhi ready nahi hai. &7Enable karne se pehle iska region aur spawn set karo."
+arena-not-empty: "%prefix%&cArena &f%arena% &cmein abhi players hain. &7Delete karne se pehle arena stop karo ya players ko bahar nikalo."
+build-usage: "%prefix%&eUse: &f/ffa build &7ya &f/ffa build <arena> <true|false> &7ya &f/ffa build <arena> <break|place> <hand|hotbar|inventory|kit|block,block|clear> &7ya &f/ffa build <arena> auto [kit]"
+command-blocked-in-arena: "%prefix%&cFight ke time commands use nahi kar sakte. &7Bahar nikalne ke liye &f/ffa leave &7use karo."
+ffaarena-usage: "%prefix%&eUse: &f/ffaarena <arena>"
+
+# MiniMessage, legacy colors (&a), RGB hex (&#2EB6FF), PlaceholderAPI aur FFA placeholders support karta hai.
+
+prefix: "&#2EB6FF&lFlixCore FFA &8> "
+
+no-permission: "%prefix%&cPermission nahi hai. &7Tum ye command use nahi kar sakte."
+only-players: "%prefix%&cYe command sirf players ke liye hai. &7Isse game ke andar use karo."
+unknown-command: "%prefix%&cUnknown command. &7&f/ffa help&7 use karo."
+reloaded: "%prefix%&aConfiguration reload ho gayi."
+database-error: "%prefix%&cDatabase error. &7Details ke liye console check karo."
+
+
+token-balance: "%prefix%&#2EB6FFTokens &8| &7Balance: &f%tokens%"
+token-balance-other: "%prefix%&#2EB6FFTokens &8| &f%player% &7ke paas &f%tokens% &7tokens hain."
+token-given: "%prefix%&aToken update &8| &f%player% &7ko &f%amount% &7tokens diye gaye. Balance: &f%tokens%"
+token-taken: "%prefix%&eToken update &8| &f%player% &7se &f%amount% &7tokens hata diye gaye. Balance: &f%tokens%"
+token-set: "%prefix%&aToken update &8| &f%player%&7 ke tokens &f%tokens% &7set kar diye gaye."
+token-giveall: "%prefix%&aToken update &8| &f%players% &7online players ko &f%amount% &7tokens diye gaye."
+token-invalid-amount: "%prefix%&cInvalid amount. &7Positive whole number use karo."
+token-kill-reward: "%prefix%&a+%amount% Tokens &8(&e%multiplier%x&8) &8| &7Naya balance: &f%tokens%"
+
+
+arena-created: "%prefix%&aArena &f%arena% &acreate ho gaya."
+arena-setup-complete: "%prefix%&bSetup &8> &7Next: &f/ffa setspawn %arena% &8> &f/ffa kit create <kit> &8> &f/ffa build %arena% auto <kit> &8> &f/ffa arena enable %arena%&7."
+arena-create-select-region: "%prefix%&ePehle region select karo. &7Use: &f/ffa wand &8> &f/ffa pos1 &8> &f/ffa pos2 &8> &f/ffa create <arena>&7."
+arena-deleted: "%prefix%&aArena &f%arena% &adelete ho gaya."
+arena-missing: "%prefix%&cArena &f%arena% &cexist nahi karta."
+arena-exists: "%prefix%&eArena &f%arena% &epehle se exist karta hai."
+arena-disabled: "%prefix%&cArena &f%arena% &cdisabled hai."
+arena-enabled: "%prefix%&aArena &f%arena% &aenable ho gaya."
+arena-ready: "%prefix%&aArena ready hai. &7Test karne ke liye &f/ffa join %arena%&7 use karo."
+arena-disabled-done: "%prefix%&eArena &f%arena% &edisable ho gaya."
+arena-started: "%prefix%&aArena &f%arena% &astart ho gaya."
+arena-stopped: "%prefix%&eArena &f%arena% &estop ho gaya."
+arena-regen-started: "%prefix%&aArena &f%arena% &aki fast regeneration start ho gayi."
+arena-regen-all-started: "%prefix%&aSabhi arenas ki fast regeneration start ho gayi."
+arena-regen-snapshot-started: "%prefix%&aArena &f%arena% &ako regen system mein add kar diya gaya."
+arena-regen-snapshot-all-started: "%prefix%&aSabhi arenas ko regen system mein add kiya ja raha hai."
+
+arena-regen-snapshot-folder: "%prefix%&7Snapshot file path: &f%path%"
+arena-regen-snapshot-status-ready: "%prefix%&aSnapshot ready &8| &f%arena% &8| &7File: &f%path%"
+arena-regen-snapshot-status-saving: "%prefix%&eSnapshot save ho raha hai &8| &f%arena% &8| &7File yaha aayegi/update hogi: &f%path%"
+arena-regen-snapshot-status-missing: "%prefix%&cSnapshot missing &8| &f%arena% &8| &7Run karo &f/ffa arena snapshot add %arena%&7."
+
+
+spawn-set: "%prefix%&aArena &f%arena%&a ka spawn save ho gaya."
+spawn-next-step: "%prefix%&bSetup &8> &7Ab &f/ffa kit create <kit>&7 se kit create/save karo."
+lobby-set: "%prefix%&aFFA lobby save ho gaya."
+lobby-missing: "%prefix%&cLobby set nahi hai. &7&f/ffa setlobby&7 use karo."
+
+
+region-pos1: "%prefix%&a&f%arena%&a ke liye Position 1 save ho gayi. &7Ab Position 2 set karo."
+region-selection-started: "%prefix%&bSetup &8> &7Dono corners set karo: &f/ffa pos1 &8> &f/ffa pos2&7."
+region-wand-given: "%prefix%&bSetup &8> &7Wand use karo, phir &f/ffa create <arena>&7 run karo."
+region-click-block: "%prefix%&cRegion wand se kisi block par click karo."
+region-no-selection: "%prefix%&cKoi region selection active nahi hai. &7&f/ffa wand&7 se start karo."
+region-wand-pos1: "%prefix%&aPosition 1 set: &f%x%, %y%, %z%&7. Next: &f/ffa pos2&7."
+region-wand-pos2: "%prefix%&aPosition 2 set: &f%x%, %y%, %z%&7."
+region-world-mismatch: "%prefix%&cDono region positions same world mein honi chahiye."
+region-selection-ready: "%prefix%&bSetup &8> &7Region select ho gaya. &f/ffa create <arena>&7 se finish karo."
+region-set: "%prefix%&aArena &f%arena%&a ka region save ho gaya."
+
+
+joined: "%prefix%&aTum arena &f%arena%&a mein join ho gaye. Good luck."
+left: "%prefix%&aTum arena se bahar aa gaye."
+not-in-arena: "%prefix%&cTum kisi arena ke andar nahi ho."
+already-in-arena: "%prefix%&eTum pehle se arena ke andar ho."
+spectate-target-not-in-arena: "%prefix%&cPlayer &f%player% &cabhi kisi arena mein fight nahi kar raha."
+
+
+spawnpvp-hand-block-required: "%prefix%&eSpawnPvP Setup &8> &7Wahi block/slab haath mein pakdo jo PvP circle mein use hua hai, phir &f/ffa spawnpvp block select&7 run karo."
+spawnpvp-wand-given: "%prefix%&aSpawnPvP Wand mil gaya. &7Corner 1 ke liye left-click, corner 2 ke liye right-click karo, phir outline block haath mein pakad kar &f/ffa spawnpvp block select&7 run karo."
+spawnpvp-corner-select-started: "%prefix%&aSpawnPvP Setup &8> &7Spawn PvP area ka corner &f%position% &7right-click karo."
+spawnpvp-click-block-required: "%prefix%&cSpawnPvP &8> &7Is corner ko save karne ke liye kisi block par right-click karo."
+spawnpvp-corner-set: "%prefix%&aSpawnPvP Corner %position% &8> &7&f%x%, %y%, %z% &7par &f%world%&7 mein save ho gaya."
+spawnpvp-material-selected: "%prefix%&aSpawnPvP Block &8> &7Marker block &f%material%&7 set ho gaya. Selected corners ke andar circle detect kiya ja raha hai..."
+spawnpvp-setup-incomplete: "%prefix%&eSpawnPvP Setup &8> &7Pehle &f/ffa spawnpvp 1&7 aur &f/ffa spawnpvp 2&7 set karo, phir &f/ffa spawnpvp block select&7 use karo."
+spawnpvp-world-mismatch: "%prefix%&cSpawnPvP &8> &7Dono corners same world mein hone chahiye."
+spawnpvp-world-missing: "%prefix%&cSpawnPvP &8> &7World &f%world% &7loaded nahi hai."
+spawnpvp-detect-failed: "%prefix%&cSpawnPvP &8> &7Selected corners ke andar closed &f%material% &7outline nahi mila."
+spawnpvp-zone-saved: "%prefix%&aSpawnPvP save ho gaya &8> &7World: &f%world% &8| &7Center: &f%x%, %y%, %z% &8| &7Cells: &f%cells% &8| &7Block: &f%material%&7."
+spawnpvp-zone-cleared: "%prefix%&eSpawnPvP &8> &7Saved PvP circle clear ho gaya."
+spawnpvp-zone-missing: "%prefix%&cSpawnPvP &8> &7Koi active PvP circle saved nahi hai."
+spawnpvp-zone-info: "%prefix%&bSpawnPvP &8> &7World: &f%world% &8| &7Center: &f%x%, %y%, %z% &8| &7Cells: &f%cells% &8| &7Block: &f%material%&7."
+spawnpvp-reloaded: "%prefix%&aSpawnPvP configuration reload ho gayi."
+
+
+kit-selected: "%prefix%&aKit select ho gayi: &f%kit%&a."
+arena-kit-linked: "%prefix%&aKit &f%kit% &aarena &f%arena%&a ke saath link ho gayi."
+arena-kit-already-linked: "%prefix%&eKit &f%kit% &epehle se &f%arena%&e ke saath linked hai."
+kit-missing: "%prefix%&cKit &f%kit% &cexist nahi karti."
+kit-created: "%prefix%&aKit &f%kit% &acreate ho gayi."
+kit-exists: "%prefix%&eKit &f%kit% &epehle se exist karti hai. &7&f/kiteditor %kit%&7 use karo."
+kit-saved: "%prefix%&aTumhari inventory se kit &f%kit% &asave ho gayi."
+personal-kit-saved: "%prefix%&aPersonal kit &f%kit% &asave ho gayi."
+kit-save-guide: "%prefix%&bSetup &8> &7Next: &f/ffa build <arena> auto %kit% &8> &f/ffa arena enable <arena>&7."
+kit-reset: "%prefix%&eKit editor ko saved kit &f%kit%&e par reset kar diya gaya."
+kit-cleaned: "%prefix%&eKit &f%kit%&e ki editor inventory clear ho gayi."
+kit-deleted: "%prefix%&aKit &f%kit% &adelete ho gayi."
+kit-given: "%prefix%&a&f%player%&a ko kit &f%kit% &adi gayi."
+kit-removed: "%prefix%&e&f%player%&e ki selected kit ko &f%kit%&e par reset kar diya gaya."
+kiteditor-usage: "%prefix%&eUse: &f/kiteditor [kitname] &7ya &f/ffa kit edit [kitname]"
+kiteditor-blocked-in-ffa: "%prefix%&cFFA ke andar kit editor disabled hai. &7Pehle &f/ffa leave&7 se arena chhodo."
+kiteditor-opened: "%prefix%&aKit &f%kit%&a edit kar rahe ho. &7Dusri kits change nahi hongi."
+personal-kiteditor-opened: "%prefix%&a&f%kit%&a ke liye personal kit editor open ho gaya."
+kit-create-guide: "%prefix%&bKit &8> &7&f/kiteditor %kit% &7ya &f/ffa kit edit %kit%&7 se edit karo."
+
+
+stats-reset: "%prefix%&a&f%player%&a ke stats reset ho gaye."
+player-missing: "%prefix%&cPlayer &f%player% &cnahi mila."
+
+build-enabled: "%prefix%&aBuild mode enable ho gaya."
+build-disabled: "%prefix%&eBuild mode disable ho gaya."
+build-arena-set: "%prefix%&aArena &f%arena% &aka build mode &f%state%&a set ho gaya."
+build-blocks-set: "%prefix%&aArena &f%arena% &ake allowed &f%type% &ablocks: &f%blocks%&a."
+build-blocks-auto: "%prefix%&aArena &f%arena% &ake build blocks kit &f%kit%&a se set hue: &f%blocks%&a."
+
+scoreboard-reloaded: "%prefix%&aScoreboard aur actionbar reload ho gaye."
+announcements-reloaded: "%prefix%&aAnnouncements reload ho gaye."
+
+tag-selected: "%prefix%&aTag %tag% &8(&f%tag_name%&8)&a select ho gaya."
+tag-cleared: "%prefix%&eTumhara active tag clear ho gaya."
+tag-locked: "%prefix%&cTumhare paas ye tag use karne ki permission nahi hai."
+
+chatcolour-selected: "%prefix%&aChat colour %colour%&a select ho gaya."
+chatcolour-cleared: "%prefix%&eTumhara active chat colour clear ho gaya."
+chatcolour-locked: "%prefix%&cTumhare paas ye chat colour use karne ki permission nahi hai."
+chatcustomization-reloaded: "%prefix%&aTags aur chat colours reload ho gaye."
+
+
+arena-list-header: "&8&m--------------------------------"
+arena-list-entry: "&#2EB6FF%arena% &8| &7Enabled: &f%enabled% &8| &7Players: &f%players%"
+arena-list-footer: "&8&m--------------------------------"
+
+
+stats-format:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lStats &8| &f%player%"
+  - "&7Kills: &a%kills% &8| &7Deaths: &c%deaths% &8| &7KDR: &e%kdr%"
+  - "&7Killstreak: &b%killstreak% &8| &7Best: &d%best_killstreak%"
+  - "&7Tokens: &#2EB6FF%tokens%"
+  - "&7XP: &b%xp% &8| &7Level: &d%level%"
+  - "&8&m--------------------------------"
+
+
+top-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lTop FFA Kills"
+
+top-entry: "&f%position%. &#7CFFCB%player% &8- &f%value%"
+
+top-footer: "&8&m--------------------------------"
+
+
+feature-disabled: "%prefix%&cYe feature abhi disabled hai: &f%feature%&c."
+
+settings-usage: "%prefix%&eUse: &f/ffa settings list &7ya &f/ffa settings [setting] [on/off]"
+settings-unknown: "%prefix%&cUnknown setting: &f%setting%&c. &7&f/ffa settings list&7 use karo."
+settings-updated: "%prefix%&aSetting &f%setting% &aab &f%state%&a hai."
+
+settings-list-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lFlixCore FFA Settings"
+
+settings-list-entry: "&f%setting% &8- &7%state%"
+
+settings-list-footer:
+  - "&8&m--------------------------------"
+
+
+afk-setup-started: "%prefix%&#2EB6FFAFK Setup &8> &f%zone%-afk.yml&7 create/load ho gayi. Golden axe use karo: pos1 ke liye left-click aur pos2 ke liye right-click."
+afk-reloaded: "%prefix%&#2EB6FFAFK zones reload ho gaye."

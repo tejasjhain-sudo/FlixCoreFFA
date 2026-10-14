@@ -1,0 +1,37 @@
+# FlixCore FFA title language override: Japanese
+titles:
+  join:
+    enabled: true
+    title: "&#7CFFCB&lバトル開始"
+    subtitle: "&fアリーナ: &#2EB6FF%ffa_arena%"
+    fade-in: 10
+    stay: 40
+    fade-out: 10
+  kill:
+    enabled: true
+    title: "&#52FF00&l+1 キル"
+    subtitle: "&fキルストリーク: &#2EB6FF%ffa_killstreak%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+  respawn:
+    enabled: true
+    title: "&#2EB6FF&lリスポーン"
+    subtitle: "&fキット復元: &#7CFFCB%ffa_kit%"
+    fade-in: 5
+    stay: 25
+    fade-out: 10
+  kiteditor-leave:
+    enabled: true
+    title: "&#2EB6FF&lキットエディター"
+    subtitle: "&fエディターを閉じました。キットは保存済みです。"
+    fade-in: 5
+    stay: 25
+    fade-out: 5
+  spawnpvp-enter:
+    enabled: true
+    title: "&#2EB6FF&lSPAWNPVP"
+    subtitle: "&fこのゾーンではPvPが有効です。"
+    fade-in: 5
+    stay: 35
+    fade-out: 10

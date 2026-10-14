@@ -1,0 +1,183 @@
+# FlixCore FFA 編集可能なプレイヤーメッセージ: ja
+# 通常のプレイヤー向けメッセージはここで編集できます。
+# /ffa help などのコマンドガイドはプラグイン内に組み込まれており、ここでは編集できません。
+# 存在しないキーは lang/messages_en.yml にフォールバックし、
+# 古いインストールに legacy messages.yml が存在する場合は、さらにそこへフォールバックします。
+
+arena-not-ready: "%prefix%&cアリーナ &f%arena% &cはまだ準備できていません。 &7有効化する前にリージョンとスポーン地点を設定してください。"
+arena-not-empty: "%prefix%&cアリーナ &f%arena% &cにはまだプレイヤーがいます。 &7削除する前に停止するか、プレイヤーを退出させてください。"
+build-usage: "%prefix%&e使用方法: &f/ffa build &7または &f/ffa build <arena> <true|false> &7または &f/ffa build <arena> <break|place> <hand|hotbar|inventory|kit|block,block|clear> &7または &f/ffa build <arena> auto [kit]"
+command-blocked-in-arena: "%prefix%&c戦闘中はコマンドを使用できません。 &7退出するには &f/ffa leave &7を使用してください。"
+ffaarena-usage: "%prefix%&e使用方法: &f/ffaarena <arena>"
+
+# MiniMessage、従来のカラーコード (&a)、RGB HEX (&#2EB6FF)、
+# PlaceholderAPI、FFA プレースホルダーに対応しています。
+
+prefix: "&#2EB6FF&lFlixCore FFA &8> "
+
+no-permission: "%prefix%&c権限がありません。 &7このコマンドは使用できません。"
+only-players: "%prefix%&cこのコマンドはプレイヤー専用です。 &7ゲーム内で使用してください。"
+unknown-command: "%prefix%&c不明なコマンドです。 &7&f/ffa help&7 を使用してください。"
+reloaded: "%prefix%&a設定をリロードしました。"
+database-error: "%prefix%&cデータベースエラーが発生しました。 &7詳細はコンソールを確認してください。"
+
+
+token-balance: "%prefix%&#2EB6FFトークン &8| &7残高: &f%tokens%"
+token-balance-other: "%prefix%&#2EB6FFトークン &8| &f%player% &7の所持トークン: &f%tokens%"
+token-given: "%prefix%&aトークン更新 &8| &f%player% &7に &f%amount% &7トークンを追加しました。 残高: &f%tokens%"
+token-taken: "%prefix%&eトークン更新 &8| &f%player% &7から &f%amount% &7トークンを削除しました。 残高: &f%tokens%"
+token-set: "%prefix%&aトークン更新 &8| &f%player%&7 のトークンを &f%tokens% &7に設定しました。"
+token-giveall: "%prefix%&aトークン更新 &8| &f%players% &7人のオンラインプレイヤーに &f%amount% &7トークンを付与しました。"
+token-invalid-amount: "%prefix%&c無効な数量です。 &7正の整数を指定してください。"
+token-kill-reward: "%prefix%&a+%amount% トークン &8(&e%multiplier%x&8) &8| &7現在の残高: &f%tokens%"
+
+
+arena-created: "%prefix%&aアリーナ &f%arena% &aを作成しました。"
+arena-setup-complete: "%prefix%&bセットアップ &8> &7次の手順: &f/ffa setspawn %arena% &8> &f/ffa kit create <kit> &8> &f/ffa build %arena% auto <kit> &8> &f/ffa arena enable %arena%&7."
+arena-create-select-region: "%prefix%&e先にリージョンを選択してください。 &7&f/ffa wand &8> &f/ffa pos1 &8> &f/ffa pos2 &8> &f/ffa create <arena>&7 を使用してください。"
+arena-deleted: "%prefix%&aアリーナ &f%arena% &aを削除しました。"
+arena-missing: "%prefix%&cアリーナ &f%arena% &cは存在しません。"
+arena-exists: "%prefix%&eアリーナ &f%arena% &eはすでに存在します。"
+arena-disabled: "%prefix%&cアリーナ &f%arena% &cは無効になっています。"
+arena-enabled: "%prefix%&aアリーナ &f%arena% &aを有効にしました。"
+arena-ready: "%prefix%&aアリーナの準備が完了しました。 &7&f/ffa join %arena%&7 でテストできます。"
+arena-disabled-done: "%prefix%&eアリーナ &f%arena% &eを無効にしました。"
+arena-started: "%prefix%&aアリーナ &f%arena% &aを開始しました。"
+arena-stopped: "%prefix%&eアリーナ &f%arena% &eを停止しました。"
+arena-regen-started: "%prefix%&aアリーナ &f%arena% &aの高速再生成を開始しました。"
+arena-regen-all-started: "%prefix%&aすべてのアリーナの高速再生成を開始しました。"
+arena-regen-snapshot-started: "%prefix%&aアリーナ &f%arena% &aを再生成システムに追加しました。"
+arena-regen-snapshot-all-started: "%prefix%&aすべてのアリーナを再生成システムに追加しています。"
+arena-regen-snapshot-folder: "%prefix%&7スナップショットのパス: &f%path%"
+arena-regen-snapshot-status-ready: "%prefix%&aスナップショット準備完了 &8| &f%arena% &8| &7ファイル: &f%path%"
+arena-regen-snapshot-status-saving: "%prefix%&eスナップショット保存中 &8| &f%arena% &8| &7ファイル: &f%path%"
+arena-regen-snapshot-status-missing: "%prefix%&cスナップショットがありません &8| &f%arena% &8| &7&f/ffa arena snapshot add %arena% &7を実行してください。"
+
+
+spawn-set: "%prefix%&aアリーナ &f%arena%&a のスポーン地点を保存しました。"
+spawn-next-step: "%prefix%&bセットアップ &8> &7次に &f/ffa kit create <kit>&7 でキットを作成・保存してください。"
+lobby-set: "%prefix%&aFFA ロビーを保存しました。"
+lobby-missing: "%prefix%&cロビーが設定されていません。 &7&f/ffa setlobby&7 を使用してください。"
+
+
+region-pos1: "%prefix%&a&f%arena%&a の位置1を保存しました。 &7次に位置2を設定してください。"
+region-selection-started: "%prefix%&bセットアップ &8> &7両方の角を設定してください: &f/ffa pos1 &8> &f/ffa pos2&7."
+region-wand-given: "%prefix%&bセットアップ &8> &7ワンドを使用し、その後 &f/ffa create <arena>&7 を実行してください。"
+region-click-block: "%prefix%&cリージョンワンドでブロックをクリックしてください。"
+region-no-selection: "%prefix%&cリージョン選択が開始されていません。 &7&f/ffa wand&7 から開始してください。"
+region-wand-pos1: "%prefix%&a位置1を設定しました: &f%x%, %y%, %z%&7。 次: &f/ffa pos2&7."
+region-wand-pos2: "%prefix%&a位置2を設定しました: &f%x%, %y%, %z%&7."
+region-world-mismatch: "%prefix%&c両方のリージョン位置は同じワールド内で設定する必要があります。"
+region-selection-ready: "%prefix%&bセットアップ &8> &7リージョンを選択しました。 &f/ffa create <arena>&7 で完了してください。"
+region-set: "%prefix%&aアリーナ &f%arena%&a のリージョンを保存しました。"
+
+
+joined: "%prefix%&aアリーナ &f%arena%&a に参加しました。 頑張ってください！"
+left: "%prefix%&aアリーナから退出しました。"
+not-in-arena: "%prefix%&cあなたはアリーナ内にいません。"
+already-in-arena: "%prefix%&eあなたはすでにアリーナ内にいます。"
+spectate-target-not-in-arena: "%prefix%&cプレイヤー &f%player% &cは現在アリーナで戦っていません。"
+
+
+spawnpvp-hand-block-required: "%prefix%&eSpawnPvP セットアップ &8> &7PvP サークルで使用するものと同じブロックまたはハーフブロックを手に持ち、&f/ffa spawnpvp block select&7 を実行してください。"
+spawnpvp-wand-given: "%prefix%&aSpawnPvP ワンドを受け取りました。 &7左クリックで角1、右クリックで角2を設定し、枠に使用するブロックを手に持って &f/ffa spawnpvp block select&7 を実行してください。"
+spawnpvp-corner-select-started: "%prefix%&aSpawnPvP セットアップ &8> &7SpawnPvP エリアの角 &f%position% &7を右クリックしてください。"
+spawnpvp-click-block-required: "%prefix%&cSpawnPvP &8> &7ブロックを右クリックしてこの角を保存してください。"
+spawnpvp-corner-set: "%prefix%&aSpawnPvP 角 %position% &8> &f%world%&7 の &f%x%, %y%, %z% &7に保存しました。"
+spawnpvp-material-selected: "%prefix%&aSpawnPvP ブロック &8> &7マーカーブロックを &f%material%&7 に設定しました。 選択した範囲内からサークルを検出しています..."
+spawnpvp-setup-incomplete: "%prefix%&eSpawnPvP セットアップ &8> &7&f/ffa spawnpvp 1&7、&f/ffa spawnpvp 2&7 を設定してから &f/ffa spawnpvp block select&7 を実行してください。"
+spawnpvp-world-mismatch: "%prefix%&cSpawnPvP &8> &7両方の角は同じワールド内に設定する必要があります。"
+spawnpvp-world-missing: "%prefix%&cSpawnPvP &8> &7ワールド &f%world% &7は読み込まれていません。"
+spawnpvp-detect-failed: "%prefix%&cSpawnPvP &8> &7選択した範囲内に閉じた &f%material% &7の枠を検出できませんでした。"
+spawnpvp-zone-saved: "%prefix%&aSpawnPvP を保存しました &8> &7ワールド: &f%world% &8| &7中心: &f%x%, %y%, %z% &8| &7セル数: &f%cells% &8| &7ブロック: &f%material%&7."
+spawnpvp-zone-cleared: "%prefix%&eSpawnPvP &8> &7保存された PvP サークルを削除しました。"
+spawnpvp-zone-missing: "%prefix%&cSpawnPvP &8> &7保存されている PvP サークルはありません。"
+spawnpvp-zone-info: "%prefix%&bSpawnPvP &8> &7ワールド: &f%world% &8| &7中心: &f%x%, %y%, %z% &8| &7セル数: &f%cells% &8| &7ブロック: &f%material%&7."
+spawnpvp-reloaded: "%prefix%&aSpawnPvP の設定をリロードしました。"
+
+
+kit-selected: "%prefix%&aキットを選択しました: &f%kit%&a."
+arena-kit-linked: "%prefix%&aキット &f%kit% &aをアリーナ &f%arena%&a にリンクしました。"
+arena-kit-already-linked: "%prefix%&eキット &f%kit% &eはすでに &f%arena%&e にリンクされています。"
+kit-missing: "%prefix%&cキット &f%kit% &cは存在しません。"
+kit-created: "%prefix%&aキット &f%kit% &aを作成しました。"
+kit-exists: "%prefix%&eキット &f%kit% &eはすでに存在します。 &7&f/kiteditor %kit%&7 を使用してください。"
+kit-saved: "%prefix%&aインベントリからキット &f%kit% &aを保存しました。"
+personal-kit-saved: "%prefix%&a個人キット &f%kit% &aを保存しました。"
+kit-save-guide: "%prefix%&bセットアップ &8> &7次の手順: &f/ffa build <arena> auto %kit% &8> &f/ffa arena enable <arena>&7."
+kit-reset: "%prefix%&eキットエディターを保存済みのキット &f%kit%&e にリセットしました。"
+kit-cleaned: "%prefix%&eキット &f%kit%&e のエディターインベントリを空にしました。"
+kit-deleted: "%prefix%&aキット &f%kit% &aを削除しました。"
+kit-given: "%prefix%&a&f%player%&a にキット &f%kit% &aを付与しました。"
+kit-removed: "%prefix%&e&f%player%&e の選択キットを &f%kit%&e にリセットしました。"
+kiteditor-usage: "%prefix%&e使用方法: &f/kiteditor [kitname] &7または &f/ffa kit edit [kitname]"
+kiteditor-blocked-in-ffa: "%prefix%&cFFA 内ではキットエディターを使用できません。 &7先に &f/ffa leave&7 でアリーナから退出してください。"
+kiteditor-opened: "%prefix%&aキット &f%kit%&a を編集中です。 &7他のキットには影響しません。"
+personal-kiteditor-opened: "%prefix%&a&f%kit%&a の個人キットエディターを開きました。"
+kit-create-guide: "%prefix%&bキット &8> &7&f/kiteditor %kit% &7または &f/ffa kit edit %kit%&7 で編集できます。"
+
+
+stats-reset: "%prefix%&a&f%player%&a の統計をリセットしました。"
+player-missing: "%prefix%&cプレイヤー &f%player% &cが見つかりませんでした。"
+
+build-enabled: "%prefix%&aビルドモードを有効にしました。"
+build-disabled: "%prefix%&eビルドモードを無効にしました。"
+build-arena-set: "%prefix%&aアリーナ &f%arena% &aのビルドモードを &f%state%&a に設定しました。"
+build-blocks-set: "%prefix%&aアリーナ &f%arena% &aで許可する &f%type% &aブロック: &f%blocks%&a."
+build-blocks-auto: "%prefix%&aアリーナ &f%arena% &aのビルドブロックをキット &f%kit%&a から設定しました: &f%blocks%&a."
+
+scoreboard-reloaded: "%prefix%&aスコアボードとアクションバーをリロードしました。"
+announcements-reloaded: "%prefix%&aアナウンスをリロードしました。"
+
+tag-selected: "%prefix%&aタグ %tag% &8(&f%tag_name%&8)&a を選択しました。"
+tag-cleared: "%prefix%&e現在のタグを解除しました。"
+tag-locked: "%prefix%&cこのタグを使用する権限がありません。"
+
+chatcolour-selected: "%prefix%&aチャットカラー %colour%&a を選択しました。"
+chatcolour-cleared: "%prefix%&e現在のチャットカラーを解除しました。"
+chatcolour-locked: "%prefix%&cこのチャットカラーを使用する権限がありません。"
+chatcustomization-reloaded: "%prefix%&aタグとチャットカラーをリロードしました。"
+
+
+arena-list-header: "&8&m--------------------------------"
+arena-list-entry: "&#2EB6FF%arena% &8| &7有効: &f%enabled% &8| &7プレイヤー: &f%players%"
+arena-list-footer: "&8&m--------------------------------"
+
+
+stats-format:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&l統計 &8| &f%player%"
+  - "&7キル: &a%kills% &8| &7デス: &c%deaths% &8| &7KDR: &e%kdr%"
+  - "&7連続キル: &b%killstreak% &8| &7最高記録: &d%best_killstreak%"
+  - "&7トークン: &#2EB6FF%tokens%"
+  - "&7XP: &b%xp% &8| &7レベル: &d%level%"
+  - "&8&m--------------------------------"
+
+
+top-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lFFA キルランキング"
+
+top-entry: "&f%position%. &#7CFFCB%player% &8- &f%value%"
+
+top-footer: "&8&m--------------------------------"
+
+
+feature-disabled: "%prefix%&cこの機能は現在無効です: &f%feature%&c."
+
+settings-usage: "%prefix%&e使用方法: &f/ffa settings list &7または &f/ffa settings [setting] [on/off]"
+settings-unknown: "%prefix%&c不明な設定です: &f%setting%&c。 &7&f/ffa settings list&7 を使用してください。"
+settings-updated: "%prefix%&a設定 &f%setting% &aを &f%state%&a に変更しました。"
+
+settings-list-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lFlixCore FFA 設定"
+
+settings-list-entry: "&f%setting% &8- &7%state%"
+
+settings-list-footer:
+  - "&8&m--------------------------------"
+
+
+afk-setup-started: "%prefix%&#2EB6FFAFK セットアップ &8> &f%zone%-afk.yml&7 を作成または読み込みました。 金の斧を使用してください: 左クリックで位置1、右クリックで位置2。"
+afk-reloaded: "%prefix%&#2EB6FFAFK ゾーンをリロードしました。"

@@ -1,0 +1,19 @@
+# =============================================================================
+# FlixCore FFA - Actionbar
+# Installed path: plugins/FlixCoreFFA/display.yml
+#
+# Actionbar display configuration.
+# Supports PlaceholderAPI, FFA placeholders, legacy colors, RGB hex, and MiniMessage.
+# =============================================================================
+
+actionbar:
+  # Enable or disable actionbar messages globally.
+  enabled: true
+  # Update interval in ticks.
+  update-interval-ticks: 40
+  default:
+    enabled: true
+    # Static message.
+    message: "&fKills: &a%ffa_kills% &8| &fStreak: &b%ffa_killstreak%"
+  # Per-arena actionbar overrides.
+  arenas: {}

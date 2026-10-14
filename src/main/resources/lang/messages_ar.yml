@@ -1,0 +1,182 @@
+# FlixCore FFA editable player messages: ar
+# عدّل هنا الرسائل العادية التي تظهر للاعبين.
+# أدلة الأوامر مثل /ffa help مدمجة داخل الإضافة ولا يمكن تعديلها من هنا.
+# المفاتيح المفقودة ستستخدم lang/messages_en.yml، ثم legacy messages.yml إذا كانت موجودة في تثبيت قديم.
+
+arena-not-ready: "%prefix%&cالساحة &f%arena% &cغير جاهزة بعد. &7قم بتحديد المنطقة ونقطة الظهور قبل تفعيلها."
+arena-not-empty: "%prefix%&cالساحة &f%arena% &cما زال بداخلها لاعبون. &7أوقفها أو أخرج اللاعبين قبل حذفها."
+build-usage: "%prefix%&eالاستخدام: &f/ffa build &7أو &f/ffa build <arena> <true|false> &7أو &f/ffa build <arena> <break|place> <hand|hotbar|inventory|kit|block,block|clear> &7أو &f/ffa build <arena> auto [kit]"
+command-blocked-in-arena: "%prefix%&cلا يمكنك استخدام الأوامر أثناء القتال. &7استخدم &f/ffa leave &7للخروج."
+ffaarena-usage: "%prefix%&eالاستخدام: &f/ffaarena <arena>"
+
+# يدعم MiniMessage وألوان Legacy مثل (&a) وألوان RGB مثل (&#2EB6FF)
+# وPlaceholderAPI وFFA placeholders.
+
+prefix: "&#2EB6FF&lFlixCore FFA &8> "
+
+no-permission: "%prefix%&cليس لديك صلاحية. &7لا يمكنك استخدام هذا الأمر."
+only-players: "%prefix%&cهذا الأمر مخصص للاعبين فقط. &7استخدمه داخل اللعبة."
+unknown-command: "%prefix%&cأمر غير معروف. &7استخدم &f/ffa help&7."
+reloaded: "%prefix%&aتمت إعادة تحميل الإعدادات."
+database-error: "%prefix%&cحدث خطأ في قاعدة البيانات. &7راجع الكونسول لمزيد من التفاصيل."
+
+
+token-balance: "%prefix%&#2EB6FFالتوكنز &8| &7الرصيد: &f%tokens%"
+token-balance-other: "%prefix%&#2EB6FFالتوكنز &8| &f%player% &7يمتلك &f%tokens% &7توكن."
+token-given: "%prefix%&aتحديث التوكنز &8| &7تمت إضافة &f%amount% &7توكن إلى &f%player%&7. الرصيد: &f%tokens%"
+token-taken: "%prefix%&eتحديث التوكنز &8| &7تمت إزالة &f%amount% &7توكن من &f%player%&7. الرصيد: &f%tokens%"
+token-set: "%prefix%&aتحديث التوكنز &8| &7تم تعيين توكنز &f%player%&7 إلى &f%tokens%&7."
+token-giveall: "%prefix%&aتحديث التوكنز &8| &7تم إعطاء &f%amount% &7توكن إلى &f%players% &7لاعبين متصلين."
+token-invalid-amount: "%prefix%&cالكمية غير صالحة. &7استخدم رقماً صحيحاً موجباً."
+token-kill-reward: "%prefix%&a+%amount% توكن &8(&e%multiplier%x&8) &8| &7الرصيد الجديد: &f%tokens%"
+
+
+arena-created: "%prefix%&aتم إنشاء الساحة &f%arena%&a."
+arena-setup-complete: "%prefix%&bالإعداد &8> &7التالي: &f/ffa setspawn %arena% &8> &f/ffa kit create <kit> &8> &f/ffa build %arena% auto <kit> &8> &f/ffa arena enable %arena%&7."
+arena-create-select-region: "%prefix%&eحدد منطقة أولاً. &7استخدم &f/ffa wand &8> &f/ffa pos1 &8> &f/ffa pos2 &8> &f/ffa create <arena>&7."
+arena-deleted: "%prefix%&aتم حذف الساحة &f%arena%&a."
+arena-missing: "%prefix%&cالساحة &f%arena% &cغير موجودة."
+arena-exists: "%prefix%&eالساحة &f%arena% &eموجودة بالفعل."
+arena-disabled: "%prefix%&cالساحة &f%arena% &cمعطلة."
+arena-enabled: "%prefix%&aتم تفعيل الساحة &f%arena%&a."
+arena-ready: "%prefix%&aالساحة جاهزة. &7اختبرها باستخدام &f/ffa join %arena%&7."
+arena-disabled-done: "%prefix%&eتم تعطيل الساحة &f%arena%&e."
+arena-started: "%prefix%&aتم تشغيل الساحة &f%arena%&a."
+arena-stopped: "%prefix%&eتم إيقاف الساحة &f%arena%&e."
+arena-regen-started: "%prefix%&aبدأ التجديد السريع للساحة &f%arena%&a."
+arena-regen-all-started: "%prefix%&aبدأ التجديد السريع لجميع الساحات."
+arena-regen-snapshot-started: "%prefix%&aتمت إضافة الساحة &f%arena% &aإلى نظام التجديد."
+arena-regen-snapshot-all-started: "%prefix%&aيتم الآن إضافة جميع الساحات إلى نظام التجديد."
+arena-regen-snapshot-folder: "%prefix%&7مسار ملف اللقطة: &f%path%"
+arena-regen-snapshot-status-ready: "%prefix%&aاللقطة جاهزة &8| &f%arena% &8| &7الملف: &f%path%"
+arena-regen-snapshot-status-saving: "%prefix%&eيتم حفظ اللقطة &8| &f%arena% &8| &7الملف: &f%path%"
+arena-regen-snapshot-status-missing: "%prefix%&cاللقطة غير موجودة &8| &f%arena% &8| &7استخدم &f/ffa arena snapshot add %arena%&7."
+
+
+spawn-set: "%prefix%&aتم حفظ نقطة الظهور للساحة &f%arena%&a."
+spawn-next-step: "%prefix%&bالإعداد &8> &7الآن أنشئ/احفظ كِت باستخدام &f/ffa kit create <kit>&7."
+lobby-set: "%prefix%&aتم حفظ لوبي FFA."
+lobby-missing: "%prefix%&cلم يتم تحديد اللوبي. &7استخدم &f/ffa setlobby&7."
+
+
+region-pos1: "%prefix%&aتم حفظ الموضع 1 للساحة &f%arena%&a. &7الآن حدد الموضع 2."
+region-selection-started: "%prefix%&bالإعداد &8> &7حدد الزاويتين: &f/ffa pos1 &8> &f/ffa pos2&7."
+region-wand-given: "%prefix%&bالإعداد &8> &7استخدم العصا، ثم نفذ &f/ffa create <arena>&7."
+region-click-block: "%prefix%&cاضغط على بلوك باستخدام عصا تحديد المنطقة."
+region-no-selection: "%prefix%&cلا يوجد تحديد منطقة نشط. &7ابدأ باستخدام &f/ffa wand&7."
+region-wand-pos1: "%prefix%&aتم تحديد الموضع 1: &f%x%, %y%, %z%&7. التالي: &f/ffa pos2&7."
+region-wand-pos2: "%prefix%&aتم تحديد الموضع 2: &f%x%, %y%, %z%&7."
+region-world-mismatch: "%prefix%&cيجب أن يكون الموضعان في نفس العالم."
+region-selection-ready: "%prefix%&bالإعداد &8> &7تم تحديد المنطقة. أكمل باستخدام &f/ffa create <arena>&7."
+region-set: "%prefix%&aتم حفظ منطقة الساحة &f%arena%&a."
+
+
+joined: "%prefix%&aدخلت إلى الساحة &f%arena%&a. حظاً موفقاً."
+left: "%prefix%&aغادرت الساحة."
+not-in-arena: "%prefix%&cأنت لست داخل أي ساحة."
+already-in-arena: "%prefix%&eأنت موجود بالفعل داخل ساحة."
+spectate-target-not-in-arena: "%prefix%&cاللاعب &f%player% &cلا يقاتل حالياً داخل أي ساحة."
+
+
+spawnpvp-hand-block-required: "%prefix%&eإعداد SpawnPvP &8> &7أمسك نفس البلوك/النصف بلوك المستخدم في دائرة PvP، ثم نفذ &f/ffa spawnpvp block select&7."
+spawnpvp-wand-given: "%prefix%&aتم إعطاؤك عصا SpawnPvP. &7اضغط بزر الفأرة الأيسر لتحديد الزاوية 1، والأيمن لتحديد الزاوية 2، ثم أمسك بلوك الإطار ونفذ &f/ffa spawnpvp block select&7."
+spawnpvp-corner-select-started: "%prefix%&aإعداد SpawnPvP &8> &7اضغط بزر الفأرة الأيمن على الزاوية &f%position% &7لمنطقة SpawnPvP."
+spawnpvp-click-block-required: "%prefix%&cSpawnPvP &8> &7اضغط بزر الفأرة الأيمن على بلوك لحفظ هذه الزاوية."
+spawnpvp-corner-set: "%prefix%&aزاوية SpawnPvP %position% &8> &7تم حفظها عند &f%x%, %y%, %z% &7في &f%world%&7."
+spawnpvp-material-selected: "%prefix%&aبلوك SpawnPvP &8> &7تم تعيين بلوك التحديد إلى &f%material%&7. جارٍ اكتشاف الدائرة داخل الزوايا المحددة..."
+spawnpvp-setup-incomplete: "%prefix%&eإعداد SpawnPvP &8> &7حدد &f/ffa spawnpvp 1&7 و &f/ffa spawnpvp 2&7، ثم استخدم &f/ffa spawnpvp block select&7."
+spawnpvp-world-mismatch: "%prefix%&cSpawnPvP &8> &7يجب أن تكون الزاويتان في نفس العالم."
+spawnpvp-world-missing: "%prefix%&cSpawnPvP &8> &7العالم &f%world% &7غير محمل."
+spawnpvp-detect-failed: "%prefix%&cSpawnPvP &8> &7تعذر العثور على إطار مغلق من &f%material% &7داخل الزوايا المحددة."
+spawnpvp-zone-saved: "%prefix%&aتم حفظ SpawnPvP &8> &7العالم: &f%world% &8| &7المركز: &f%x%, %y%, %z% &8| &7الخلايا: &f%cells% &8| &7البلوك: &f%material%&7."
+spawnpvp-zone-cleared: "%prefix%&eSpawnPvP &8> &7تم حذف دائرة PvP المحفوظة."
+spawnpvp-zone-missing: "%prefix%&cSpawnPvP &8> &7لا توجد دائرة PvP نشطة محفوظة."
+spawnpvp-zone-info: "%prefix%&bSpawnPvP &8> &7العالم: &f%world% &8| &7المركز: &f%x%, %y%, %z% &8| &7الخلايا: &f%cells% &8| &7البلوك: &f%material%&7."
+spawnpvp-reloaded: "%prefix%&aتمت إعادة تحميل إعدادات SpawnPvP."
+
+
+kit-selected: "%prefix%&aتم اختيار الكِت: &f%kit%&a."
+arena-kit-linked: "%prefix%&aتم ربط الكِت &f%kit% &aبالساحة &f%arena%&a."
+arena-kit-already-linked: "%prefix%&eالكِت &f%kit% &eمرتبط بالفعل بالساحة &f%arena%&e."
+kit-missing: "%prefix%&cالكِت &f%kit% &cغير موجود."
+kit-created: "%prefix%&aتم إنشاء الكِت &f%kit%&a."
+kit-exists: "%prefix%&eالكِت &f%kit% &eموجود بالفعل. &7استخدم &f/kiteditor %kit%&7."
+kit-saved: "%prefix%&aتم حفظ الكِت &f%kit% &aمن الإنفنتوري الخاص بك."
+personal-kit-saved: "%prefix%&aتم حفظ الكِت الشخصي &f%kit%&a."
+kit-save-guide: "%prefix%&bالإعداد &8> &7التالي: &f/ffa build <arena> auto %kit% &8> &f/ffa arena enable <arena>&7."
+kit-reset: "%prefix%&eتمت إعادة محرر الكِت إلى الكِت المحفوظ &f%kit%&e."
+kit-cleaned: "%prefix%&eتم تفريغ إنفنتوري محرر الكِت &f%kit%&e."
+kit-deleted: "%prefix%&aتم حذف الكِت &f%kit%&a."
+kit-given: "%prefix%&aتم إعطاء الكِت &f%kit% &aإلى &f%player%&a."
+kit-removed: "%prefix%&eتمت إعادة الكِت المختار للاعب &f%player%&e إلى &f%kit%&e."
+kiteditor-usage: "%prefix%&eالاستخدام: &f/kiteditor [kitname] &7أو &f/ffa kit edit [kitname]"
+kiteditor-blocked-in-ffa: "%prefix%&cمحرر الكِت معطل أثناء وجودك داخل FFA. &7غادر الساحة أولاً باستخدام &f/ffa leave&7."
+kiteditor-opened: "%prefix%&aأنت تقوم بتعديل الكِت &f%kit%&a. &7لن يتم تعديل الكِتات الأخرى."
+personal-kiteditor-opened: "%prefix%&aتم فتح محرر الكِت الشخصي لـ &f%kit%&a."
+kit-create-guide: "%prefix%&bالكِت &8> &7عدله باستخدام &f/kiteditor %kit% &7أو &f/ffa kit edit %kit%&7."
+
+
+stats-reset: "%prefix%&aتمت إعادة إحصائيات &f%player%&a."
+player-missing: "%prefix%&cلم يتم العثور على اللاعب &f%player%&c."
+
+build-enabled: "%prefix%&aتم تفعيل وضع البناء."
+build-disabled: "%prefix%&eتم تعطيل وضع البناء."
+build-arena-set: "%prefix%&aتم تعيين وضع البناء للساحة &f%arena% &aإلى &f%state%&a."
+build-blocks-set: "%prefix%&aالبلوكات المسموح بها من نوع &f%type% &aفي الساحة &f%arena%&a: &f%blocks%&a."
+build-blocks-auto: "%prefix%&aتم تعيين بلوكات البناء في الساحة &f%arena% &aمن الكِت &f%kit%&a: &f%blocks%&a."
+
+scoreboard-reloaded: "%prefix%&aتمت إعادة تحميل لوحة النتائج وشريط الأكشن."
+announcements-reloaded: "%prefix%&aتمت إعادة تحميل الإعلانات."
+
+tag-selected: "%prefix%&aتم اختيار التاغ %tag% &8(&f%tag_name%&8)&a."
+tag-cleared: "%prefix%&eتم مسح التاغ النشط الخاص بك."
+tag-locked: "%prefix%&cليس لديك صلاحية لاستخدام هذا التاغ."
+
+chatcolour-selected: "%prefix%&aتم اختيار لون الدردشة %colour%&a."
+chatcolour-cleared: "%prefix%&eتم مسح لون الدردشة النشط الخاص بك."
+chatcolour-locked: "%prefix%&cليس لديك صلاحية لاستخدام لون الدردشة هذا."
+chatcustomization-reloaded: "%prefix%&aتمت إعادة تحميل التاغات وألوان الدردشة."
+
+
+arena-list-header: "&8&m--------------------------------"
+arena-list-entry: "&#2EB6FF%arena% &8| &7مفعلة: &f%enabled% &8| &7اللاعبون: &f%players%"
+arena-list-footer: "&8&m--------------------------------"
+
+
+stats-format:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lالإحصائيات &8| &f%player%"
+  - "&7القتلات: &a%kills% &8| &7الوفيات: &c%deaths% &8| &7KDR: &e%kdr%"
+  - "&7سلسلة القتلات: &b%killstreak% &8| &7الأفضل: &d%best_killstreak%"
+  - "&7التوكنز: &#2EB6FF%tokens%"
+  - "&7XP: &b%xp% &8| &7المستوى: &d%level%"
+  - "&8&m--------------------------------"
+
+
+top-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lأفضل قتلات FFA"
+
+top-entry: "&f%position%. &#7CFFCB%player% &8- &f%value%"
+
+top-footer: "&8&m--------------------------------"
+
+
+feature-disabled: "%prefix%&cهذه الميزة معطلة حالياً: &f%feature%&c."
+
+settings-usage: "%prefix%&eالاستخدام: &f/ffa settings list &7أو &f/ffa settings [setting] [on/off]"
+settings-unknown: "%prefix%&cإعداد غير معروف: &f%setting%&c. &7استخدم &f/ffa settings list&7."
+settings-updated: "%prefix%&aالإعداد &f%setting% &aأصبح الآن &f%state%&a."
+
+settings-list-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lإعدادات FlixCore FFA"
+
+settings-list-entry: "&f%setting% &8- &7%state%"
+
+settings-list-footer:
+  - "&8&m--------------------------------"
+
+
+afk-setup-started: "%prefix%&#2EB6FFإعداد AFK &8> &7تم إنشاء/تحميل &f%zone%-afk.yml&7. استخدم الفأس الذهبي: زر الفأرة الأيسر لـ pos1 والأيمن لـ pos2."
+afk-reloaded: "%prefix%&#2EB6FFتمت إعادة تحميل مناطق AFK."

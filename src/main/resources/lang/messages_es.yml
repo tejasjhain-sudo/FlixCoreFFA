@@ -1,0 +1,184 @@
+
+# FlixCore FFA editable player messages: es
+# Edita aquí los mensajes normales visibles para los jugadores.
+# Las guías de comandos como /ffa help están integradas en el plugin y no se pueden editar aquí.
+# Las claves que falten usarán lang/messages_en.yml y después legacy messages.yml si existe una instalación antigua.
+
+arena-not-ready: "%prefix%&cLa arena &f%arena% &caún no está lista. &7Configura su región y punto de aparición antes de activarla."
+arena-not-empty: "%prefix%&cLa arena &f%arena% &ctodavía tiene jugadores. &7Deténla o vacíala antes de eliminarla."
+build-usage: "%prefix%&eUso: &f/ffa build &7o &f/ffa build <arena> <true|false> &7o &f/ffa build <arena> <break|place> <hand|hotbar|inventory|kit|block,block|clear> &7o &f/ffa build <arena> auto [kit]"
+command-blocked-in-arena: "%prefix%&cNo puedes usar comandos mientras estás luchando. &7Usa &f/ffa leave &7para salir."
+ffaarena-usage: "%prefix%&eUso: &f/ffaarena <arena>"
+
+# Compatible con MiniMessage, colores clásicos (&a), RGB hex (&#2EB6FF),
+# PlaceholderAPI y placeholders de FFA.
+
+prefix: "&#2EB6FF&lFlixCore FFA &8> "
+
+no-permission: "%prefix%&cNo tienes permiso. &7No puedes usar este comando."
+only-players: "%prefix%&cEste comando es solo para jugadores. &7Úsalo dentro del juego."
+unknown-command: "%prefix%&cComando desconocido. &7Usa &f/ffa help&7."
+reloaded: "%prefix%&aConfiguración recargada."
+database-error: "%prefix%&cError de base de datos. &7Revisa la consola para más detalles."
+
+
+token-balance: "%prefix%&#2EB6FFTokens &8| &7Saldo: &f%tokens%"
+token-balance-other: "%prefix%&#2EB6FFTokens &8| &f%player% &7tiene &f%tokens% &7tokens."
+token-given: "%prefix%&aActualización de tokens &8| &7Se añadieron &f%amount% &7tokens a &f%player%&7. Saldo: &f%tokens%"
+token-taken: "%prefix%&eActualización de tokens &8| &7Se eliminaron &f%amount% &7tokens de &f%player%&7. Saldo: &f%tokens%"
+token-set: "%prefix%&aActualización de tokens &8| &7Los tokens de &f%player%&7 se establecieron en &f%tokens%&7."
+token-giveall: "%prefix%&aActualización de tokens &8| &7Se dieron &f%amount% &7tokens a &f%players% &7jugadores conectados."
+token-invalid-amount: "%prefix%&cCantidad inválida. &7Usa un número entero positivo."
+token-kill-reward: "%prefix%&a+%amount% Tokens &8(&e%multiplier%x&8) &8| &7Nuevo saldo: &f%tokens%"
+
+
+arena-created: "%prefix%&aLa arena &f%arena% &aha sido creada."
+arena-setup-complete: "%prefix%&bConfiguración &8> &7Siguiente: &f/ffa setspawn %arena% &8> &f/ffa kit create <kit> &8> &f/ffa build %arena% auto <kit> &8> &f/ffa arena enable %arena%&7."
+arena-create-select-region: "%prefix%&ePrimero selecciona una región. &7Usa &f/ffa wand &8> &f/ffa pos1 &8> &f/ffa pos2 &8> &f/ffa create <arena>&7."
+arena-deleted: "%prefix%&aLa arena &f%arena% &aha sido eliminada."
+arena-missing: "%prefix%&cLa arena &f%arena% &cno existe."
+arena-exists: "%prefix%&eLa arena &f%arena% &eya existe."
+arena-disabled: "%prefix%&cLa arena &f%arena% &cestá desactivada."
+arena-enabled: "%prefix%&aLa arena &f%arena% &aha sido activada."
+arena-ready: "%prefix%&aLa arena está lista. &7Pruébala con &f/ffa join %arena%&7."
+arena-disabled-done: "%prefix%&eLa arena &f%arena% &eha sido desactivada."
+arena-started: "%prefix%&aLa arena &f%arena% &aha comenzado."
+arena-stopped: "%prefix%&eLa arena &f%arena% &ese ha detenido."
+arena-regen-started: "%prefix%&aLa regeneración rápida de la arena &f%arena% &aha comenzado."
+arena-regen-all-started: "%prefix%&aLa regeneración rápida de todas las arenas ha comenzado."
+arena-regen-snapshot-started: "%prefix%&aLa arena &f%arena% &aha sido añadida al sistema de regeneración."
+arena-regen-snapshot-all-started: "%prefix%&aTodas las arenas están siendo añadidas al sistema de regeneración."
+
+arena-regen-snapshot-folder: "%prefix%&7Ruta del snapshot: &f%path%"
+arena-regen-snapshot-status-ready: "%prefix%&aSnapshot listo &8| &f%arena% &8| &7Archivo: &f%path%"
+arena-regen-snapshot-status-saving: "%prefix%&eSnapshot guardándose &8| &f%arena% &8| &7Archivo: &f%path%"
+arena-regen-snapshot-status-missing: "%prefix%&cSnapshot faltante &8| &f%arena% &8| &7Usa &f/ffa arena snapshot add %arena%&7."
+
+
+spawn-set: "%prefix%&aEl punto de aparición de la arena &f%arena%&a ha sido guardado."
+spawn-next-step: "%prefix%&bConfiguración &8> &7Ahora crea/guarda un kit con &f/ffa kit create <kit>&7."
+lobby-set: "%prefix%&aEl lobby de FFA ha sido guardado."
+lobby-missing: "%prefix%&cEl lobby no está configurado. &7Usa &f/ffa setlobby&7."
+
+
+region-pos1: "%prefix%&aLa posición 1 de &f%arena%&a ha sido guardada. &7Ahora configura la posición 2."
+region-selection-started: "%prefix%&bConfiguración &8> &7Configura ambas esquinas: &f/ffa pos1 &8> &f/ffa pos2&7."
+region-wand-given: "%prefix%&bConfiguración &8> &7Usa la varita y luego ejecuta &f/ffa create <arena>&7."
+region-click-block: "%prefix%&cHaz clic en un bloque con la varita de región."
+region-no-selection: "%prefix%&cNo hay ninguna selección de región activa. &7Empieza con &f/ffa wand&7."
+region-wand-pos1: "%prefix%&aPosición 1 establecida: &f%x%, %y%, %z%&7. Siguiente: &f/ffa pos2&7."
+region-wand-pos2: "%prefix%&aPosición 2 establecida: &f%x%, %y%, %z%&7."
+region-world-mismatch: "%prefix%&cLas dos posiciones de la región deben estar en el mismo mundo."
+region-selection-ready: "%prefix%&bConfiguración &8> &7Región seleccionada. Termina con &f/ffa create <arena>&7."
+region-set: "%prefix%&aLa región de la arena &f%arena%&a ha sido guardada."
+
+
+joined: "%prefix%&aHas entrado en la arena &f%arena%&a. Buena suerte."
+left: "%prefix%&aHas salido de la arena."
+not-in-arena: "%prefix%&cNo estás dentro de una arena."
+already-in-arena: "%prefix%&eYa estás dentro de una arena."
+spectate-target-not-in-arena: "%prefix%&cEl jugador &f%player% &cno está luchando en ninguna arena."
+
+
+spawnpvp-hand-block-required: "%prefix%&eConfiguración SpawnPvP &8> &7Sostén el mismo bloque/losa usado para tu círculo PvP y luego ejecuta &f/ffa spawnpvp block select&7."
+spawnpvp-wand-given: "%prefix%&aVarita SpawnPvP entregada. &7Haz clic izquierdo para la esquina 1, clic derecho para la esquina 2, luego sostén el bloque del borde y ejecuta &f/ffa spawnpvp block select&7."
+spawnpvp-corner-select-started: "%prefix%&aConfiguración SpawnPvP &8> &7Haz clic derecho en la esquina &f%position% &7del área SpawnPvP."
+spawnpvp-click-block-required: "%prefix%&cSpawnPvP &8> &7Haz clic derecho en un bloque para guardar esta esquina."
+spawnpvp-corner-set: "%prefix%&aEsquina SpawnPvP %position% &8> &7Guardada en &f%x%, %y%, %z% &7en &f%world%&7."
+spawnpvp-material-selected: "%prefix%&aBloque SpawnPvP &8> &7El bloque marcador se estableció en &f%material%&7. Detectando el círculo dentro de las esquinas seleccionadas..."
+spawnpvp-setup-incomplete: "%prefix%&eConfiguración SpawnPvP &8> &7Configura &f/ffa spawnpvp 1&7, &f/ffa spawnpvp 2&7 y luego &f/ffa spawnpvp block select&7."
+spawnpvp-world-mismatch: "%prefix%&cSpawnPvP &8> &7Ambas esquinas deben estar en el mismo mundo."
+spawnpvp-world-missing: "%prefix%&cSpawnPvP &8> &7El mundo &f%world% &7no está cargado."
+spawnpvp-detect-failed: "%prefix%&cSpawnPvP &8> &7No se pudo encontrar un borde cerrado de &f%material% &7dentro de las esquinas seleccionadas."
+spawnpvp-zone-saved: "%prefix%&aSpawnPvP guardado &8> &7Mundo: &f%world% &8| &7Centro: &f%x%, %y%, %z% &8| &7Celdas: &f%cells% &8| &7Bloque: &f%material%&7."
+spawnpvp-zone-cleared: "%prefix%&eSpawnPvP &8> &7El círculo PvP guardado ha sido eliminado."
+spawnpvp-zone-missing: "%prefix%&cSpawnPvP &8> &7No hay ningún círculo PvP activo guardado."
+spawnpvp-zone-info: "%prefix%&bSpawnPvP &8> &7Mundo: &f%world% &8| &7Centro: &f%x%, %y%, %z% &8| &7Celdas: &f%cells% &8| &7Bloque: &f%material%&7."
+spawnpvp-reloaded: "%prefix%&aLa configuración de SpawnPvP ha sido recargada."
+
+
+kit-selected: "%prefix%&aKit seleccionado: &f%kit%&a."
+arena-kit-linked: "%prefix%&aEl kit &f%kit% &aha sido vinculado a la arena &f%arena%&a."
+arena-kit-already-linked: "%prefix%&eEl kit &f%kit% &eya está vinculado a &f%arena%&e."
+kit-missing: "%prefix%&cEl kit &f%kit% &cno existe."
+kit-created: "%prefix%&aEl kit &f%kit% &aha sido creado."
+kit-exists: "%prefix%&eEl kit &f%kit% &eya existe. &7Usa &f/kiteditor %kit%&7."
+kit-saved: "%prefix%&aEl kit &f%kit% &aha sido guardado desde tu inventario."
+personal-kit-saved: "%prefix%&aEl kit personal &f%kit% &aha sido guardado."
+kit-save-guide: "%prefix%&bConfiguración &8> &7Siguiente: &f/ffa build <arena> auto %kit% &8> &f/ffa arena enable <arena>&7."
+kit-reset: "%prefix%&eEl editor de kits se ha restablecido al kit guardado &f%kit%&e."
+kit-cleaned: "%prefix%&eEl inventario del editor del kit &f%kit%&e ha sido vaciado."
+kit-deleted: "%prefix%&aEl kit &f%kit% &aha sido eliminado."
+kit-given: "%prefix%&aSe ha dado el kit &f%kit% &aa &f%player%&a."
+kit-removed: "%prefix%&eEl kit seleccionado de &f%player%&e se ha restablecido a &f%kit%&e."
+kiteditor-usage: "%prefix%&eUso: &f/kiteditor [kitname] &7o &f/ffa kit edit [kitname]"
+kiteditor-blocked-in-ffa: "%prefix%&cEl editor de kits está desactivado mientras estás dentro de FFA. &7Primero sal de la arena con &f/ffa leave&7."
+kiteditor-opened: "%prefix%&aEditando el kit &f%kit%&a. &7Los demás kits no serán modificados."
+personal-kiteditor-opened: "%prefix%&aEditor del kit personal &f%kit%&a abierto."
+kit-create-guide: "%prefix%&bKit &8> &7Edítalo con &f/kiteditor %kit% &7o &f/ffa kit edit %kit%&7."
+
+
+stats-reset: "%prefix%&aLas estadísticas de &f%player%&a han sido restablecidas."
+player-missing: "%prefix%&cNo se encontró al jugador &f%player%&c."
+
+build-enabled: "%prefix%&aModo de construcción activado."
+build-disabled: "%prefix%&eModo de construcción desactivado."
+build-arena-set: "%prefix%&aEl modo de construcción de la arena &f%arena% &ase estableció en &f%state%&a."
+build-blocks-set: "%prefix%&aBloques &f%type% &apermitidos en la arena &f%arena%&a: &f%blocks%&a."
+build-blocks-auto: "%prefix%&aBloques de construcción de la arena &f%arena% &aobtenidos del kit &f%kit%&a: &f%blocks%&a."
+
+scoreboard-reloaded: "%prefix%&aEl scoreboard y la actionbar han sido recargados."
+announcements-reloaded: "%prefix%&aLos anuncios han sido recargados."
+
+tag-selected: "%prefix%&aTag seleccionado %tag% &8(&f%tag_name%&8)&a."
+tag-cleared: "%prefix%&eTu tag activo ha sido eliminado."
+tag-locked: "%prefix%&cNo tienes permiso para usar este tag."
+
+chatcolour-selected: "%prefix%&aColor de chat %colour%&a seleccionado."
+chatcolour-cleared: "%prefix%&eTu color de chat activo ha sido eliminado."
+chatcolour-locked: "%prefix%&cNo tienes permiso para usar este color de chat."
+chatcustomization-reloaded: "%prefix%&aLos tags y colores de chat han sido recargados."
+
+
+arena-list-header: "&8&m--------------------------------"
+arena-list-entry: "&#2EB6FF%arena% &8| &7Activada: &f%enabled% &8| &7Jugadores: &f%players%"
+arena-list-footer: "&8&m--------------------------------"
+
+
+stats-format:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lEstadísticas &8| &f%player%"
+  - "&7Kills: &a%kills% &8| &7Muertes: &c%deaths% &8| &7KDR: &e%kdr%"
+  - "&7Racha: &b%killstreak% &8| &7Mejor: &d%best_killstreak%"
+  - "&7Tokens: &#2EB6FF%tokens%"
+  - "&7XP: &b%xp% &8| &7Nivel: &d%level%"
+  - "&8&m--------------------------------"
+
+
+top-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lTop de Kills FFA"
+
+top-entry: "&f%position%. &#7CFFCB%player% &8- &f%value%"
+
+top-footer: "&8&m--------------------------------"
+
+
+feature-disabled: "%prefix%&cEsta función está desactivada actualmente: &f%feature%&c."
+
+settings-usage: "%prefix%&eUso: &f/ffa settings list &7o &f/ffa settings [setting] [on/off]"
+settings-unknown: "%prefix%&cConfiguración desconocida: &f%setting%&c. &7Usa &f/ffa settings list&7."
+settings-updated: "%prefix%&aLa configuración &f%setting% &aahora está en &f%state%&a."
+
+settings-list-header:
+  - "&8&m--------------------------------"
+  - "&#2EB6FF&lConfiguración de FlixCore FFA"
+
+settings-list-entry: "&f%setting% &8- &7%state%"
+
+settings-list-footer:
+  - "&8&m--------------------------------"
+
+
+afk-setup-started: "%prefix%&#2EB6FFConfiguración AFK &8> &7Se creó/cargó &f%zone%-afk.yml&7. Usa el hacha dorada: clic izquierdo para pos1 y clic derecho para pos2."
+afk-reloaded: "%prefix%&#2EB6FFLas zonas AFK han sido recargadas."
