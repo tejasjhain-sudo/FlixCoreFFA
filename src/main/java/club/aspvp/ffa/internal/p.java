@@ -197,6 +197,18 @@ public final class p {
    }
 
    private FileConfiguration x7q9(File var1, String var2) {
+      if (var1 != null && var1.exists()) {
+         try {
+            String raw = Files.readString(var1.toPath(), StandardCharsets.UTF_8);
+            if (raw.contains("TwoCube") || raw.contains("twocube")) {
+               String updated = raw.replace("TwoCubeFFA", "FlixCore FFA")
+                                   .replace("twocubeffa", "flixcoreffa")
+                                   .replace("TwoCube", "FlixCore")
+                                   .replace("twocube", "flixcore");
+               Files.writeString(var1.toPath(), updated, StandardCharsets.UTF_8);
+            }
+         } catch (Exception ignored) {}
+      }
       YamlConfiguration var8 = YamlConfiguration.loadConfiguration(var1);
 
       try (InputStream var3 = this.gt.getResource(var2)) {

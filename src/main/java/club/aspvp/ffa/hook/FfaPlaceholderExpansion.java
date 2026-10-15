@@ -74,11 +74,15 @@ public class FfaPlaceholderExpansion extends PlaceholderExpansion {
             case "deaths":
                return String.valueOf(var6.v);
             case "killstreak":
+            case "streak":
                return String.valueOf(var6.w);
             case "best_killstreak":
+            case "beststreak":
+            case "best_streak":
                return String.valueOf(var6.x);
             case "token":
             case "tokens":
+            case "coins":
                return String.valueOf(var6.y);
             case "level":
                return String.valueOf(var6.A);
@@ -99,13 +103,19 @@ public class FfaPlaceholderExpansion extends PlaceholderExpansion {
 
                return this.players.y(var3);
             case "in_game":
+            case "ingame":
                if (var3 != null && this.players.w(var3)) {
                   return "true";
                }
 
                return "false";
             case "players":
+            case "online":
                return String.valueOf(this.players.w());
+            case "player":
+            case "player_name":
+            case "name":
+               return var1.getName() == null ? "" : var1.getName();
             case "tag":
                if (var3 == null) {
                   return "";
@@ -124,18 +134,21 @@ public class FfaPlaceholderExpansion extends PlaceholderExpansion {
                }
 
                return this.chatCustomization.e7z1(var3);
+            case "chatcolor":
             case "chatcolor_chat_colour":
                if (var3 == null) {
                   return "";
                }
 
                return w.n(this.chatCustomization.l9m6(var3));
+            case "chatcolor_name":
             case "chatcolor_colour_name":
                if (var3 == null) {
                   return "";
                }
 
                return this.chatCustomization.o3w8(var3);
+            case "ping":
             case "player_ping":
                if (var3 == null) {
                   return "0";

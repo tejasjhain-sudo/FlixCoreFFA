@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 
 public final class s {
    private static final DateTimeFormatter gG = DateTimeFormatter.ofPattern("HH:mm:ss");
-   private static final Pattern gH = Pattern.compile("%(?:twocubeffa|flixcoreffa|flixffa)_ping_([A-Za-z0-9_.-]+)%");
-   private static final Pattern gI = Pattern.compile("%\\s*((?:ffa|flixcoreffa|flixffa|twocubeffa)_tokens?|playerpoints_tokens)\\s*%", 2);
+   private static final Pattern gH = Pattern.compile("%(?:twocubeffa|flixcoreffa|flixffa|flixcore|ffa)_ping_([A-Za-z0-9_.-]+)%");
+   private static final Pattern gI = Pattern.compile("%\\s*((?:ffa|flixcoreffa|flixffa|flixcore|twocubeffa)_tokens?|playerpoints_tokens|tokens?)\\s*%", 2);
    private final p gJ;
    private final h gK;
    private final b gL;
@@ -53,63 +53,183 @@ public final class s {
             }
 
             String var5 = var10000;
+            String killsStr = String.valueOf(var3.u);
+            String deathsStr = String.valueOf(var3.v);
+            String kdrStr = var3.ae();
+            String streakStr = String.valueOf(var3.w);
+            String bestStreakStr = String.valueOf(var3.x);
+            String tokensStr = String.valueOf(var3.y);
+            String xpStr = String.valueOf(var3.z);
+            String levelStr = String.valueOf(var3.A);
+            String kitStr = this.gL.y(var1);
+            String inGameStr = this.gL.w(var1) ? "true" : "false";
+            String pingStr = String.valueOf(var1.getPing());
+
             var10000 = var2.replace("%player_name%", var1.getName())
+               .replace("%player%", var1.getName())
+               .replace("%name%", var1.getName())
+               .replace("%ffa_player%", var1.getName())
+               .replace("%flixcoreffa_player%", var1.getName())
+               .replace("%flixcore_player%", var1.getName())
                .replace("%ffa_name_prefix%", var5)
                .replace("%ffa_player_display%", var5 + var1.getName())
-               .replace("%ffa_kills%", String.valueOf(var3.u))
-               .replace("%ffa_deaths%", String.valueOf(var3.v))
-               .replace("%ffa_kdr%", var3.ae())
-               .replace("%ffa_killstreak%", String.valueOf(var3.w))
-               .replace("%ffa_best_killstreak%", String.valueOf(var3.x))
-               .replace("%ffa_token%", String.valueOf(var3.y))
-               .replace("%ffa_tokens%", String.valueOf(var3.y))
-               .replace("%PLAYERPOINTS_tokens%", String.valueOf(var3.y))
-               .replace("%twocubeffa_token%", String.valueOf(var3.y))
-               .replace("%flixcoreffa_token%", String.valueOf(var3.y))
-               .replace("%flixcoreffa_tokens%", String.valueOf(var3.y))
-               .replace("%flixffa_token%", String.valueOf(var3.y))
-               .replace("%flixffa_tokens%", String.valueOf(var3.y))
-               .replace("%twocubeffa_tokens%", String.valueOf(var3.y))
-               .replace("%ffa_xp%", String.valueOf(var3.z))
-               .replace("%ffa_level%", String.valueOf(var3.A))
+               .replace("%ffa_kills%", killsStr)
+               .replace("%flixcoreffa_kills%", killsStr)
+               .replace("%flixcore_kills%", killsStr)
+               .replace("%flixffa_kills%", killsStr)
+               .replace("%kills%", killsStr)
+               .replace("%twocubeffa_kills%", killsStr)
+               .replace("%ffa_deaths%", deathsStr)
+               .replace("%flixcoreffa_deaths%", deathsStr)
+               .replace("%flixcore_deaths%", deathsStr)
+               .replace("%flixffa_deaths%", deathsStr)
+               .replace("%deaths%", deathsStr)
+               .replace("%twocubeffa_deaths%", deathsStr)
+               .replace("%ffa_kdr%", kdrStr)
+               .replace("%flixcoreffa_kdr%", kdrStr)
+               .replace("%flixcore_kdr%", kdrStr)
+               .replace("%flixffa_kdr%", kdrStr)
+               .replace("%kdr%", kdrStr)
+               .replace("%twocubeffa_kdr%", kdrStr)
+               .replace("%ffa_killstreak%", streakStr)
+               .replace("%ffa_streak%", streakStr)
+               .replace("%flixcoreffa_killstreak%", streakStr)
+               .replace("%flixcoreffa_streak%", streakStr)
+               .replace("%flixcore_killstreak%", streakStr)
+               .replace("%flixcore_streak%", streakStr)
+               .replace("%flixffa_killstreak%", streakStr)
+               .replace("%flixffa_streak%", streakStr)
+               .replace("%killstreak%", streakStr)
+               .replace("%streak%", streakStr)
+               .replace("%twocubeffa_killstreak%", streakStr)
+               .replace("%ffa_best_killstreak%", bestStreakStr)
+               .replace("%ffa_beststreak%", bestStreakStr)
+               .replace("%ffa_best_streak%", bestStreakStr)
+               .replace("%flixcoreffa_best_killstreak%", bestStreakStr)
+               .replace("%flixcoreffa_beststreak%", bestStreakStr)
+               .replace("%flixcore_best_killstreak%", bestStreakStr)
+               .replace("%flixcore_beststreak%", bestStreakStr)
+               .replace("%flixffa_best_killstreak%", bestStreakStr)
+               .replace("%best_killstreak%", bestStreakStr)
+               .replace("%beststreak%", bestStreakStr)
+               .replace("%best_streak%", bestStreakStr)
+               .replace("%twocubeffa_best_killstreak%", bestStreakStr)
+               .replace("%ffa_token%", tokensStr)
+               .replace("%ffa_tokens%", tokensStr)
+               .replace("%flixcoreffa_token%", tokensStr)
+               .replace("%flixcoreffa_tokens%", tokensStr)
+               .replace("%flixcore_token%", tokensStr)
+               .replace("%flixcore_tokens%", tokensStr)
+               .replace("%flixffa_token%", tokensStr)
+               .replace("%flixffa_tokens%", tokensStr)
+               .replace("%tokens%", tokensStr)
+               .replace("%token%", tokensStr)
+               .replace("%coins%", tokensStr)
+               .replace("%PLAYERPOINTS_tokens%", tokensStr)
+               .replace("%twocubeffa_token%", tokensStr)
+               .replace("%twocubeffa_tokens%", tokensStr)
+               .replace("%ffa_xp%", xpStr)
+               .replace("%flixcoreffa_xp%", xpStr)
+               .replace("%flixcore_xp%", xpStr)
+               .replace("%flixffa_xp%", xpStr)
+               .replace("%xp%", xpStr)
+               .replace("%twocubeffa_xp%", xpStr)
+               .replace("%ffa_level%", levelStr)
+               .replace("%flixcoreffa_level%", levelStr)
+               .replace("%flixcore_level%", levelStr)
+               .replace("%flixffa_level%", levelStr)
+               .replace("%level%", levelStr)
+               .replace("%twocubeffa_level%", levelStr)
                .replace("%ffa_arena%", var4)
-               .replace("%ffa_kit%", this.gL.y(var1))
-               .replace("%ffa_in_game%", this.gL.w(var1) ? "true" : "false")
-               .replace("%ffa_player_ping%", String.valueOf(var1.getPing()))
-               .replace("%flixcoreffa_player_ping%", String.valueOf(var1.getPing()))
-               .replace("%flixffa_player_ping%", String.valueOf(var1.getPing()))
-               .replace("%twocubeffa_player_ping%", String.valueOf(var1.getPing()));
+               .replace("%flixcoreffa_arena%", var4)
+               .replace("%flixcore_arena%", var4)
+               .replace("%flixffa_arena%", var4)
+               .replace("%arena%", var4)
+               .replace("%twocubeffa_arena%", var4)
+               .replace("%ffa_kit%", kitStr)
+               .replace("%flixcoreffa_kit%", kitStr)
+               .replace("%flixcore_kit%", kitStr)
+               .replace("%flixffa_kit%", kitStr)
+               .replace("%kit%", kitStr)
+               .replace("%twocubeffa_kit%", kitStr)
+               .replace("%ffa_in_game%", inGameStr)
+               .replace("%ffa_ingame%", inGameStr)
+               .replace("%flixcoreffa_in_game%", inGameStr)
+               .replace("%flixcore_in_game%", inGameStr)
+               .replace("%in_game%", inGameStr)
+               .replace("%ingame%", inGameStr)
+               .replace("%twocubeffa_in_game%", inGameStr)
+               .replace("%ffa_player_ping%", pingStr)
+               .replace("%ffa_ping%", pingStr)
+               .replace("%flixcoreffa_player_ping%", pingStr)
+               .replace("%flixcoreffa_ping%", pingStr)
+               .replace("%flixcore_player_ping%", pingStr)
+               .replace("%flixcore_ping%", pingStr)
+               .replace("%flixffa_player_ping%", pingStr)
+               .replace("%flixffa_ping%", pingStr)
+               .replace("%player_ping%", pingStr)
+               .replace("%ping%", pingStr)
+               .replace("%twocubeffa_player_ping%", pingStr)
+               .replace("%twocubeffa_ping%", pingStr);
             int var17 = var3.y;
             var5 = var10000;
             var2 = gI.matcher(var5).replaceAll(Matcher.quoteReplacement(String.valueOf(Math.max(0, var17))));
             if (this.o3w8 != null) {
-               var2 = var2.replace("%ffa_tag%", this.o3w8.j4n9(var1))
-                  .replace("%flixcoreffa_tag%", this.o3w8.j4n9(var1))
-                  .replace("%flixffa_tag%", this.o3w8.j4n9(var1))
-                  .replace("%twocubeffa_tag%", this.o3w8.j4n9(var1))
-                  .replace("%ffa_tag_name%", this.o3w8.u2q5(var1))
-                  .replace("%flixcoreffa_tag_name%", this.o3w8.u2q5(var1))
-                  .replace("%flixffa_tag_name%", this.o3w8.u2q5(var1))
-                  .replace("%twocubeffa_tag_name%", this.o3w8.u2q5(var1))
-                  .replace("%ffa_tag_id%", this.o3w8.e7z1(var1))
-                  .replace("%flixcoreffa_tag_id%", this.o3w8.e7z1(var1))
-                  .replace("%flixffa_tag_id%", this.o3w8.e7z1(var1))
-                  .replace("%twocubeffa_tag_id%", this.o3w8.e7z1(var1))
-                  .replace("%ffa_chatcolor_chat_colour%", this.o3w8.l9m6(var1))
-                  .replace("%flixcoreffa_chatcolor_chat_colour%", this.o3w8.l9m6(var1))
-                  .replace("%flixffa_chatcolor_chat_colour%", this.o3w8.l9m6(var1))
-                  .replace("%twocubeffa_chatcolor_chat_colour%", this.o3w8.l9m6(var1))
-                  .replace("%ffa_chatcolor_colour_name%", this.o3w8.o3w8(var1))
-                  .replace("%flixcoreffa_chatcolor_colour_name%", this.o3w8.o3w8(var1))
-                  .replace("%flixffa_chatcolor_colour_name%", this.o3w8.o3w8(var1))
-                  .replace("%twocubeffa_chatcolor_colour_name%", this.o3w8.o3w8(var1));
+               String tag = this.o3w8.j4n9(var1);
+               String tagName = this.o3w8.u2q5(var1);
+               String tagId = this.o3w8.e7z1(var1);
+               String chatColor = this.o3w8.l9m6(var1);
+               String colourName = this.o3w8.o3w8(var1);
+               var2 = var2.replace("%ffa_tag%", tag)
+                  .replace("%flixcoreffa_tag%", tag)
+                  .replace("%flixcore_tag%", tag)
+                  .replace("%flixffa_tag%", tag)
+                  .replace("%tag%", tag)
+                  .replace("%twocubeffa_tag%", tag)
+                  .replace("%ffa_tag_name%", tagName)
+                  .replace("%flixcoreffa_tag_name%", tagName)
+                  .replace("%flixcore_tag_name%", tagName)
+                  .replace("%flixffa_tag_name%", tagName)
+                  .replace("%tag_name%", tagName)
+                  .replace("%twocubeffa_tag_name%", tagName)
+                  .replace("%ffa_tag_id%", tagId)
+                  .replace("%flixcoreffa_tag_id%", tagId)
+                  .replace("%flixcore_tag_id%", tagId)
+                  .replace("%flixffa_tag_id%", tagId)
+                  .replace("%tag_id%", tagId)
+                  .replace("%twocubeffa_tag_id%", tagId)
+                  .replace("%ffa_chatcolor_chat_colour%", chatColor)
+                  .replace("%flixcoreffa_chatcolor_chat_colour%", chatColor)
+                  .replace("%flixcore_chatcolor_chat_colour%", chatColor)
+                  .replace("%flixffa_chatcolor_chat_colour%", chatColor)
+                  .replace("%chatcolor%", chatColor)
+                  .replace("%twocubeffa_chatcolor_chat_colour%", chatColor)
+                  .replace("%ffa_chatcolor_colour_name%", colourName)
+                  .replace("%flixcoreffa_chatcolor_colour_name%", colourName)
+                  .replace("%flixcore_chatcolor_colour_name%", colourName)
+                  .replace("%flixffa_chatcolor_colour_name%", colourName)
+                  .replace("%chatcolor_name%", colourName)
+                  .replace("%twocubeffa_chatcolor_colour_name%", colourName);
             }
          }
 
-         var2 = var2.replace("%ffa_players%", String.valueOf(this.gL.w()));
+         String playersCount = String.valueOf(this.gL.w());
+         var2 = var2.replace("%ffa_players%", playersCount)
+            .replace("%flixcoreffa_players%", playersCount)
+            .replace("%flixcore_players%", playersCount)
+            .replace("%flixffa_players%", playersCount)
+            .replace("%ffa_online%", playersCount)
+            .replace("%players%", playersCount)
+            .replace("%online%", playersCount)
+            .replace("%twocubeffa_players%", playersCount);
 
          for (j var14 : this.gM.arenas()) {
-            var2 = var2.replace("%ffa_players_" + var14.O() + "%", String.valueOf(this.gL.i5k2(var14.O())));
+            String arenaPlayers = String.valueOf(this.gL.i5k2(var14.O()));
+            var2 = var2.replace("%ffa_players_" + var14.O() + "%", arenaPlayers)
+               .replace("%flixcoreffa_players_" + var14.O() + "%", arenaPlayers)
+               .replace("%flixcore_players_" + var14.O() + "%", arenaPlayers)
+               .replace("%flixffa_players_" + var14.O() + "%", arenaPlayers)
+               .replace("%twocubeffa_players_" + var14.O() + "%", arenaPlayers);
          }
 
          s var16 = this;

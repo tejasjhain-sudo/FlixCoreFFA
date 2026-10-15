@@ -362,10 +362,10 @@ public class TwoCubeFFA extends JavaPlugin {
             });
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "ffa").register();
-               new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixffa").register();
+               new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixcore").register();
                new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixcoreffa").register();
-               new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "twocubeffa").register();
-               this.getLogger().info("PlaceholderAPI hook registered.");
+               new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixffa").register();
+               this.getLogger().info("PlaceholderAPI hook registered (ffa, flixcore, flixcoreffa, flixffa).");
             }
 
             t var11 = this.m4z1;
