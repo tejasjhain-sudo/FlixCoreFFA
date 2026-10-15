@@ -520,11 +520,16 @@ public class TwoCubeFFA extends JavaPlugin {
 
    private void printStartupBanner() {
       String[] banner = new String[]{
-         "§8============================================================",
-         "§6  FlixCore FFA",
-         "§7  Version: §a" + this.getDescription().getVersion(),
-         "§7  Author:  §eFlixStudios",
-         "§8============================================================"
+         "§6   ____ _ _      ____                 _____ _____    _   ",
+         "§6  |  ___| (_)_  / ___|___  _ __ ___  |  ___|  ___|  / \\  ",
+         "§e  | |_  | | \\ \\/ / |   / _ \\| '__/ _ \\ | |_  | |_    / _ \\ ",
+         "§e  |  _| | | |>  <| |__| (_) | | |  __/ |  _| |  _|  / ___ \\",
+         "§6  |_|   |_|_/_/\\_\\\\____\\___/|_|  \\___| |_|   |_|   /_/   \\_\\",
+         "§8  ===========================================================",
+         "§7   » Plugin:  §6FlixCore FFA",
+         "§7   » Version: §a" + this.getDescription().getVersion(),
+         "§7   » Author:  §eFlixStudios",
+         "§8  ==========================================================="
       };
       for (String line : banner) {
          Bukkit.getConsoleSender().sendMessage(line);
