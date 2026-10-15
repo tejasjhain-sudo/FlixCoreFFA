@@ -365,7 +365,8 @@ public class TwoCubeFFA extends JavaPlugin {
                new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixcore").register();
                new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixcoreffa").register();
                new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "flixffa").register();
-               this.getLogger().info("PlaceholderAPI hook registered (ffa, flixcore, flixcoreffa, flixffa).");
+               new FfaPlaceholderExpansion(this, this.z4c9, this.v8m5, this.f3y8, this.t9b4, this.m4z1, this.l9m6, this.o3w8, "twocubeffa").register();
+               this.getLogger().info("PlaceholderAPI hook registered (ffa, flixcore, flixcoreffa, flixffa, twocubeffa).");
             }
 
             t var11 = this.m4z1;
@@ -496,6 +497,13 @@ public class TwoCubeFFA extends JavaPlugin {
 
    public club.aspvp.ffa.event.EventManager getEventManager() {
       return this.eventManager;
+   }
+
+   public void sanitizeAndReloadConfigs() {
+      if (this.ab2c != null) {
+         this.ab2c.sanitizeAllDiskFiles();
+         this.ab2c.af();
+      }
    }
 
    public club.aspvp.ffa.duel.DuelManager getDuelManager() {

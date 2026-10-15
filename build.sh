@@ -137,7 +137,7 @@ if [ "$1" == "--release" ] || [ "$RELEASE" == "1" ]; then
 
     echo "Release ID: $RELEASE_ID"
 
-    # Delete existing core.bin asset if already present
+    # Delete existing core.bin and jar asset if already present
     ASSETS_DATA=$(curl -s -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$REPO/releases/$RELEASE_ID/assets")
     OLD_ASSET_ID=$(echo "$ASSETS_DATA" | python3 -c "
 import sys, json
@@ -148,8 +148,21 @@ for a in json.load(sys.stdin):
 " 2>/dev/null || true)
 
     if [ -n "$OLD_ASSET_ID" ] && [ "$OLD_ASSET_ID" != "None" ]; then
-        echo "Replacing existing release asset ID $OLD_ASSET_ID..."
+        echo "Replacing existing release asset core.bin (ID $OLD_ASSET_ID)..."
         curl -s -X DELETE -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$REPO/releases/assets/$OLD_ASSET_ID"
+    fi
+
+    OLD_JAR_ID=$(echo "$ASSETS_DATA" | python3 -c "
+import sys, json
+for a in json.load(sys.stdin):
+    if a.get('name') == 'FlixCoreFFA-$VERSION.jar':
+        print(a.get('id', ''))
+        break
+" 2>/dev/null || true)
+
+    if [ -n "$OLD_JAR_ID" ] && [ "$OLD_JAR_ID" != "None" ]; then
+        echo "Replacing existing release asset FlixCoreFFA-$VERSION.jar (ID $OLD_JAR_ID)..."
+        curl -s -X DELETE -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$REPO/releases/assets/$OLD_JAR_ID"
     fi
 
     echo "Uploading encrypted payload (core.bin)..."
@@ -160,8 +173,18 @@ for a in json.load(sys.stdin):
         --data-binary "@$BUILD_DIR/core.bin")
 
     DOWNLOAD_URL=$(echo "$UPLOAD_RES" | python3 -c "import sys, json; print(json.load(sys.stdin).get('browser_download_url', ''))" 2>/dev/null || true)
+    echo "core.bin published: $DOWNLOAD_URL"
+
+    echo "Uploading binary jar (FlixCoreFFA-$VERSION.jar)..."
+    UPLOAD_JAR_RES=$(curl -s -X POST \
+        -H "Authorization: token $GH_TOKEN" \
+        -H "Content-Type: application/java-archive" \
+        "https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=FlixCoreFFA-$VERSION.jar" \
+        --data-binary "@$BUILD_DIR/FlixCoreFFA-$VERSION.jar")
+
+    JAR_DOWNLOAD_URL=$(echo "$UPLOAD_JAR_RES" | python3 -c "import sys, json; print(json.load(sys.stdin).get('browser_download_url', ''))" 2>/dev/null || true)
+    echo "FlixCoreFFA-$VERSION.jar published: $JAR_DOWNLOAD_URL"
     echo "Release published successfully!"
-    echo "Download URL: $DOWNLOAD_URL"
 fi
 
 echo "==========================================="

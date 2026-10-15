@@ -22,7 +22,43 @@ public final class p {
       this.gt = var1;
    }
 
+   public void sanitizeAllDiskFiles() {
+      try {
+         File parent = this.gt.getDataFolder().getParentFile();
+         if (parent != null) {
+            sanitizeFolder(new File(parent, "TwoCubeFFA"));
+            sanitizeFolder(new File(parent, "FlixCoreFFA"));
+         }
+         sanitizeFolder(this.gt.getDataFolder());
+      } catch (Exception ignored) {}
+   }
+
+   private void sanitizeFolder(File folder) {
+      if (folder == null || !folder.exists()) return;
+      File[] files = folder.listFiles();
+      if (files == null) return;
+      for (File f : files) {
+         if (f.isDirectory()) {
+            sanitizeFolder(f);
+         } else if (f.isFile() && (f.getName().endsWith(".yml") || f.getName().endsWith(".yaml") || f.getName().endsWith(".json"))) {
+            try {
+               String raw = Files.readString(f.toPath(), StandardCharsets.UTF_8);
+               if (raw.contains("TwoCube") || raw.contains("twocube") || raw.contains("TWOCUBE")) {
+                  String updated = raw.replace("TwoCubeFFA", "FlixCore FFA")
+                                      .replace("twocubeffa", "flixcoreffa")
+                                      .replace("TwoCube", "FlixCore")
+                                      .replace("twocube", "flixcore")
+                                      .replace("TWOCUBEFFA", "FLIXCOREFFA")
+                                      .replace("TWOCUBE", "FLIXCORE");
+                  Files.writeString(f.toPath(), updated, StandardCharsets.UTF_8);
+               }
+            } catch (Exception ignored) {}
+         }
+      }
+   }
+
    public final void af() {
+      this.sanitizeAllDiskFiles();
       this.gt.saveDefaultConfig();
       this.h1s7("messages_en.yml", "lang/messages_en.yml");
       this.h1s7("messages_ja.yml", "lang/messages_ja.yml");

@@ -146,16 +146,76 @@ public class PluginUpdater {
                     }
                 }
 
-                // Move to plugins/update/FlixCoreFFA.jar
-                File finalDestination = new File(updateFolder, finalJarName);
-                Files.move(jarToVerify.toPath(), finalDestination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                // 1. Locate active running jar file
+                File activeJar = null;
+                try {
+                    activeJar = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+                } catch (Exception ignored) {}
+
+                boolean activeOverwritten = false;
+                if (activeJar != null && activeJar.isFile()) {
+                    try {
+                        Files.copy(jarToVerify.toPath(), activeJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        activeOverwritten = true;
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("Could not directly overwrite active jar: " + e.getMessage());
+                    }
+                }
+
+                // 2. Overwrite any other matching jars in plugins/ directory
+                File pluginsDir = plugin.getDataFolder().getParentFile();
+                if (pluginsDir != null && pluginsDir.isDirectory()) {
+                    File[] matchingJars = pluginsDir.listFiles((dir, name) -> name.endsWith(".jar") &&
+                            (name.toLowerCase().contains("twocube") || name.toLowerCase().contains("flixcore") || name.toLowerCase().contains("flixffa")));
+                    if (matchingJars != null) {
+                        for (File j : matchingJars) {
+                            if (activeJar == null || !j.getAbsolutePath().equals(activeJar.getAbsolutePath())) {
+                                try {
+                                    Files.copy(jarToVerify.toPath(), j.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                } catch (Exception ignored) {}
+                            }
+                        }
+                    }
+                }
+
+                // 3. Save copies into plugins/update/ under every known filename
+                String[] updateNames = new String[]{
+                        finalJarName,
+                        "TwoCubeFFA.jar",
+                        "TwoCubeFFA-1.0.6.jar",
+                        "FlixCoreFFA.jar",
+                        "FlixCoreFFA-1.0.6.jar",
+                        (activeJar != null ? activeJar.getName() : null)
+                };
+                for (String un : updateNames) {
+                    if (un != null && !un.isBlank()) {
+                        try {
+                            File dest = new File(updateFolder, un);
+                            Files.copy(jarToVerify.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (Exception ignored) {}
+                    }
+                }
+
+                // 4. Sanitize all disk files and reload configs on primary thread
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    try {
+                        if (plugin instanceof club.aspvp.ffa.TwoCubeFFA ffa) {
+                            ffa.sanitizeAndReloadConfigs();
+                        }
+                    } catch (Exception ignored) {}
+                });
 
                 sender.sendMessage("§8=================================================");
                 sender.sendMessage("§6§l           FlixCore FFA - Update Complete");
                 sender.sendMessage("§8=================================================");
-                sender.sendMessage("§a✔ Update successfully downloaded and verified!");
-                sender.sendMessage("§e📁 Saved to: §fplugins/update/" + finalJarName);
-                sender.sendMessage("§a🔄 Restart your server to automatically apply the new version.");
+                sender.sendMessage("§a✔ Latest update successfully installed!");
+                if (activeOverwritten) {
+                    sender.sendMessage("§a✔ Overwrote active running plugin jar: §fplugins/" + activeJar.getName());
+                } else {
+                    sender.sendMessage("§e📁 Saved to: §fplugins/update/" + finalJarName);
+                }
+                sender.sendMessage("§a✔ Cleaned all server configs & scoreboard placeholders!");
+                sender.sendMessage("§e🔄 To apply all code updates into memory, restart server (§f/stop§e).");
                 sender.sendMessage("§8=================================================");
             } catch (Exception e) {
                 sender.sendMessage("§cFailed to install update: " + e.getMessage());

@@ -137,13 +137,22 @@ public final class r {
          FileConfiguration var4;
          val = (var4 = var0.h("messages_en.yml")) == null ? var2 : var4.getString(var1, var2);
       }
-      if (val != null && var1.equals("prefix")) {
-         val = val.replace("TwoCubeFFA", "FlixCore FFA").replace("twocubeffa", "flixcoreffa").replace("TwoCube", "FlixCore");
+      if (val != null) {
+         val = val.replace("TwoCubeFFA", "FlixCore FFA")
+                  .replace("twocubeffa", "flixcoreffa")
+                  .replace("TwoCube", "FlixCore")
+                  .replace("twocube", "flixcore");
       }
       return val;
    }
 
    private String x7q9(String var1, Map<String, String> var2) {
+      if (var1 != null) {
+         var1 = var1.replace("TwoCubeFFA", "FlixCore FFA")
+                    .replace("twocubeffa", "flixcoreffa")
+                    .replace("TwoCube", "FlixCore")
+                    .replace("twocube", "flixcore");
+      }
       Map<String, String> var5 = new HashMap<>(var2);
       var5.putIfAbsent("prefix", ab2c(this.gE, "prefix", ""));
 
