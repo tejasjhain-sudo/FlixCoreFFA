@@ -520,19 +520,10 @@ public class TwoCubeFFA extends JavaPlugin {
 
    private void printStartupBanner() {
       String[] banner = new String[]{
-         "§6  ███████╗██╗     ██╗██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗",
-         "§6  ██╔════╝██║     ██║╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝",
-         "§e  █████╗  ██║     ██║ ╚███╔╝ ██║     ██║   ██║██████╔╝█████╗  ",
-         "§e  ██╔══╝  ██║     ██║ ██╔██╗ ██║     ██║   ██║██╔══██╗██╔══╝  ",
-         "§6  ██║     ███████╗██║██╔╝ ██╗╚██████╗╚██████╔╝██║  ██║███████╗",
-         "§6  ╚═╝     ╚══════╝╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝",
          "§8============================================================",
-         "§6  FlixCore FFA §7- §eNext-Gen High Performance Free-For-All Core",
-         "§7  Version:     §a1.0.6 §8| §7Platform: §bPaper 1.21.4 (Java 21)",
-         "§7  Developer:   §eFlixStudios §8(§bhttps://discord.gg/flixstudios§8)",
-         "§7  Backend:     §aSupabase Cloud Verification Active",
-         "§7  Live Events: §aActive §8(§eDynamic Supply Crates & KOTH Hills§8)",
-         "§7  Updater:     §aActive §8(§btejasjhain-sudo/FlixCoreFFA§8)",
+         "§6  FlixCore FFA",
+         "§7  Version: §a" + this.getDescription().getVersion(),
+         "§7  Author:  §eFlixStudios",
          "§8============================================================"
       };
       for (String line : banner) {

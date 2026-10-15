@@ -113,22 +113,17 @@ public class KothManager {
         ActiveKoth koth = new ActiveKoth(finalArenaId, zone, bossBar, captureSeconds, maxDurationMinutes * 60);
         activeGames.put(finalArenaId.toLowerCase(Locale.ROOT), koth);
 
-        // Visual boundary particles task (every 10 ticks = 0.5s)
+        // Visual colored 3D boundary task (every 4 ticks = 0.2s)
         if (config.getBoolean("koth.boundary-particles.enabled", true)) {
-            String particleName = config.getString("koth.boundary-particles.particle", "FLAME");
-            Particle particle;
-            try {
-                particle = Particle.valueOf(particleName.toUpperCase(Locale.ROOT));
-            } catch (Exception ex) {
-                particle = Particle.FLAME;
-            }
-            final Particle finalParticle = particle;
+            final double height = config.getDouble("koth.boundary-particles.height", 2.5);
             koth.particleTask = new BukkitRunnable() {
+                int tick = 0;
                 @Override
                 public void run() {
-                    drawZoneBoundary(zone, finalParticle);
+                    tick += 4;
+                    drawZoneBoundary(koth, tick, height);
                 }
-            }.runTaskTimer(plugin, 0L, 10L);
+            }.runTaskTimer(plugin, 0L, 4L);
         }
 
         // 1-second capture tick loop
@@ -190,6 +185,7 @@ public class KothManager {
 
         if (zonePlayers.isEmpty()) {
             // Uncontested
+            koth.state = ActiveKoth.KothState.UNCONTESTED;
             koth.bossBar.setColor(BarColor.YELLOW);
             int timeLeft = koth.requiredSeconds - koth.cappingSeconds;
             String title = color(config.getString("koth.bossbar.uncontested-title", "&6&lKOTH &8» &e%arena% &8| &7Stand in zone to capture! &8(&e%time_left%s&8)")
@@ -200,6 +196,7 @@ public class KothManager {
             koth.bossBar.setProgress(Math.max(0.0, Math.min(1.0, progress)));
         } else if (zonePlayers.size() == 1) {
             // Single capper
+            koth.state = ActiveKoth.KothState.CAPPING;
             Player capper = zonePlayers.get(0);
             if (capper.getUniqueId().equals(koth.currentCapperUUID)) {
                 koth.cappingSeconds++;
@@ -236,6 +233,7 @@ public class KothManager {
             }
         } else {
             // Contested!
+            koth.state = ActiveKoth.KothState.CONTESTED;
             koth.bossBar.setColor(BarColor.RED);
             String title = color(config.getString("koth.bossbar.contested-title", "&6&lKOTH &8» &e%arena% &8| &c&lCONTESTED! &8(&f%players% players&8)")
                     .replace("%arena%", koth.arenaId)
@@ -433,28 +431,73 @@ public class KothManager {
         return -1;
     }
 
-    private void drawZoneBoundary(KothZone zone, Particle particle) {
+    private void drawZoneBoundary(ActiveKoth koth, int tick, double height) {
+        KothZone zone = koth.zone;
         World world = zone.getWorld();
         if (world == null) return;
 
-        double y = zone.getMinY() + 0.15;
-        double step = 0.5;
+        FileConfiguration config = eventManager.getConfig();
+        Color color;
+        if (koth.state == ActiveKoth.KothState.CAPPING) {
+            color = parseHexColor(config.getString("koth.boundary-particles.capping-color", "#32CD32"), Color.fromRGB(50, 255, 50));
+        } else if (koth.state == ActiveKoth.KothState.CONTESTED) {
+            color = parseHexColor(config.getString("koth.boundary-particles.contested-color", "#FF2020"), Color.fromRGB(255, 32, 32));
+        } else {
+            color = parseHexColor(config.getString("koth.boundary-particles.uncontested-color", "#FFD700"), Color.fromRGB(255, 215, 0));
+        }
 
-        // Perimeter line 1: (minX, minZ) -> (maxX, minZ)
-        for (double x = zone.getMinX(); x <= zone.getMaxX(); x += step) {
-            world.spawnParticle(particle, x, y, zone.getMinZ(), 1, 0, 0, 0, 0.0);
+        Particle.DustOptions dust = new Particle.DustOptions(color, 1.4f);
+
+        double minX = zone.getMinX();
+        double maxX = zone.getMaxX();
+        double minZ = zone.getMinZ();
+        double maxZ = zone.getMaxZ();
+        double minY = zone.getMinY();
+        double topY = minY + height;
+        double step = 0.45;
+
+        // 1. Lower and upper perimeter colored bounding lines
+        for (double x = minX; x <= maxX; x += step) {
+            world.spawnParticle(Particle.DUST, x, minY + 0.15, minZ, 1, 0, 0, 0, 0, dust, true);
+            world.spawnParticle(Particle.DUST, x, topY, minZ, 1, 0, 0, 0, 0, dust, true);
+            world.spawnParticle(Particle.DUST, x, minY + 0.15, maxZ, 1, 0, 0, 0, 0, dust, true);
+            world.spawnParticle(Particle.DUST, x, topY, maxZ, 1, 0, 0, 0, 0, dust, true);
         }
-        // Perimeter line 2: (maxX, minZ) -> (maxX, maxZ)
-        for (double z = zone.getMinZ(); z <= zone.getMaxZ(); z += step) {
-            world.spawnParticle(particle, zone.getMaxX(), y, z, 1, 0, 0, 0, 0.0);
+        for (double z = minZ; z <= maxZ; z += step) {
+            world.spawnParticle(Particle.DUST, minX, minY + 0.15, z, 1, 0, 0, 0, 0, dust, true);
+            world.spawnParticle(Particle.DUST, minX, topY, z, 1, 0, 0, 0, 0, dust, true);
+            world.spawnParticle(Particle.DUST, maxX, minY + 0.15, z, 1, 0, 0, 0, 0, dust, true);
+            world.spawnParticle(Particle.DUST, maxX, topY, z, 1, 0, 0, 0, 0, dust, true);
         }
-        // Perimeter line 3: (maxX, maxZ) -> (minX, maxZ)
-        for (double x = zone.getMaxX(); x >= zone.getMinX(); x -= step) {
-            world.spawnParticle(particle, x, y, zone.getMaxZ(), 1, 0, 0, 0, 0.0);
+
+        // 2. 4 Vertical corner pillars
+        double[][] corners = new double[][]{
+            {minX, minZ}, {maxX, minZ}, {maxX, maxZ}, {minX, maxZ}
+        };
+        for (double[] corner : corners) {
+            for (double y = minY; y <= topY; y += 0.45) {
+                world.spawnParticle(Particle.DUST, corner[0], y, corner[1], 1, 0, 0, 0, 0, dust, true);
+            }
+            world.spawnParticle(Particle.END_ROD, corner[0], topY + 0.1, corner[1], 1, 0, 0, 0, 0, null, true);
         }
-        // Perimeter line 4: (minX, maxZ) -> (minX, minZ)
-        for (double z = zone.getMaxZ(); z >= zone.getMinZ(); z -= step) {
-            world.spawnParticle(particle, zone.getMinX(), y, z, 1, 0, 0, 0, 0.0);
+
+        // 3. Central glowing crown marker on hill
+        double centerX = (minX + maxX) / 2.0;
+        double centerZ = (minZ + maxZ) / 2.0;
+        world.spawnParticle(Particle.END_ROD, centerX, minY + 0.6, centerZ, 1, 0, 0, 0, 0, null, true);
+        if (tick % 8 == 0) {
+            world.spawnParticle(Particle.GLOW, centerX, minY + 0.25, centerZ, 2, 0.2, 0.05, 0.2, 0.0, null, true);
+        }
+    }
+
+    private Color parseHexColor(String hex, Color def) {
+        if (hex == null || hex.isBlank()) return def;
+        try {
+            if (hex.startsWith("#")) hex = hex.substring(1);
+            int rgb = Integer.parseInt(hex, 16);
+            return Color.fromRGB((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
+        } catch (Exception e) {
+            return def;
         }
     }
 
@@ -474,6 +517,8 @@ public class KothManager {
     }
 
     public static class ActiveKoth {
+        public enum KothState { UNCONTESTED, CAPPING, CONTESTED }
+
         public final String arenaId;
         public final KothZone zone;
         public final BossBar bossBar;
@@ -483,6 +528,7 @@ public class KothManager {
         public UUID currentCapperUUID = null;
         public String currentCapperName = null;
         public int cappingSeconds = 0;
+        public KothState state = KothState.UNCONTESTED;
         public BukkitTask tickTask;
         public BukkitTask particleTask;
 

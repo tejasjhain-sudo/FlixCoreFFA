@@ -111,29 +111,82 @@ public class AirdropManager {
                 .replace("%time%", String.valueOf(warningSeconds)));
         Bukkit.broadcastMessage(spawnMsg);
 
+        // Sound cue that the supply crate is incoming (Raid Horn + Beacon activation)
+        World world = dropLocation.getWorld();
+        String incomingSoundName = config.getString("airdrop.effects.incoming-sound", "EVENT_RAID_HORN");
+        Sound incomingSound = parseSound(incomingSoundName, Sound.EVENT_RAID_HORN);
+
+        if (world != null && incomingSound != null) {
+            try {
+                world.playSound(dropLocation, incomingSound, 12.0f, 1.0f);
+                world.playSound(dropLocation, Sound.BLOCK_BEACON_ACTIVATE, 12.0f, 1.1f);
+            } catch (Exception ignored) {}
+        }
+
+        // Play incoming alarm directly to players inside this arena
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            Optional<String> playerArena = TwoCubeFFAAPI.get().arenaOf(p);
+            if (playerArena.isPresent() && playerArena.get().equalsIgnoreCase(finalArenaId)) {
+                if (incomingSound != null) {
+                    try {
+                        p.playSound(p.getLocation(), incomingSound, 1.0f, 1.0f);
+                        p.playSound(p.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 0.8f, 1.1f);
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+
+        final boolean beamEnabled = config.getBoolean("airdrop.effects.beam-enabled", true);
+        final int beamHeight = config.getInt("airdrop.effects.beam-height", 70);
+
         if (warningSeconds <= 0) {
             landAirdrop(finalArenaId, dropLocation);
         } else {
-            // Visual warning beam task leading up to drop
+            final int totalTicks = warningSeconds * 20;
+            // Visual beacon beam descending and countdown alarm task
             new BukkitRunnable() {
-                int count = warningSeconds;
+                int elapsedTicks = 0;
+
                 @Override
                 public void run() {
-                    if (count <= 0) {
+                    elapsedTicks += 3;
+                    int remainingSeconds = Math.max(0, (totalTicks - elapsedTicks) / 20);
+
+                    if (elapsedTicks >= totalTicks) {
                         landAirdrop(finalArenaId, dropLocation);
                         cancel();
                         return;
                     }
-                    // Visual beacon / beam particles descending
-                    World world = dropLocation.getWorld();
-                    if (world != null) {
-                        for (double y = dropLocation.getY(); y <= dropLocation.getY() + 30; y += 2.0) {
-                            world.spawnParticle(Particle.FIREWORK, dropLocation.getX() + 0.5, y, dropLocation.getZ() + 0.5, 1, 0.1, 0.1, 0.1, 0.0);
+
+                    // Render high-intensity beacon beam from ground all the way up to sky
+                    if (beamEnabled) {
+                        renderBeaconBeam(dropLocation, elapsedTicks, beamHeight);
+                    }
+
+                    // Audible radar / beacon ping on every second
+                    if (elapsedTicks % 20 == 0) {
+                        World w = dropLocation.getWorld();
+                        if (w != null) {
+                            if (remainingSeconds <= 5 && remainingSeconds > 0) {
+                                try {
+                                    w.playSound(dropLocation, Sound.BLOCK_NOTE_BLOCK_PLING, 8.0f, 1.0f + (5 - remainingSeconds) * 0.2f);
+                                } catch (Exception ignored) {}
+                                for (Player p : Bukkit.getOnlinePlayers()) {
+                                    if (TwoCubeFFAAPI.get().arenaOf(p).filter(a -> a.equalsIgnoreCase(finalArenaId)).isPresent()) {
+                                        try {
+                                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 0.8f, 1.5f);
+                                        } catch (Exception ignored) {}
+                                    }
+                                }
+                            } else {
+                                try {
+                                    w.playSound(dropLocation, Sound.BLOCK_BEACON_AMBIENT, 6.0f, 1.0f);
+                                } catch (Exception ignored) {}
+                            }
                         }
                     }
-                    count--;
                 }
-            }.runTaskTimer(plugin, 0L, 20L);
+            }.runTaskTimer(plugin, 0L, 3L);
         }
 
         if (sender != null) {
@@ -261,8 +314,10 @@ public class AirdropManager {
         }
         String soundName = config.getString("airdrop.effects.landing-sound", "ENTITY_ENDER_DRAGON_GROWL");
         try {
-            Sound sound = Sound.valueOf(soundName.toUpperCase(Locale.ROOT));
-            world.playSound(loc, sound, 3.0f, 1.0f);
+            Sound sound = parseSound(soundName, Sound.ENTITY_ENDER_DRAGON_GROWL);
+            world.playSound(loc, sound, 4.0f, 1.0f);
+            world.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.8f);
+            world.playSound(loc, Sound.BLOCK_BEACON_POWER_SELECT, 5.0f, 1.2f);
         } catch (Exception ignored) {}
 
         String landMsg = color(config.getString("airdrop.broadcast.landed", "&8[&6&lFlix&eFFA&8] &a📦 The Supply Crate has landed in arena &b%arena% &eat &f%x%, %y%, %z%&e! &eFight for it!")
@@ -271,6 +326,29 @@ public class AirdropManager {
                 .replace("%y%", String.valueOf(loc.getBlockY()))
                 .replace("%z%", String.valueOf(loc.getBlockZ())));
         Bukkit.broadcastMessage(landMsg);
+
+        // Keep the beacon beam shining into the sky while crate is waiting to be claimed
+        final boolean beamEnabled = config.getBoolean("airdrop.effects.beam-enabled", true);
+        final int beamHeight = config.getInt("airdrop.effects.beam-height", 70);
+        if (beamEnabled) {
+            airdrop.beamTask = new BukkitRunnable() {
+                int tick = 0;
+                @Override
+                public void run() {
+                    if (!activeAirdrops.containsKey(arenaId.toLowerCase(Locale.ROOT))) {
+                        cancel();
+                        return;
+                    }
+                    tick += 3;
+                    renderBeaconBeam(loc, tick, beamHeight);
+                    if (tick % 80 == 0) {
+                        try {
+                            loc.getWorld().playSound(loc, Sound.BLOCK_BEACON_AMBIENT, 3.0f, 1.0f);
+                        } catch (Exception ignored) {}
+                    }
+                }
+            }.runTaskTimer(plugin, 0L, 3L);
+        }
 
         // Despawn countdown task
         airdrop.task = new BukkitRunnable() {
@@ -348,6 +426,7 @@ public class AirdropManager {
         FileConfiguration config = eventManager.getConfig();
         activeAirdrops.remove(airdrop.arenaId.toLowerCase(Locale.ROOT));
 
+        if (airdrop.beamTask != null) airdrop.beamTask.cancel();
         if (airdrop.task != null) airdrop.task.cancel();
         airdrop.holograms.forEach(ArmorStand::remove);
         airdrop.chestBlock.setType(Material.AIR);
@@ -396,6 +475,7 @@ public class AirdropManager {
         ActiveAirdrop airdrop = activeAirdrops.remove(arenaId.toLowerCase(Locale.ROOT));
         if (airdrop == null) return;
 
+        if (airdrop.beamTask != null) airdrop.beamTask.cancel();
         if (airdrop.task != null) airdrop.task.cancel();
         airdrop.holograms.forEach(ArmorStand::remove);
         airdrop.chestBlock.setType(Material.AIR);
@@ -418,6 +498,49 @@ public class AirdropManager {
 
     public Map<String, ActiveAirdrop> getActiveAirdrops() {
         return activeAirdrops;
+    }
+
+    public void renderBeaconBeam(Location loc, int tick, int height) {
+        World world = loc.getWorld();
+        if (world == null) return;
+
+        double x = loc.getBlockX() + 0.5;
+        double z = loc.getBlockZ() + 0.5;
+        double minY = loc.getY();
+        double maxY = Math.min(world.getMaxHeight() - 2, minY + height);
+
+        // Core central beam: intense END_ROD line with force=true so players 100+ blocks away see it clearly
+        for (double y = minY; y <= maxY; y += 0.8) {
+            world.spawnParticle(Particle.END_ROD, x, y, z, 1, 0.0, 0.0, 0.0, 0.0, null, true);
+        }
+
+        // Swirling energetic spiral around the beam column
+        double baseAngle = (tick * 0.28) % (2 * Math.PI);
+        for (double y = minY; y <= maxY; y += 2.5) {
+            double angle = baseAngle + (y * 0.45);
+            double ox = 0.42 * Math.cos(angle);
+            double oz = 0.42 * Math.sin(angle);
+            world.spawnParticle(Particle.FIREWORK, x + ox, y, z + oz, 1, 0.0, 0.0, 0.0, 0.0, null, true);
+        }
+
+        // Concentric beacon base rings on ground every 9 ticks (~0.45s)
+        if (tick % 9 == 0) {
+            for (int i = 0; i < 10; i++) {
+                double ringAngle = (2 * Math.PI / 10) * i;
+                double rx = 0.85 * Math.cos(ringAngle);
+                double rz = 0.85 * Math.sin(ringAngle);
+                world.spawnParticle(Particle.GLOW, x + rx, minY + 0.15, z + rz, 1, 0.0, 0.02, 0.0, 0.0, null, true);
+            }
+        }
+    }
+
+    private Sound parseSound(String name, Sound def) {
+        if (name == null || name.isBlank()) return def;
+        try {
+            return Sound.valueOf(name.trim().toUpperCase(Locale.ROOT));
+        } catch (Exception e) {
+            return def;
+        }
     }
 
     private ItemStack parseLootItem(Map<?, ?> def) {
@@ -474,6 +597,7 @@ public class AirdropManager {
         public final List<ArmorStand> holograms;
         public int secondsRemaining;
         public BukkitTask task;
+        public BukkitTask beamTask;
 
         public ActiveAirdrop(String arenaId, Location location, Block chestBlock, List<ArmorStand> holograms, int secondsRemaining) {
             this.arenaId = arenaId;

@@ -17,9 +17,11 @@ airdrop:
   warning-countdown-seconds: 15
   # Visual drop beam & beacon particles while crate is falling / landing
   effects:
-    falling-particles: FIREWORK
+    incoming-sound: EVENT_RAID_HORN
     landing-sound: ENTITY_ENDER_DRAGON_GROWL
     claim-sound: UI_TOAST_CHALLENGE_COMPLETE
+    beam-enabled: true
+    beam-height: 70
     firework-on-land: true
     firework-on-claim: true
   # Floating text displayed above the supply crate
@@ -77,10 +79,13 @@ koth:
   capture-seconds: 60
   # Maximum duration in minutes before KOTH times out if no one captures it
   max-duration-minutes: 15
-  # Visual boundary particles showing the capture zone on the ground
+  # Visual boundary particles showing the capture zone with dynamic 3D colors
   boundary-particles:
     enabled: true
-    particle: FLAME
+    uncontested-color: "#FFD700"
+    capping-color: "#32CD32"
+    contested-color: "#FF2020"
+    height: 2.5
     density: 0.5
   # BossBar display
   bossbar:
