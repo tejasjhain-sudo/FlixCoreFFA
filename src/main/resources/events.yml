@@ -22,6 +22,11 @@ airdrop:
     claim-sound: UI_TOAST_CHALLENGE_COMPLETE
     beam-enabled: true
     beam-height: 70
+    falling-capsule-visual: true
+    ground-radar-target: true
+    landing-shockwave: true
+    ground-smoke-flares: true
+    landing-shield-dome: true
     firework-on-land: true
     firework-on-claim: true
   # Floating text displayed above the supply crate
@@ -87,6 +92,10 @@ koth:
     contested-color: "#FF2020"
     height: 2.5
     density: 0.5
+    cyber-obelisks: true
+    vertical-scanner: true
+    energy-tethers: true
+    capper-halo: true
   # BossBar display
   bossbar:
     capping-title: "&6&lKOTH &8» &e%arena% &8| &a%player% &8(&b%time_left%s left&8)"

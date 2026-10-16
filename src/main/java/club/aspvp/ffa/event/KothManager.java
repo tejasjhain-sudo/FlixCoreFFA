@@ -269,6 +269,37 @@ public class KothManager {
         int fadeOut = config.getInt("koth.rewards.title.fadeOut", 20);
         winner.sendTitle(mainTitle, subTitle, fadeIn, stay, fadeOut);
 
+        // Victory Novablast Shockwave
+        Location winLoc = winner.getLocation();
+        World winWorld = winLoc.getWorld();
+        if (winWorld != null) {
+            winWorld.spawnParticle(Particle.FLASH, winLoc.clone().add(0, 1.2, 0), 3, 0, 0, 0, 0, null, true);
+            winWorld.playSound(winLoc, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5f, 1.0f);
+            winWorld.playSound(winLoc, Sound.ITEM_TOTEM_USE, 2.0f, 1.3f);
+
+            Particle.DustOptions novaGold = new Particle.DustOptions(Color.fromRGB(255, 215, 0), 1.6f);
+            Particle.DustOptions novaOrange = new Particle.DustOptions(Color.fromRGB(255, 120, 0), 1.4f);
+            new BukkitRunnable() {
+                int ring = 1;
+                @Override
+                public void run() {
+                    if (ring > 5) {
+                        cancel();
+                        return;
+                    }
+                    double rad = ring * 1.1;
+                    int count = 18 + (ring * 4);
+                    for (int i = 0; i < count; i++) {
+                        double a = (2 * Math.PI / count) * i;
+                        double nx = winLoc.getX() + rad * Math.cos(a);
+                        double nz = winLoc.getZ() + rad * Math.sin(a);
+                        winWorld.spawnParticle(Particle.DUST, nx, winLoc.getY() + 0.3, nz, 1, 0, 0, 0, 0, (ring % 2 == 0 ? novaGold : novaOrange), true);
+                    }
+                    ring++;
+                }
+            }.runTaskTimer(plugin, 0L, 2L);
+        }
+
         // Sound
         winner.playSound(winner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.0f, 1.0f);
 
@@ -446,7 +477,11 @@ public class KothManager {
             color = parseHexColor(config.getString("koth.boundary-particles.uncontested-color", "#FFD700"), Color.fromRGB(255, 215, 0));
         }
 
-        Particle.DustOptions dust = new Particle.DustOptions(color, 1.4f);
+        Particle.DustOptions dust = new Particle.DustOptions(color, 1.35f);
+        boolean obelisksEnabled = config.getBoolean("koth.boundary-particles.cyber-obelisks", true);
+        boolean scannerEnabled = config.getBoolean("koth.boundary-particles.vertical-scanner", true);
+        boolean tethersEnabled = config.getBoolean("koth.boundary-particles.energy-tethers", true);
+        boolean haloEnabled = config.getBoolean("koth.boundary-particles.capper-halo", true);
 
         double minX = zone.getMinX();
         double maxX = zone.getMaxX();
@@ -454,9 +489,9 @@ public class KothManager {
         double maxZ = zone.getMaxZ();
         double minY = zone.getMinY();
         double topY = minY + height;
-        double step = 0.45;
+        double step = 0.55;
 
-        // 1. Lower and upper perimeter colored bounding lines
+        // 1. Lower and upper perimeter bounding laser lines
         for (double x = minX; x <= maxX; x += step) {
             world.spawnParticle(Particle.DUST, x, minY + 0.15, minZ, 1, 0, 0, 0, 0, dust, true);
             world.spawnParticle(Particle.DUST, x, topY, minZ, 1, 0, 0, 0, 0, dust, true);
@@ -470,23 +505,121 @@ public class KothManager {
             world.spawnParticle(Particle.DUST, maxX, topY, z, 1, 0, 0, 0, 0, dust, true);
         }
 
-        // 2. 4 Vertical corner pillars
+        // 2. Corner Cyber-Obelisks with Levitating Power Crystals
         double[][] corners = new double[][]{
             {minX, minZ}, {maxX, minZ}, {maxX, maxZ}, {minX, maxZ}
         };
+        double crystalBob = Math.sin(tick * 0.14) * 0.18;
+        double crystalY = topY + 0.35 + crystalBob;
+
         for (double[] corner : corners) {
-            for (double y = minY; y <= topY; y += 0.45) {
+            for (double y = minY; y <= topY; y += 0.5) {
                 world.spawnParticle(Particle.DUST, corner[0], y, corner[1], 1, 0, 0, 0, 0, dust, true);
             }
-            world.spawnParticle(Particle.END_ROD, corner[0], topY + 0.1, corner[1], 1, 0, 0, 0, 0, null, true);
+            if (obelisksEnabled) {
+                world.spawnParticle(Particle.END_ROD, corner[0], crystalY, corner[1], 1, 0, 0, 0, 0, null, true);
+                world.spawnParticle(Particle.DUST, corner[0], crystalY, corner[1], 1, 0, 0, 0, 0, new Particle.DustOptions(color, 1.6f), true);
+                // Orbiting glow ring around power crystal
+                double orbA = (tick * 0.22) % (2 * Math.PI);
+                world.spawnParticle(Particle.GLOW, corner[0] + 0.26 * Math.cos(orbA), crystalY, corner[1] + 0.26 * Math.sin(orbA), 1, 0, 0, 0, 0, null, true);
+            } else {
+                world.spawnParticle(Particle.END_ROD, corner[0], topY + 0.1, corner[1], 1, 0, 0, 0, 0, null, true);
+            }
         }
 
-        // 3. Central glowing crown marker on hill
+        // 3. Vertical Elevation Scanner (oscillating laser grid plane)
+        if (scannerEnabled) {
+            double scanY = minY + ((Math.sin(tick * 0.08) + 1.0) / 2.0) * height;
+            Particle.DustOptions scanDust = new Particle.DustOptions(color, 1.2f);
+            for (double x = minX; x <= maxX; x += 0.8) {
+                world.spawnParticle(Particle.DUST, x, scanY, minZ, 1, 0, 0, 0, 0, scanDust, true);
+                world.spawnParticle(Particle.DUST, x, scanY, maxZ, 1, 0, 0, 0, 0, scanDust, true);
+            }
+            for (double z = minZ; z <= maxZ; z += 0.8) {
+                world.spawnParticle(Particle.DUST, minX, scanY, z, 1, 0, 0, 0, 0, scanDust, true);
+                world.spawnParticle(Particle.DUST, maxX, scanY, z, 1, 0, 0, 0, 0, scanDust, true);
+            }
+            if (tick % 8 == 0) {
+                for (double[] corner : corners) {
+                    world.spawnParticle(Particle.ELECTRIC_SPARK, corner[0], scanY, corner[1], 1, 0, 0, 0, 0.02, null, true);
+                }
+            }
+        }
+
+        // 4. Energy Siphon Tethers & Floating Holographic King's Crown
+        Player capper = null;
+        if (koth.currentCapperUUID != null) {
+            capper = Bukkit.getPlayer(koth.currentCapperUUID);
+        }
+
+        if (koth.state == ActiveKoth.KothState.CAPPING && capper != null && capper.isOnline() && zone.contains(capper.getLocation())) {
+            Location capperHeart = capper.getLocation().add(0, 1.05, 0);
+
+            // Energy Tethers arcing from corner power crystals into capper's chest
+            if (tethersEnabled) {
+                Particle.DustOptions tetherDust = new Particle.DustOptions(color, 1.15f);
+                for (double[] corner : corners) {
+                    double startX = corner[0];
+                    double startY = crystalY;
+                    double startZ = corner[1];
+
+                    for (double t = 0.15; t <= 0.85; t += 0.18) {
+                        double tx = startX + (capperHeart.getX() - startX) * t;
+                        double ty = startY + (capperHeart.getY() - startY) * t + Math.sin(t * Math.PI) * 0.45;
+                        double tz = startZ + (capperHeart.getZ() - startZ) * t;
+                        world.spawnParticle(Particle.DUST, tx, ty, tz, 1, 0, 0, 0, 0, tetherDust, true);
+                    }
+                }
+                if (tick % 6 == 0) {
+                    world.spawnParticle(Particle.SCULK_CHARGE_POP, capperHeart.getX(), capperHeart.getY(), capperHeart.getZ(), 1, 0.2, 0.2, 0.2, 0.01, null, true);
+                }
+            }
+
+            // Floating Holographic King's Crown / Halo
+            if (haloEnabled) {
+                double crownY = capper.getLocation().getY() + 2.15;
+                double crownRadius = 0.45;
+                double spinAngle = (tick * 0.12) % (2 * Math.PI);
+                Particle.DustOptions goldCrown = new Particle.DustOptions(Color.fromRGB(255, 215, 0), 1.3f);
+
+                int crownPts = 10;
+                for (int i = 0; i < crownPts; i++) {
+                    double a = (2 * Math.PI / crownPts) * i + spinAngle;
+                    double cx = capper.getLocation().getX() + crownRadius * Math.cos(a);
+                    double cz = capper.getLocation().getZ() + crownRadius * Math.sin(a);
+                    world.spawnParticle(Particle.DUST, cx, crownY, cz, 1, 0, 0, 0, 0, goldCrown, true);
+
+                    // 5 crown spikes pointing upward
+                    if (i % 2 == 0) {
+                        world.spawnParticle(Particle.DUST, cx, crownY + 0.22, cz, 1, 0, 0, 0, 0, goldCrown, true);
+                        if (tick % 6 == 0) {
+                            world.spawnParticle(Particle.END_ROD, cx, crownY + 0.26, cz, 1, 0, 0, 0, 0, null, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 5. Contested Red Alert Matrix
         double centerX = (minX + maxX) / 2.0;
         double centerZ = (minZ + maxZ) / 2.0;
-        world.spawnParticle(Particle.END_ROD, centerX, minY + 0.6, centerZ, 1, 0, 0, 0, 0, null, true);
-        if (tick % 8 == 0) {
-            world.spawnParticle(Particle.GLOW, centerX, minY + 0.25, centerZ, 2, 0.2, 0.05, 0.2, 0.0, null, true);
+
+        if (koth.state == ActiveKoth.KothState.CONTESTED) {
+            if (tick % 4 == 0) {
+                world.spawnParticle(Particle.ELECTRIC_SPARK, centerX, minY + 1.2, centerZ, 4, 1.2, 0.6, 1.2, 0.08, null, true);
+                world.spawnParticle(Particle.DUST, centerX, minY + 0.8, centerZ, 3, 1.0, 0.5, 1.0, 0, dust, true);
+            }
+            if (tick % 20 == 0) {
+                try {
+                    world.playSound(new Location(world, centerX, minY + 1.0, centerZ), Sound.BLOCK_NOTE_BLOCK_BASS, 1.4f, 0.6f);
+                } catch (Exception ignored) {}
+            }
+        } else if (koth.state == ActiveKoth.KothState.UNCONTESTED) {
+            // Central glowing runic marker on hill
+            world.spawnParticle(Particle.END_ROD, centerX, minY + 0.6, centerZ, 1, 0, 0, 0, 0, null, true);
+            if (tick % 8 == 0) {
+                world.spawnParticle(Particle.GLOW, centerX, minY + 0.25, centerZ, 2, 0.2, 0.05, 0.2, 0.0, null, true);
+            }
         }
     }
 
